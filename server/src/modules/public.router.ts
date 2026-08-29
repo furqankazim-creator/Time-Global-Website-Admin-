@@ -146,7 +146,10 @@ publicRouter.post(
               description: rawMessage || "(no message provided)",
             }),
           });
-          if (!r.ok) {
+          if (r.ok) {
+            const body = (await r.json().catch(() => null)) as { id?: string } | null;
+            logger.info({ crmId: body?.id, leadId: String(lead._id) }, "CRM inquiry forwarded");
+          } else {
             logger.warn({ status: r.status }, "CRM inquiry forward rejected");
           }
         } catch (err) {
