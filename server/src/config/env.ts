@@ -55,6 +55,13 @@ const schema = z.object({
   SMTP_FROM_NAME: z.string().optional(),
   /** Where "new inquiry" notification emails are sent, if SMTP is configured. */
   LEAD_NOTIFY_TO: z.string().email().optional(),
+
+  /**
+   * If set, every public inquiry is also POSTed (server-to-server) to this
+   * CRM intake endpoint. Leave unset to disable the forward.
+   * e.g. https://crm.tgailab.site/api/public/inquiries
+   */
+  CRM_INQUIRY_URL: z.string().url().optional(),
 });
 
 const parsed = schema.safeParse(process.env);

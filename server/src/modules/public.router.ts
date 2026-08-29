@@ -4,6 +4,7 @@ import { env } from "../config/env.js";
 import { asyncHandler } from "../lib/asyncHandler.js";
 import { ApiError } from "../lib/ApiError.js";
 import { audit } from "../lib/audit.js";
+import { logger } from "../lib/logger.js";
 import { sendMail } from "../lib/mailer.js";
 import { publicWriteLimiter } from "../middleware/rateLimit.js";
 import { validate } from "../middleware/validate.js";
@@ -71,6 +72,7 @@ const leadSchema = z.object({
   industry: z.string().trim().max(120).optional(),
   budgetRange: z.string().trim().max(60).optional(),
   preferredContact: z.enum(["Email", "Phone", "WhatsApp", "SMS"]).optional(),
+  topic: z.string().trim().max(120).optional(),
   message: z.string().trim().max(5000).optional(),
   sourcePage: z.string().trim().max(300).optional(),
   consent: z.literal(true, { errorMap: () => ({ message: "Consent is required" }) }),
@@ -93,6 +95,9 @@ publicRouter.post(
       return res.status(201).json({ data: { received: true } });
     }
 
+    const rawMessage = (req.body.message ?? "").trim();
+    const topic = (req.body.topic ?? "").trim();
+
     const lead = await Lead.create({
       name: req.body.name,
       email: req.body.email,
@@ -101,7 +106,9 @@ publicRouter.post(
       industry: req.body.industry ?? "",
       budgetRange: req.body.budgetRange ?? "",
       preferredContact: req.body.preferredContact ?? "",
-      message: req.body.message ?? "",
+      // Topic has no column of its own — prepend it so it stays visible in
+      // the admin inbox.
+      message: topic && rawMessage ? `[${topic}]\n\n${rawMessage}` : rawMessage,
       sourcePage: req.body.sourcePage ?? "",
       ipAddress: req.ip ?? null,
       consentGivenAt: new Date(),
@@ -115,6 +122,38 @@ publicRouter.post(
       body: [lead.company, lead.budgetRange, lead.email].filter(Boolean).join(" — "),
       link: "/admin/leads",
     });
+
+    // Forward the inquiry into the Time Global Tech CRM (crm.tgailab.site).
+    // Server-to-server, fire-and-forget: the visitor's submission is already
+    // stored, so a slow or unreachable CRM must never delay or fail it. Only
+    // runs when CRM_INQUIRY_URL is configured.
+    if (env.CRM_INQUIRY_URL && env.NODE_ENV !== "test") {
+      const url = env.CRM_INQUIRY_URL;
+      void (async () => {
+        try {
+          const r = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              client_name: lead.name,
+              email: lead.email || undefined,
+              phone: lead.phone || undefined,
+              company: lead.company || undefined,
+              service: topic || undefined,
+              industry: lead.industry || undefined,
+              budget_range: lead.budgetRange || undefined,
+              preferred_contact_method: lead.preferredContact || undefined,
+              description: rawMessage || "(no message provided)",
+            }),
+          });
+          if (!r.ok) {
+            logger.warn({ status: r.status }, "CRM inquiry forward rejected");
+          }
+        } catch (err) {
+          logger.error({ err }, "CRM inquiry forward failed");
+        }
+      })();
+    }
 
     // Notify asynchronously — a slow or broken SMTP must not delay or fail
     // the visitor's submission, which is already safely stored.

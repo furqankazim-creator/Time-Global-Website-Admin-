@@ -188,11 +188,8 @@ export default function ContactModal() {
           industry: formData.industry,
           budgetRange: formData.budgetRange,
           preferredContact: formData.preferredContact || "Email",
-          // Topic has no column of its own — prepending keeps it visible in
-          // the inbox without a schema change for a single select.
-          message: formData.topic
-            ? `[${formData.topic}]\n\n${formData.message}`
-            : formData.message,
+          topic: formData.topic,
+          message: formData.message,
           sourcePage: window.location.pathname,
           consent: consent,
           // Server-side honeypot. Mirrors the _gotcha field above.
