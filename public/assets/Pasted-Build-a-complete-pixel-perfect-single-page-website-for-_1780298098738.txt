@@ -1,0 +1,286 @@
+Build a complete, pixel-perfect single-page website for "TimeGlobalTech" — an IT & Software Development company. The design must be a near-exact structural and aesthetic clone of https://www.auxility.ca/ — same layout, same section flow, same interaction patterns, same visual language — but with TimeGlobalTech's branding and content. Do NOT copy Auxility's text verbatim; replace all content with TimeGlobalTech equivalents.
+
+Use React + Tailwind CSS + Framer Motion. The site must be fully responsive (mobile, tablet, desktop).
+
+---
+
+## VISUAL DESIGN SYSTEM
+
+**Color Palette (replace Auxility's green with TimeGlobalTech's signature blue-green):**
+- Primary background: #ffffff (white)
+- Accent / CTA color: #00C48C (vibrant teal-green — used for buttons, highlights, glows)
+- Secondary accent: #1A1A2E (deep dark navy — used for dark sections)
+- Text primary: #0D0D0D
+- Text secondary: #555555
+- Tag/label color: #00C48C with low-opacity background
+
+**Typography:**
+- Display headings: "Syne" (Google Font) — bold, large, uppercase-styled
+- Body text: "DM Sans" (Google Font)
+- Code-style tags like `<why timeglobaltech>` and `<services>` rendered in monospace font (Fira Code or similar) in accent color
+
+**3D Decorative Shapes:**
+- Use CSS + SVG or Spline embeds to create floating abstract 3D shapes throughout the page (clusters of cubes, spirals, half-rounds, diamonds, rings, prisms) — rendered in teal/green gradient tones, similar to Auxility's lime-green glassmorphism shapes
+- These shapes appear in: Hero, About, Services, Cases, and CTA sections
+- All shapes have a slow infinite float/rotate CSS animation
+
+**Animations:**
+- All sections fade-in + slide-up on scroll (Intersection Observer)
+- Navbar blurs/frosts on scroll
+- CTA button has a gradient shimmer hover animation
+- Infinite horizontal marquee for client logos
+- Horizontal auto-scroll carousel for testimonials (pause on hover)
+- Animated number counters (count up when scrolled into view)
+
+---
+
+## SECTION-BY-SECTION BLUEPRINT
+
+### 1. TOP ANNOUNCEMENT BAR
+- Thin bar at very top of page (dark background)
+- Text: "🚀 TimeGlobalTech — Delivering world-class software solutions globally"
+- Scrolling ticker / marquee style, same as Auxility's top bar
+
+---
+
+### 2. NAVBAR
+- Logo: "TimeGlobalTech" wordmark in bold dark text with a small geometric icon (interconnected nodes or circuit motif)
+- Industry tabs (pill-style, just like Auxility): [ Web & Mobile ] [ AI & Cloud ]
+- Nav links styled as code tags: `<why us>` | `<services>` | `<cases>` | `<careers>`
+- CTA button: "let's talk" — teal-green gradient rounded button, duplicated (one normal state, one hover state visible)
+- Sticky with frosted glass blur effect on scroll
+
+---
+
+### 3. HERO SECTION
+Layout: Full-width, white background, large left-aligned stacked heading with a floating 3D shape cluster on the right.
+
+**Heading (3 lines, huge bold font, staggered reveal animation):**
+Line 1: "Powered by Quality"
+Line 2: "Committed to"
+Line 3: "Efficiency" (this line in teal-green accent color)
+
+**Subheading:**
+"Turning research-backed knowledge into professionally delivered value for your business."
+
+**CTA Button:** "let's talk" (teal gradient, same pill shape as Auxility)
+
+**Below heading — two industry cards (side by side, clickable):**
+Card 1: [ Web & Mobile ] with a 3D purple cube cluster icon
+Card 2: [ AI & Cloud ] with a 3D teal half-round icon
+
+**Below cards — infinite scrolling logo marquee (client logos strip):**
+Use 6 placeholder SVG company name logos: "NovaCorp", "TechBridge", "AlphaStream", "DataSync", "CloudPeak", "NextWave"
+Marquee scrolls left, duplicated for infinite loop
+
+---
+
+### 4. INDUSTRY SHOWCASE SECTION
+Two-column layout alternating left/right (same as Auxility's FinTech/Healthcare split):
+
+**Left Column — Web & Mobile Development:**
+- Heading: "Web & Mobile Development"
+- Body: "We provide exceptional web and mobile software development services tailored to the unique needs of startups, enterprises, and everything in between."
+- CTA link: "web & mobile development →"
+- Floating 3D abstract shape (purple/violet cube cluster)
+- Mock mobile app screenshot (use a placeholder UI card showing a dashboard with charts and stats)
+- Caption: "Enterprise SaaS Dashboard — built for scale"
+- "learn more →" link
+
+**Right Column — AI & Cloud Solutions:**
+- Heading: "AI & Cloud Solutions"
+- Body: "Cutting-edge AI integrations, cloud architecture, and automation tools built to the latest industry standards, ensuring performance and security."
+- CTA link: "ai & cloud development →"
+- Floating 3D abstract shape (teal half-round)
+- Mock screenshots: desktop + tablet + mobile showing an AI analytics interface
+- Caption: "AI-powered analytics platform for enterprise clients"
+
+---
+
+### 5. REASONS TO WORK WITH US
+Layout: Identical to Auxility — intro heading, then 6 cards in a 2x3 grid, each with a floating 3D glassmorphism shape icon.
+
+**Section tag (monospace, teal):** `<why timeglobaltech>`
+**Heading:** "Top Six Reasons to Work With Us"
+**Subheading:** "Our capabilities span from concept validation to scaling established enterprises."
+
+**6 Cards:**
+1. 🟢 [3D cube cluster icon] **Client-Oriented Solutions** — "IT & software development with a human touch. We build feature-packed solutions that are intuitive and scalable."
+2. 🟢 [3D capsule/pill icon] **Custom Software Development** — "We operate within a learn-build-iterate loop. Flexibility is built in so we adjust on the go for a perfect fit."
+3. 🟢 [3D spiral sphere icon] **Dedicated Software Engineers** — "Work with developers who bring excellent skills, seniority, and real-world experience building complex applications."
+4. 🟢 [3D helix icon] **Security-First Development** — "We adhere to the highest global security standards, recognizing the critical importance of safeguarding your data."
+5. 🟢 [3D perforated ring icon] **Deep Industry Knowledge** — "We are laser-focused on compliance and industry standards — from MVP to a complex, scalable production system."
+6. 🟢 [3D diamond icon] **Years of Hands-On Experience** — "We help you build web and mobile apps that enable sustainable growth at every stage of your journey."
+
+**Below the 6 cards — Animated stats ticker (horizontal infinite scroll, same as Auxility):**
+- ">10 years of work experience"
+- "200+ projects delivered"
+- ">80 experts"
+- "98% client satisfaction"
+Duplicate and loop infinitely, left-scroll marquee
+
+---
+
+### 6. SERVICES SECTION
+Layout: Left side — vertical list of 4 service tabs (clickable, active highlights in teal). Right side — active service detail panel with 3D shape icon, description, and sub-list. Below — an expanded consulting panel.
+
+**Section tag:** `<services>`
+**Heading:** "What We Can Help You With"
+**Subheading:** "Unleashing competitive advantage via software mastery and research brilliance."
+
+**4 Service Tabs (left, stacked vertically with teal left-border on active):**
+1. Web Application Development — [3D cube cluster icon]
+2. Native & Cross-Platform Mobile Apps — [3D spring/coil icon]
+3. Project & Product Consulting — [3D capsule icon]
+4. Integration with Third-Party Systems — [3D spiral icon]
+
+**Below tabs — Full-width "IT Research & Consulting" panel:**
+- Heading: "IT Research and Consulting"
+- Body: "Our Research and Consulting service is your compass in navigating the complexities of the dynamic technology market."
+- Two-column bullet list:
+  Left: General Market Research | Tech Trend Analysis | Product Research | Competitive Analysis
+  Right: Concept Validation | Technology Scouting | Customer Segmentation Analysis
+- "let's talk →" CTA button
+
+**Below that — Accordion / rotating card carousel (5 items, same as Auxility's numbered scroll):**
+01. **Market Expansion Opportunities** — "Discover unexplored market potentials, identify new customer segments, and evaluate the viability of expanding into new regions."
+02. **Risk Mitigation** — "Stay current with emerging technologies, industry best practices, and innovative solutions to keep your business ahead."
+03. **Competitive Edge** — "Examine competitors' strengths and weaknesses to uncover tactics that set you apart and secure a lasting advantage."
+04. **Strategic Decision-Making** — "Gain invaluable insights for informed, strategic decisions aligned with current market dynamics and consumer behavior."
+05. **Innovation & Technology Adoption** — "Stay current with the latest in emerging technologies, AI tools, and innovative solutions to future-proof your business."
+
+---
+
+### 7. PORTFOLIO / PROMINENT CASES SECTION
+Layout: Exactly like Auxility — section label, bold heading, large alternating project showcase cards (project name as `<TagName>`, description, mock screenshot, "learn more →" link). Ends with a "Will your idea be next?" CTA.
+
+**Section tag:** `<our work>`
+**Heading:** "Prominent Cases"
+**Subheading:** "We are good at building web and mobile apps used by thousands and platforms that serve growing businesses."
+
+**4 Case Cards:**
+
+Card 1: `<EduTrack/>` — "A next-gen learning management system for universities and online academies"
+- Mock screenshot: dashboard with course progress bars, student lists
+- "learn more →"
+
+Card 2: `<PayFlow/>` — "A FinTech payment processing platform built for high-volume B2B transactions"
+- Mock screenshot: mobile app with transaction history and balance cards
+- "learn more →"
+
+Card 3: `<MediSync/>` — "Multi-tenant telemedicine SaaS connecting patients and doctors across clinics"
+- Mock screenshot: appointment scheduling UI on desktop + mobile
+- "learn more →"
+
+Card 4: `<LogiX/>` — "An end-to-end fleet and delivery management system for logistics companies"
+- Mock screenshot: map-based tracking interface with delivery statuses
+- "learn more →"
+
+**End CTA card:**
+Text: "Will your idea be next?"
+Button: "let's talk" (teal gradient)
+Floating 3D twisted donut/torus shape beside the CTA (same as Auxility's yellow marshmallow shape, but in teal)
+
+---
+
+### 8. TESTIMONIALS SECTION
+Layout: Exactly like Auxility — section label, heading, then a horizontal infinite auto-scroll carousel of testimonial cards. Pause on hover.
+
+**Section tag:** `<what clients say>`
+**Heading:** "What Our Clients Say About Us"
+**Subheading:** "Trusted by 50+ happy startups & partners."
+
+**8 Testimonial Cards (carousel, auto-scroll left):**
+Each card: avatar (colored circle with initials), name, title & company, project tag `<ProjectName/>`, quote text.
+
+1. **Sarah Mitchell** — CTO, NovaCorp | `<EduTrack/>` — "TimeGlobalTech built our LMS from scratch. The team's attention to detail and deep technical knowledge made the entire process seamless and the final product exceeded expectations."
+
+2. **James Okafor** — CEO, PayFlow Inc | `<PayFlow/>` — "Within the first month of launch, our transaction volume tripled. The TimeGlobalTech team understood our compliance needs and delivered a flawless payment infrastructure."
+
+3. **Priya Sharma** — Product Manager, MediCare Plus | `<MediSync/>` — "We needed a HIPAA-compliant telemedicine platform fast. TimeGlobalTech delivered on time and on budget with an interface our doctors and patients love."
+
+4. **David Chen** — Founder, LogiX | `<LogiX/>` — "The fleet management system they built handles 500+ daily deliveries without a hiccup. Reliable, clean code, and a team that genuinely cares about results."
+
+5. **Aisha Al-Farsi** — COO, AlphaStream | `<custom>` — "TimeGlobalTech seamlessly integrated into our existing team. Their workflow, communication, and technical seniority made them feel like an in-house engineering squad."
+
+6. **Tom Bakker** — CEO, CloudPeak | `<custom>` — "The cloud migration they handled was complex and time-sensitive. The team delivered with zero downtime and gave us architecture that scales effortlessly."
+
+7. **Lena Volkova** — Head of Engineering, DataSync | `<custom>` — "Outstanding mobile app delivered in just 10 weeks. The UI/UX quality and backend performance blew our expectations out of the water."
+
+8. **Carlos Reyes** — Founder, NextWave | `<custom>` — "From concept to App Store in 14 weeks. TimeGlobalTech helped us validate our idea, build the MVP, and attract our first 1,000 users. Incredible partners."
+
+---
+
+### 9. COLLABORATE / INVESTOR CTA SECTION
+Full-width dark section (navy #1A1A2E background), centered content.
+
+**Heading:** "Collaborate with Us"
+**Body:** "TimeGlobalTech invests in fresh ideas. We help entrepreneurs bring brilliant projects to market and turn them into profitable digital products."
+**CTA Button:** "let's discuss your idea" (teal gradient, large pill)
+
+---
+
+### 10. AWARDS / RECOGNITION SECTION
+White background, centered.
+
+**Heading:** "We're Proud Of"
+
+**4 Award Badges (styled as hexagonal or circular badge graphics, monochrome/dark style):**
+1. "Top Software Developer — Clutch 2023"
+2. "Top Mobile App — The Manifest 2023"
+3. "Best IT Company — GoodFirms 2022"
+4. "Top Web Developer — Clutch 2024"
+
+**Below badges — full-width dark CTA strip:**
+Text: "For software development — we've got you."
+Button: "hire us" (teal, pill)
+
+---
+
+### 11. CONTACT MODAL / SLIDE-IN FORM
+Triggered by "let's talk" button anywhere on page. Slides in from right side as a drawer/modal (same as Auxility's contact form popup).
+
+**Modal heading:** `<Hi, TimeGlobalTech team!/>`
+
+**Form fields:**
+- "My name is" [text input] "from" [text input — company name]
+- "My position in the company" [radio pills: CEO | CTO | Product Manager | Developer | Other]
+- "I'd like to discuss" [radio pills: Web Development | Mobile App | AI & Cloud | Consulting | Other]
+- "I am interested in" [radio pills: Enterprise Software | Startup MVP | SaaS Product | Other]
+- "Reach back to me" [email input] "or" [phone input]
+- Checkbox: "I have read and accept the terms of the Privacy Policy"
+- Submit button: "send message" (teal gradient)
+
+**Success state:** Shows `<Thank you!/>` heading + "Your submission has been received." + "see you soon!" link
+
+---
+
+### 12. FOOTER
+Two-column layout on desktop, stacked on mobile. Dark background (#0D0D0D), light text.
+
+**Left:**
+- TimeGlobalTech logo (white version)
+- Copyright: "© 2025 TimeGlobalTech — Software Development Agency. All rights reserved | TimeGlobalTech, Inc."
+- "Our Products" section with 2 placeholder links
+
+**Right columns:**
+- Navigation: `<why us>` | `<services>` | `<cases>` | `<careers>`
+- Contacts: info@timeglobaltech.com | Address placeholder
+- Social icons: Facebook | LinkedIn | Instagram | Behance | Twitter/X | GitHub
+
+**Bottom strip:** Privacy Policy link | Terms of Service link
+
+---
+
+## GLOBAL REQUIREMENTS
+
+- React + Tailwind CSS + Framer Motion
+- Google Fonts: Syne (headings) + DM Sans (body) + Fira Code (tags)
+- All section labels styled as: `<tagname>` in Fira Code font, teal color, small size
+- Smooth scroll behavior site-wide
+- Mobile hamburger menu with slide-down nav
+- All buttons use the same teal gradient pill style
+- No placeholder lorem ipsum — all text must be final as written above
+- Contact form is UI-only (no backend), with a success state on submit
+- All 3D shapes are CSS/SVG animated (no external 3D library required)
+- Page loads with a brief fade-in animation on the hero section

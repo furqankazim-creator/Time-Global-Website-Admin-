@@ -1,0 +1,230 @@
+@import url('https://fonts.googleapis.com/css2?family=Encode+Sans+Expanded:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+@import "tw-animate-css";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-card-border: hsl(var(--card-border));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-popover-border: hsl(var(--popover-border));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-surface-dark: hsl(var(--surface-dark));
+  --color-brand-green: #9fff00;
+  --color-bg-base: #EDEEF5;
+
+  --font-sans: var(--app-font-sans);
+  --font-serif: var(--app-font-serif);
+  --font-mono: var(--app-font-mono);
+  --font-display: var(--app-font-display);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 0 0% 5%;
+
+  --border: 0 0% 85%;
+  --input: 0 0% 85%;
+  --ring: 163 100% 38%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 5%;
+  --card-border: 0 0% 85%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 5%;
+  --popover-border: 0 0% 85%;
+
+  --primary: 163 100% 38%;
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 240 30% 96%;
+  --secondary-foreground: 0 0% 8%;
+
+  /* Intentionally dark in light mode too — see --color-surface-dark. */
+  --surface-dark: 240 28% 12%;
+
+  --muted: 0 0% 96%;
+  --muted-foreground: 0 0% 33%;
+
+  --accent: 163 100% 38%;
+  --accent-foreground: 0 0% 100%;
+
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+
+  --app-font-sans: 'Inter', sans-serif;
+  --app-font-mono: 'Inter', monospace;
+  --app-font-display: 'Outfit', sans-serif;
+
+  --radius: 0.5rem;
+}
+
+.dark {
+  --background: 240 28% 14%;
+  --foreground: 0 0% 100%;
+
+  --border: 240 28% 20%;
+  --input: 240 28% 20%;
+  --ring: 163 100% 38%;
+
+  --card: 240 28% 16%;
+  --card-foreground: 0 0% 100%;
+  --card-border: 240 28% 20%;
+
+  --popover: 240 28% 16%;
+  --popover-foreground: 0 0% 100%;
+  --popover-border: 240 28% 20%;
+
+  --primary: 163 100% 38%;
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 240 28% 20%;
+  --secondary-foreground: 0 0% 100%;
+  --surface-dark: 240 28% 12%;
+
+  --muted: 240 28% 20%;
+  --muted-foreground: 0 0% 60%;
+
+  --accent: 163 100% 38%;
+  --accent-foreground: 0 0% 100%;
+
+  --destructive: 0 62% 30%;
+  --destructive-foreground: 0 0% 100%;
+}
+
+@layer base {
+  html {
+    scrollbar-gutter: stable;
+  }
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+  }
+  code {
+    @apply font-mono;
+  }
+}
+
+@layer utilities {
+  .section-padding {
+    @apply py-24 md:py-32;
+  }
+  .section-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6;
+  }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(10deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+@keyframes rotate-slow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes gradient-shimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-rotate-slow {
+  animation: rotate-slow 20s linear infinite;
+}
+
+.btn-shimmer {
+  background-size: 200% auto;
+  animation: gradient-shimmer 3s ease infinite;
+}
+
+/* Fix for logo visibility in light theme */
+:root:not(.dark) .light-logo-filter {
+  filter: invert(1) brightness(0);
+}
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes wave {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Hide the scrollbar on horizontal rails that scroll natively on mobile —
+   the slider progress bar / snap points communicate position instead. */
+@utility scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/**
+ * Respect prefers-reduced-motion.
+ *
+ * A blanket rule rather than per-component guards: it catches CSS
+ * transitions, Tailwind animate-* utilities, framer-motion and GSAP alike
+ * (both write inline styles that these near-zero durations override), and
+ * it can't be forgotten when a new animation is added.
+ *
+ * Durations are 0.01ms rather than 0 so animation/transition end events
+ * still fire — code that waits on them would otherwise hang.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
