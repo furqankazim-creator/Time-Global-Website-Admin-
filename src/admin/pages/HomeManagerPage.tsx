@@ -137,6 +137,7 @@ export default function HomeManagerPage() {
     mutationFn: (body: object) => api("/api/v1/admin/home", { method: "PUT", body }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["home"] });
+      qc.invalidateQueries({ queryKey: ["cms"] });
       setSaved(true);
       setTimeout(() => setSaved(false), 2500);
     },

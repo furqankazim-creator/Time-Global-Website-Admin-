@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useCallback, createContext, useContext, forwardRef } from "react";
+import { Link } from "wouter";
 import { ArrowUpRight, Github, ExternalLink, ArrowLeft, ArrowRight } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 
@@ -277,6 +278,10 @@ export function ProjectCard({
         loading="lazy"
         width={1024}
         height={1024}
+        onError={(e) => {
+          e.currentTarget.onerror = null;
+          e.currentTarget.src = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1200";
+        }}
         className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-110"
       />
 
@@ -293,15 +298,25 @@ export function ProjectCard({
         ))}
       </div>
 
-      <a
-        href={liveUrl}
-        target="_blank"
-        rel="noreferrer"
-        aria-label={`Open ${title}`}
-        className="absolute right-4 top-4 z-10 grid h-9 w-9 place-items-center rounded-full bg-white/15 text-white backdrop-blur-md ring-1 ring-white/20 transition-all duration-500 group-hover:rotate-45 group-hover:bg-white group-hover:text-black"
-      >
-        <ArrowUpRight className="h-4 w-4" />
-      </a>
+      {liveUrl.startsWith("/") ? (
+        <Link
+          href={liveUrl}
+          aria-label={`Open ${title}`}
+          className="absolute right-4 top-4 z-10 grid h-9 w-9 place-items-center rounded-full bg-white/15 text-white backdrop-blur-md ring-1 ring-white/20 transition-all duration-500 group-hover:rotate-45 group-hover:bg-white group-hover:text-black"
+        >
+          <ArrowUpRight className="h-4 w-4" />
+        </Link>
+      ) : (
+        <a
+          href={liveUrl}
+          target="_blank"
+          rel="noreferrer"
+          aria-label={`Open ${title}`}
+          className="absolute right-4 top-4 z-10 grid h-9 w-9 place-items-center rounded-full bg-white/15 text-white backdrop-blur-md ring-1 ring-white/20 transition-all duration-500 group-hover:rotate-45 group-hover:bg-white group-hover:text-black"
+        >
+          <ArrowUpRight className="h-4 w-4" />
+        </a>
+      )}
 
       <div className="absolute inset-x-0 bottom-0 z-10 p-5 sm:p-6">
         <h3 className="text-2xl font-bold tracking-tight text-white">{title}</h3>
@@ -319,14 +334,23 @@ export function ProjectCard({
             ))}
           </div>
           <div className="flex gap-2">
-            <a
-              href={liveUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-full bg-white px-3 py-2 text-xs font-semibold text-black transition-transform hover:scale-[1.02]"
-            >
-              <ExternalLink className="h-3.5 w-3.5" /> View Project
-            </a>
+            {liveUrl.startsWith("/") ? (
+              <Link
+                href={liveUrl}
+                className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-full bg-white px-3 py-2 text-xs font-semibold text-black transition-transform hover:scale-[1.02]"
+              >
+                <ExternalLink className="h-3.5 w-3.5" /> View Project
+              </Link>
+            ) : (
+              <a
+                href={liveUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-full bg-white px-3 py-2 text-xs font-semibold text-black transition-transform hover:scale-[1.02]"
+              >
+                <ExternalLink className="h-3.5 w-3.5" /> View Project
+              </a>
+            )}
             <a
               href={githubUrl}
               target="_blank"

@@ -110,7 +110,7 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  href="https://wa.me/923148455430?text=Hi,%20I%20clicked%20your%20website%20number,"
+                  href="https://wa.me/923148455430?text=I%20visited%20your%20website%20and%20would%20like%20to%20connect"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-start gap-2.5 text-sm text-muted-foreground hover:text-primary transition-colors"
@@ -121,7 +121,7 @@ export default function Footer() {
               </li>
               <li className="flex items-start gap-2.5 text-sm text-muted-foreground">
                 <MapPin size={15} className="mt-0.5 shrink-0 text-primary" />
-                <span> Banglow Office # 1/2-L ,Block-6, P.E.C.H. Society,  <br />Shahrah-e-Faisal, PECHS, Karachi, 75350</span>
+                <span>Bungalow Office #1/2-L, Block 6, PECHS Society<br />Shahrah-e-Faisal, PECHS, Karachi, 75350</span>
               </li>
             </ul>
 
@@ -155,7 +155,15 @@ export default function Footer() {
       <div className="border-t border-border">
         <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col sm:flex-row justify-between items-center gap-3">
           <p className="text-muted-foreground text-xs">
-            © 2013 to {new Date().getFullYear()} Time Global — AI based Software Development Agency —  Pakistan Registered — <a href="https://www.pseb.org.pk/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground/60 transition-colors"> PSEB </a> 
+            © 2013 to {new Date().getFullYear()} Time Global — AI based Software Development Agency — Pakistan Registered —{" "}
+            <a
+              href="https://www.pseb.org.pk/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-foreground/60 transition-colors"
+            >
+              PSEB
+            </a>
           </p>
           <div className="flex items-center gap-6">
             <Link href="/privacy-policy" className="text-xs text-muted-foreground hover:text-foreground/60 transition-colors cursor-pointer">

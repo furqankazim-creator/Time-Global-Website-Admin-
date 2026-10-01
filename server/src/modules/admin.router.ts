@@ -11,6 +11,9 @@ import { leadsRouter } from "./leads/leads.routes.js";
 import { settingsRouter } from "./settings/settings.routes.js";
 import { mediaRouter } from "./media/media.routes.js";
 import { servicesRouter } from "./services/service.routes.js";
+import { usersRouter } from "./users/users.routes.js";
+import { redirectsRouter } from "./redirects/redirects.routes.js";
+import { auditLogsRouter } from "./audit/audit.routes.js";
 
 /**
  * Everything under /api/v1/admin is authenticated. Viewers may read but
@@ -35,5 +38,7 @@ adminRouter.use("/jobs", jobsRouter);
 adminRouter.use("/notifications", notificationsRouter);
 adminRouter.use("/leads", leadsRouter);
 adminRouter.use("/settings", settingsRouter);
+adminRouter.use("/users", usersRouter);
+adminRouter.use("/redirects", redirectsRouter);
+adminRouter.use("/audit-logs", auditLogsRouter);
 
-// Phase 6+: notifications, revisions…

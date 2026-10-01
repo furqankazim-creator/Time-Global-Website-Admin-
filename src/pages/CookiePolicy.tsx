@@ -138,7 +138,7 @@ export default function CookiePolicy() {
       <Navbar />
       <div className="h-[72px] shrink-0" />
 
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         {/* Hero Section */}
         <section className="relative pt-32 pb-20 px-6 bg-secondary overflow-hidden border-b border-border/50">
           <HeroBackdrop />

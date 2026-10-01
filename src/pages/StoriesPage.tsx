@@ -245,7 +245,7 @@ export default function StoriesPage() {
       <Navbar />
       <div className="h-[72px] shrink-0" />
 
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
 
         {/* ── Hero ─────────────────────────────────────────────── */}
         <section className="pt-24 pb-20 px-6 relative bg-secondary overflow-hidden">
@@ -364,7 +364,7 @@ export default function StoriesPage() {
         </section>
 
         {/* ── Process ──────────────────────────────────────────── */}
-        <section className="py-40 px-6 process-section border-b border-border/50 bg-background relative z-20">
+        <section className="py-32 px-6 process-section border-b border-border/50 bg-background relative z-20">
           <div className="max-w-7xl mx-auto text-center">
             <div className="reveal-up inline-block px-4 py-1.5 rounded-lg bg-primary/10 text-primary font-mono text-sm font-bold mb-8 border border-primary/20">
               {"<How We Work/>"}
@@ -378,7 +378,7 @@ export default function StoriesPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {PROCESS_STEPS.map((step, i) => (
-                <div key={i} className="process-item group p-10 rounded-3xl bg-card dark:bg-secondary border border-border/30 hover:border-primary/50 transition-all duration-500 text-left space-y-6 relative overflow-hidden shadow-2xl">
+                <div key={i} className="process-item group p-8 rounded-2xl bg-card dark:bg-secondary border border-border/30 hover:border-primary/50 hover:-translate-y-1 transition-all duration-300 text-left space-y-6 relative overflow-hidden shadow-sm hover:shadow-xl">
                   <div className="absolute top-0 left-0 w-1 h-full bg-primary/0 group-hover:bg-primary transition-all duration-500" />
                   <span className="text-5xl font-black text-primary/10 group-hover:text-primary/20 transition-colors font-mono leading-none block">
                     {String(i + 1).padStart(2, "0")}
@@ -482,7 +482,7 @@ export default function StoriesPage() {
         </section>
 
         {/* ── DNA Section ──────────────────────────────────────── */}
-        <section className="py-40 px-6 dna-section border-t border-border bg-background relative overflow-hidden">
+        <section className="py-32 px-6 dna-section border-t border-border bg-background relative overflow-hidden">
           <div
             className="absolute inset-0 opacity-[0.03] pointer-events-none"
             style={{ backgroundImage: "radial-gradient(circle, currentColor 1px, transparent 1px)", backgroundSize: "40px 40px" }}

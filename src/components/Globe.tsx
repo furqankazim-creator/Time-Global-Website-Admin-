@@ -2,10 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import ThreeGlobe from "three-globe";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import countriesData from "@/data/countries.json";
 
 const BRAND_GREEN = "#00C48C";
 
-let geoJsonCache: object[] | null = null;
+const geoJsonCache: object[] | null =
+  (countriesData as { features: object[] }).features || null;
 
 const WORKING_COUNTRIES = new Set([
   "USA", "CAN",
@@ -201,28 +203,18 @@ export function Globe({
       }, 1200);
     };
 
-    if (geoJsonCache) {
+    if (geoJsonCache && geoJsonCache.length > 0) {
       build(geoJsonCache);
     } else {
-      fetch(
-        "https://raw.githubusercontent.com/vasturiano/three-globe/master/example/country-polygons/ne_110m_admin_0_countries.geojson"
-      )
-        .then((r) => r.json())
-        .then((d) => {
-          geoJsonCache = d.features;
-          build(d.features);
-        })
-        .catch(() => {
-          const g = new ThreeGlobe({ waitForGlobeReady: true, animateIn: true })
-            .showAtmosphere(true)
-            .atmosphereColor(BRAND_GREEN)
-            .atmosphereAltitude(0.18);
-          (g.globeMaterial() as THREE.MeshPhongMaterial).color = new THREE.Color(0x080e1e);
-          g.rotateY(-Math.PI * (5 / 9));
-          g.rotateZ(-Math.PI / 6);
-          scene.add(g);
-          globe = g;
-        });
+      const g = new ThreeGlobe({ waitForGlobeReady: true, animateIn: true })
+        .showAtmosphere(true)
+        .atmosphereColor(BRAND_GREEN)
+        .atmosphereAltitude(0.18);
+      (g.globeMaterial() as THREE.MeshPhongMaterial).color = new THREE.Color(0x080e1e);
+      g.rotateY(-Math.PI * (5 / 9));
+      g.rotateZ(-Math.PI / 6);
+      scene.add(g);
+      globe = g;
     }
 
     // ── Mouse parallax — stored in refs, NOT lerped every frame ──
@@ -263,7 +255,13 @@ export function Globe({
       }
     };
 
-    document.addEventListener("mousemove", onMouse, { passive: true });
+    const onMouseLeave = () => {
+      setHoveredClient(null);
+      container.style.cursor = "default";
+    };
+
+    container.addEventListener("mousemove", onMouse, { passive: true });
+    container.addEventListener("mouseleave", onMouseLeave, { passive: true });
 
     // ── Resize ────────────────────────────────────────────────
     // ResizeObserver (not window.resize) so the globe also re-fits when the
@@ -285,8 +283,25 @@ export function Globe({
     const ro = new ResizeObserver(applySize);
     ro.observe(container);
 
-    // ── Render loop — NO camera lerp, just controls + render ──
+    // ── Render loop — PAUSE WHEN OFF-SCREEN TO SAVE GPU & SMOOTH PAGE SCROLL ──
+    let isVisible = true;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        const nowVisible = entry.isIntersecting;
+        if (nowVisible !== isVisible) {
+          isVisible = nowVisible;
+          if (isVisible) {
+            cancelAnimationFrame(rafId);
+            rafId = requestAnimationFrame(tick);
+          }
+        }
+      },
+      { threshold: 0.05 }
+    );
+    io.observe(container);
+
     const tick = () => {
+      if (!isVisible) return;
       rafId = requestAnimationFrame(tick);
       controls.update();
       renderer.render(scene, camera);
@@ -295,8 +310,10 @@ export function Globe({
 
     return () => {
       cancelAnimationFrame(rafId);
-      document.removeEventListener("mousemove", onMouse);
+      container.removeEventListener("mousemove", onMouse);
+      container.removeEventListener("mouseleave", onMouseLeave);
       ro.disconnect();
+      io.disconnect();
       controls.dispose();
       renderer.dispose();
       if (container.contains(renderer.domElement))
@@ -324,13 +341,13 @@ export function Globe({
             left: hoveredClient.x + 15,
             top: hoveredClient.y + 15,
             backgroundColor: "rgba(13, 25, 48, 0.95)",
-            border: "1px solid #00ff99",
+            border: `1px solid ${BRAND_GREEN}`,
             borderRadius: "8px",
             padding: "12px 16px",
             color: "#fff",
             zIndex: 9999,
             pointerEvents: "none",
-            boxShadow: "0 4px 20px rgba(0, 255, 153, 0.2)",
+            boxShadow: `0 4px 20px rgba(0, 196, 140, 0.2)`,
             backdropFilter: "blur(8px)",
             minWidth: "180px",
             fontFamily: "var(--font-sans, sans-serif)",

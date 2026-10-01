@@ -118,7 +118,7 @@ function FlagImage({ flagCode, name, className = "", size = "md" }: {
 
 function Ticker({ items, speed = 45, reverse = false }: { items: any[]; speed?: number; reverse?: boolean }) {
   return (
-    <div className="relative flex overflow-hidden py-3 sm:py-5 border-y border-border/40 bg-secondary/40 w-full">
+    <div className="relative flex overflow-hidden py-3 sm:py-5 border-y border-primary/20 bg-secondary/40 w-full">
       <div
         className={reverse ? "marquee-track-reverse gap-8 sm:gap-14" : "marquee-track gap-8 sm:gap-14"}
         style={{ "--mspd": `${speed}s` } as React.CSSProperties}

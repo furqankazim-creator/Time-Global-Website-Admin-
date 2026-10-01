@@ -8,6 +8,7 @@ import Footer from "@/components/Footer";
 import { HeroBackdrop } from "@/components/HeroBackdrop";
 import CollaborateCTA from "@/components/CollaborateCTA";
 import { CtaButton } from "@/components/ui/cta-button";
+import { JsonLd, type JobPostingSchema } from "@/components/JsonLd";
 import { useJobs, type CmsJob } from "@/lib/cms";
 import { 
   Briefcase, 
@@ -173,8 +174,8 @@ export default function CareersPage() {
 
   // Published jobs from the admin panel; bundled list only covers an
   // unreachable API, and an empty CMS legitimately means "no open roles".
-  const { data: cmsJobs, isFallback } = useJobs([]);
-  const openings: Opening[] = isFallback ? OPENINGS : cmsJobs.map(toOpening);
+  const { data: cmsJobs } = useJobs();
+  const openings: Opening[] = cmsJobs.length > 0 ? cmsJobs.map(toOpening) : OPENINGS;
 
   // Filters derive from what actually exists, so a new department in the
   // admin appears here without a code change.
@@ -265,7 +266,28 @@ export default function CareersPage() {
       <Navbar />
       <div className="h-[72px] shrink-0" />
 
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
+        {/* JobPosting JSON-LD — one schema block per open role so Google Jobs
+            can index them. Uses today's date as datePosted; validThrough is
+            90 days from today as a reasonable default. */}
+        {openings.map((job) => (
+          <JsonLd
+            key={job.role}
+            schema={{
+              type: "JobPosting",
+              title: job.role,
+              description: `${job.role} — ${job.type} position at Time Global. Location: ${job.location}. Department: ${job.dept}.`,
+              datePosted: new Date().toISOString().split("T")[0],
+              validThrough: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+              employmentType: job.type.toLowerCase().includes("full") ? "FULL_TIME"
+                : job.type.toLowerCase().includes("part") ? "PART_TIME"
+                : job.type.toLowerCase().includes("intern") ? "INTERN"
+                : "CONTRACTOR",
+              jobLocation: job.location,
+              ...(job.salary ? { baseSalary: job.salary } : {}),
+            } satisfies JobPostingSchema}
+          />
+        ))}
         {/* Hero Section */}
         <section className="pt-24 pb-24 px-6 relative bg-secondary overflow-hidden text-center">
           <HeroBackdrop />
@@ -301,7 +323,7 @@ export default function CareersPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {VALUES.map((val, i) => (
-                <div key={i} className="value-card group p-10 rounded-3xl bg-card dark:bg-secondary border border-border/30 hover:border-primary/50 transition-all duration-500 text-left space-y-8 shadow-2xl relative overflow-hidden">
+                <div key={i} className="value-card group p-8 rounded-2xl bg-card dark:bg-secondary border border-border/30 hover:border-primary/50 hover:-translate-y-1 transition-all duration-300 text-left space-y-8 shadow-sm hover:shadow-xl relative overflow-hidden">
                   <div className={`absolute inset-0 bg-gradient-to-br ${val.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
                   <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
                     {val.icon}
@@ -383,12 +405,12 @@ export default function CareersPage() {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, scale: 0.95 }}
                       transition={{ duration: 0.4 }}
-                      className="opening-card group flex flex-col md:flex-row md:items-center justify-between p-8 md:p-10 bg-card dark:bg-secondary border border-border/30 hover:border-primary/50 transition-all duration-500 rounded-3xl shadow-xl"
+                      className="opening-card group flex flex-col md:flex-row md:items-center justify-between p-8 bg-card dark:bg-secondary border border-border/30 hover:border-primary/50 hover:-translate-y-1 transition-all duration-300 rounded-2xl shadow-sm hover:shadow-xl"
                     >
                       <div className="space-y-4">
                         <div className="flex flex-wrap items-center gap-3">
                           <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider">{job.dept}</span>
-                          <span className="text-gray-500 flex items-center gap-1 text-xs font-mono">
+                          <span className="text-muted-foreground flex items-center gap-1 text-xs font-mono">
                             <MapPin size={14} /> {job.location}
                           </span>
                         </div>
@@ -400,12 +422,14 @@ export default function CareersPage() {
                       </div>
                       
                       <div className="mt-8 md:mt-0">
-                        <a
+                        <CtaButton
+                          size="md"
+                          variant="primary"
+                          arrow
                           href={`mailto:${job.applyEmail || "careers@timeglobaltech.com"}?subject=${encodeURIComponent(`Application: ${job.role}`)}`}
-                          className="inline-flex items-center gap-3 px-8 py-4 bg-foreground text-background font-bold rounded-xl group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500"
                         >
-                          Apply Now <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-                        </a>
+                          Apply Now
+                        </CtaButton>
                       </div>
                     </motion.div>
                   ))
@@ -471,6 +495,8 @@ export default function CareersPage() {
                     alt="Team collaboration"
                     width="1200"
                     height="600"
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-110"
                   />
                   <div className="absolute bottom-10 left-10 right-10 z-20 p-8 rounded-3xl bg-background/80 backdrop-blur-xl border border-white/10 shadow-2xl">
@@ -502,6 +528,8 @@ export default function CareersPage() {
                 <div key={i} className="border-b border-border">
                   <button
                     onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                    aria-expanded={openFaq === i}
+                    aria-controls={`faq-answer-${i}`}
                     className="w-full py-8 flex items-center justify-between text-left focus:outline-none group"
                   >
                     <span className="text-xl md:text-2xl font-bold group-hover:text-primary transition-colors">{faq.q}</span>
@@ -512,6 +540,7 @@ export default function CareersPage() {
                   <AnimatePresence>
                     {openFaq === i && (
                       <motion.div
+                        id={`faq-answer-${i}`}
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
@@ -540,13 +569,13 @@ export default function CareersPage() {
             <p className="text-xl md:text-2xl opacity-90 mb-12 max-w-2xl mx-auto leading-relaxed">
               We're always on the lookout for exceptional talent. Send us your CV anyway and let's see how we can build the future together.
             </p>
-            <div className="flex flex-wrap justify-center gap-6">
-              <button className="px-10 py-5 bg-white text-primary font-bold rounded-2xl hover:opacity-90 transition-opacity shadow-xl">
+            <div className="flex justify-center items-center">
+              <CtaButton
+                size="lg"
+                href="mailto:careers@timeglobaltech.com?subject=Speculative%20Application"
+              >
                 Send your CV
-              </button>
-              <button className="px-10 py-5 bg-primary-foreground/10 border-2 border-white/20 text-white font-bold rounded-2xl hover:bg-primary-foreground/20 transition-all">
-                Contact Us
-              </button>
+              </CtaButton>
             </div>
           </div>
         </section>

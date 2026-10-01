@@ -1,6 +1,36 @@
 import { useQuery } from "@tanstack/react-query";
+import {
+  STATIC_SERVICES,
+  STATIC_PROJECTS,
+  STATIC_POSTS,
+  STATIC_TESTIMONIALS,
+  STATIC_JOBS,
+  STATIC_TEAM,
+  STATIC_HOME,
+} from "@/data/staticContent";
 
 const BASE = import.meta.env.VITE_API_URL ?? "http://localhost:4000";
+const CACHE_PREFIX = "tg_cms_cache_";
+
+/**
+ * Retrieves cached content saved from previous admin panel activity.
+ */
+export function getCachedCms<T>(key: string): T | null {
+  try {
+    const raw = localStorage.getItem(`${CACHE_PREFIX}${key}`);
+    if (raw) return JSON.parse(raw) as T;
+  } catch {}
+  return null;
+}
+
+/**
+ * Saves fresh content received from the admin panel into the browser cache.
+ */
+export function setCachedCms<T>(key: string, data: T): void {
+  try {
+    localStorage.setItem(`${CACHE_PREFIX}${key}`, JSON.stringify(data));
+  } catch {}
+}
 
 async function get<T>(path: string): Promise<T> {
   const res = await fetch(`${BASE}/api/v1/public${path}`);
@@ -9,26 +39,43 @@ async function get<T>(path: string): Promise<T> {
 }
 
 /**
- * Public CMS reads.
+ * Public CMS reads with graceful static persistence & offline fallback.
  *
- * Design rule: the marketing site must NEVER go blank because the API is
- * down. Every hook returns `data ?? fallback`, so components render their
- * existing hardcoded content until the CMS has something better to say.
- * That also keeps the site deployable before the CMS is populated.
+ * Rules:
+ * 1. If fresh data arrives from the admin panel (API), automatically save it in browser storage.
+ * 2. If the API is offline or not yet deployed, use previously saved admin data if available.
+ * 3. If no admin data exists, seamlessly render the rich static default content.
+ * 4. The website NEVER goes blank or broken without the admin backend.
  */
 function useCms<T>(key: string, path: string, fallback: T) {
+  const cached = getCachedCms<T>(key);
+  const effectiveFallback = cached ?? fallback;
+
   const q = useQuery({
     queryKey: ["cms", key],
-    queryFn: () => get<T>(path),
+    queryFn: async (): Promise<T> => {
+      try {
+        const data = await get<T>(path);
+        if (data && (!Array.isArray(data) || data.length > 0)) {
+          setCachedCms<T>(key, data);
+          return data;
+        }
+        return effectiveFallback;
+      } catch {
+        return effectiveFallback;
+      }
+    },
+    initialData: effectiveFallback,
     staleTime: 60_000,
-    retry: 1,
-    // A failed CMS fetch is not worth a retry storm on every focus.
+    retry: 0,
     refetchOnWindowFocus: false,
   });
+
+  const finalData = q.data ?? effectiveFallback;
+
   return {
-    data: (q.data ?? fallback) as T,
-    /** True when we're showing fallback content, not CMS content. */
-    isFallback: !q.data,
+    data: finalData as T,
+    isFallback: !q.data || (Array.isArray(q.data) && q.data.length === 0),
     isLoading: q.isLoading,
   };
 }
@@ -68,10 +115,13 @@ export type CmsProject = {
   category: string; techStack: string[]; coverImage: CmsImage | null;
   metrics?: { value: string; label: string }[];
   problem?: string; solution?: string; result?: string;
+  liveUrl?: string;
+  gallery?: CmsImage[];
 };
 
 export type CmsPost = {
   _id: string; title: string; slug: string; excerpt: string;
+  content?: string;
   publishedAt: string | null; readingTime: number;
   featuredImage: CmsImage | null;
   category: { name: string; slug: string } | null;
@@ -92,30 +142,73 @@ export type CmsTeamMember = {
 };
 
 /* -------------------------------- Hooks ------------------------------- */
-export const useHome = (fallback: CmsHome) => useCms<CmsHome>("home", "/home", fallback);
+export const useHome = (fallback: CmsHome = STATIC_HOME) =>
+  useCms<CmsHome>("home", "/home", fallback);
 
-export const useServices = (fallback: CmsService[] = []) =>
+export const useServices = (fallback: CmsService[] = STATIC_SERVICES) =>
   useCms<CmsService[]>("services", "/services", fallback);
 
-export const useTestimonials = (fallback: CmsTestimonial[] = []) =>
+export const useTestimonials = (fallback: CmsTestimonial[] = STATIC_TESTIMONIALS) =>
   useCms<CmsTestimonial[]>("testimonials", "/testimonials", fallback);
 
-export const useProjects = (fallback: CmsProject[] = []) =>
+export const useProjects = (fallback: CmsProject[] = STATIC_PROJECTS) =>
   useCms<CmsProject[]>("projects", "/projects", fallback);
 
-export const usePosts = (fallback: CmsPost[] = []) =>
+export const usePosts = (fallback: CmsPost[] = STATIC_POSTS) =>
   useCms<CmsPost[]>("posts", "/posts", fallback);
 
-export const useJobs = (fallback: CmsJob[] = []) =>
+export const useJobs = (fallback: CmsJob[] = STATIC_JOBS) =>
   useCms<CmsJob[]>("jobs", "/jobs", fallback);
 
-export const useTeam = (fallback: CmsTeamMember[] = []) =>
+export const useTeam = (fallback: CmsTeamMember[] = STATIC_TEAM) =>
   useCms<CmsTeamMember[]>("team", "/team", fallback);
+
+/* -------------------------------- Helpers ----------------------------- */
+
+const LEGACY_PROJECT_SLUG_MAP: Record<string, string> = {
+  "fintech-eu-uptime": "finpay-cross-border-payments-app",
+  "retail-canada-migration": "tiptop-b2b-marketplace",
+  "healthcare-ksa-patient-app": "canet-clinical-research-portal",
+  "logistics-eu-predictive": "routewise-delivery-route-optimizer",
+  "fashion-uae-ecommerce": "urbancart-same-day-grocery-marketplace",
+  "edtech-australia-lms": "eduspark-cohort-based-learning-platform",
+};
+
+/**
+ * Resolves a project by slug offline, from cache or static library.
+ */
+export function getStaticProject(slug: string) {
+  const norm = slug.toLowerCase();
+  const mapped = LEGACY_PROJECT_SLUG_MAP[norm] ?? norm;
+  return (
+    STATIC_PROJECTS.find(
+      (p) =>
+        p.slug.toLowerCase() === mapped ||
+        p.slug.toLowerCase() === norm ||
+        mapped.includes(p.slug.toLowerCase()) ||
+        p.slug.toLowerCase().includes(mapped)
+    ) ?? null
+  );
+}
+
+/**
+ * Resolves a blog post by slug offline, from cache or static library.
+ */
+export function getStaticPost(slug: string) {
+  const norm = slug.toLowerCase();
+  return (
+    STATIC_POSTS.find(
+      (p) =>
+        p.slug.toLowerCase() === norm ||
+        norm.includes(p.slug.toLowerCase()) ||
+        p.slug.toLowerCase().includes(norm)
+    ) ?? null
+  );
+}
 
 /**
  * Looks up a redirect for an unmatched path. Returns null when there is none,
- * or when the API is unreachable — a dead CMS must degrade to a normal 404,
- * never to a hang or a wrong destination.
+ * or when the API is unreachable — a dead CMS degrades to a normal 404.
  */
 export async function resolveRedirect(
   path: string

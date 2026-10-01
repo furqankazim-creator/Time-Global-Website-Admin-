@@ -39,7 +39,7 @@ export default function LoginPage() {
             TG
           </div>
           <h1 className="text-2xl font-display font-bold">Admin sign in</h1>
-          <p className="text-muted-foreground text-sm mt-1">Time Global Tech</p>
+          <p className="text-muted-foreground text-sm mt-1">Time Global</p>
         </div>
 
         <form

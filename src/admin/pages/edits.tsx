@@ -7,6 +7,7 @@ import { useAuth } from "../lib/auth";
 import { AdminLayout } from "../components/AdminLayout";
 import { Area, Card, Check, Field, Num, Select, TagsInput, Text } from "../components/FormKit";
 import { MediaPicker } from "../components/MediaPicker";
+import { RichTextEditor } from "../components/RichTextEditor";
 
 /**
  * Shared edit-screen engine: load, save, field errors, concurrency conflicts.
@@ -41,6 +42,7 @@ function useResourceForm<T extends object>(resource: string, id: string | undefi
         : api<{ data: { _id: string } }>(`/api/v1/admin/${resource}/${id}`, { method: "PATCH", body }),
     onSuccess: (res) => {
       qc.invalidateQueries({ queryKey: [resource] });
+      qc.invalidateQueries({ queryKey: ["cms"] });
       qc.invalidateQueries({ queryKey: ["dashboard"] });
       navigate(`/admin/${resource}/${res.data._id}`);
     },
@@ -327,9 +329,15 @@ export function PostEditPage({ id }: { id?: string }) {
           <Text value={f.form.slug} onChange={(v) => f.set("slug", v)} />
         </Field>
         <Field label="Excerpt"><Area value={f.form.excerpt} onChange={(v) => f.set("excerpt", v)} rows={2} /></Field>
-        <Field label="Content" hint="HTML is sanitized server-side. Rich text editor is a later phase.">
-          <Area value={f.form.content} onChange={(v) => f.set("content", v)} rows={12} mono />
-        </Field>
+        <div className="pt-2">
+          <RichTextEditor
+            label="Post Content"
+            value={f.form.content}
+            onChange={(v) => f.set("content", v)}
+            rows={14}
+            placeholder="Write the full blog post content here..."
+          />
+        </div>
         <MediaPicker
           label="Featured image"
           value={f.form.featuredImage}
@@ -674,9 +682,15 @@ export function JobEditPage({ id }: { id?: string }) {
             <Text value={f.form.location} onChange={(v) => f.set("location", v)} placeholder="Remote" />
           </Field>
         </div>
-        <Field label="Description" hint="HTML is sanitized server-side.">
-          <Area value={f.form.description} onChange={(v) => f.set("description", v)} rows={10} mono />
-        </Field>
+        <div className="pt-2">
+          <RichTextEditor
+            label="Job Description & Requirements"
+            value={f.form.description}
+            onChange={(v) => f.set("description", v)}
+            rows={10}
+            placeholder="Describe role responsibilities, qualifications, and perks..."
+          />
+        </div>
         <Field label="Apply email" error={f.fields.applyEmail} hint="Applications go to this address.">
           <Text value={f.form.applyEmail} onChange={(v) => f.set("applyEmail", v)} placeholder="careers@timeglobaltech.com" />
         </Field>

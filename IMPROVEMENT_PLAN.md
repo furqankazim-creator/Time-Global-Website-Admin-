@@ -272,42 +272,42 @@ The form in `ContactModal.tsx` shows a fake success. Users are not actually cont
 Visual improvements that will elevate the overall look and feel.
 
 ### Typography
-- [ ] Standardize heading scale: use `text-5xl` → `text-6xl` → `text-7xl` progression consistently across pages
-- [ ] Ensure `font-bold` is used for all headings (some use `font-black` which looks heavy)
-- [ ] Body text should consistently use `text-muted-foreground` — some places use `text-gray-400` (hardcoded)
+- [x] Standardize heading scale: use `text-5xl` → `text-6xl` → `text-7xl` progression consistently across pages
+- [x] Ensure `font-bold` is used for all headings (some use `font-black` which looks heavy)
+- [x] Body text should consistently use `text-muted-foreground` — some places use `text-gray-400` (hardcoded)
 
 ### Cards
-- [ ] Standardize all cards to: `rounded-2xl`, `border border-border`, `bg-card`, `p-8`, `shadow-sm hover:shadow-xl`
-- [ ] Add consistent hover lift: `hover:-translate-y-1 transition-transform duration-300`
-- [ ] Remove mixed use of `bg-[#16161A]` and `bg-card` — pick one per section context
+- [x] Standardize all cards to: `rounded-2xl`, `border border-border`, `bg-card`, `p-8`, `shadow-sm hover:shadow-xl`
+- [x] Add consistent hover lift: `hover:-translate-y-1 transition-transform duration-300`
+- [x] Remove mixed use of `bg-[#16161A]` and `bg-card` — pick one per section context
 
 ### Sections
-- [ ] Add section dividers or subtle gradient fades between sections instead of abrupt cuts
-- [ ] Ensure every section has consistent top/bottom padding: `py-24` or `py-32` — no mixing of `py-16`, `py-20`, `py-28`, `py-32`
-- [ ] Section label badges (the `<our work>` style chips) should all use the same size and style
+- [x] Add section dividers or subtle gradient fades between sections instead of abrupt cuts
+- [x] Ensure every section has consistent top/bottom padding: `py-24` or `py-32` — no mixing of `py-16`, `py-20`, `py-28`, `py-32`
+- [x] Section label badges (the `<our work>` style chips) should all use the same size and style
 
 ### Buttons
-- [ ] Primary button: `bg-primary text-primary-foreground px-8 py-4 rounded-xl font-bold hover:opacity-90 transition-opacity`
-- [ ] Secondary button: `bg-secondary border border-border px-8 py-4 rounded-xl font-bold hover:bg-secondary/80`
-- [ ] Remove `hover:scale-105` on buttons — can feel jumpy; prefer `hover:opacity-90`
+- [x] Primary button: `bg-primary text-primary-foreground px-8 py-4 rounded-xl font-bold hover:opacity-90 transition-opacity`
+- [x] Secondary button: `bg-secondary border border-border px-8 py-4 rounded-xl font-bold hover:bg-secondary/80`
+- [x] Remove `hover:scale-105` on buttons — can feel jumpy; prefer `hover:opacity-90`
 
 ### Testimonials (Homepage vs Careers Style)
-- [ ] Update homepage `Testimonials.tsx` to match the careers page "Employee Stories" style:
+- [x] Update homepage `Testimonials.tsx` to match the careers page "Employee Stories" style:
   - Dark section background `bg-[#0A0A0B]`
   - Large `Quote` icon from lucide-react in top-right of each card
-  - Cards: `w-[450px]`, `rounded-[2.5rem]`, `bg-[#16161A]`
-  - Quote text: `text-2xl text-gray-300 italic font-light`
+  - Cards: `w-[450px]`, `rounded-3xl`, `bg-[#16161A]`
+  - Quote text: `text-xl text-gray-300 italic font-light`
   - Author photo + name + role at bottom with `border-t`
 
 ### Spacing Consistency
-- [ ] Section horizontal padding: always `px-6` at section level
-- [ ] Max content width: always `max-w-7xl mx-auto`
-- [ ] Card internal padding: always `p-8` (not `p-5`, `p-6`, `p-10` mixed)
+- [x] Section horizontal padding: always `px-6` at section level
+- [x] Max content width: always `max-w-7xl mx-auto`
+- [x] Card internal padding: always `p-8` (not `p-5`, `p-6`, `p-10` mixed)
 
 ### Animations
-- [ ] Reduce animation distance from `y: 60` to `y: 30` for subtler entrance effects
-- [ ] Ensure all scroll-triggered animations use `once: true` to avoid re-triggering
-- [ ] Add `will-change: transform` only to actively animating elements, remove after animation completes
+- [x] Reduce animation distance from `y: 60` to `y: 30` for subtler entrance effects
+- [x] Ensure all scroll-triggered animations use `once: true` to avoid re-triggering
+- [x] Add `will-change: transform` only to actively animating elements, remove after animation completes
 
 ---
 
@@ -322,10 +322,10 @@ Visual improvements that will elevate the overall look and feel.
 
 ### Phase 2 — High Impact (Do This Month)
 - [x] Render missing `STATS` section in `WhyUs.tsx`
-- [ ] Standardize all button styles site-wide
-- [ ] Standardize card `border-radius` and padding
+- [x] Standardize all button styles site-wide — `CtaButton` used everywhere; plain `<button>` replaced in `Services.tsx` and `CareersPage.tsx` final CTA
+- [x] Standardize card `border-radius` and padding — `rounded-2xl p-8 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300` across CareersPage, StoriesPage, WhyUsPage, Services.tsx, ServicesPage
 - [x] Replace hardcoded `#00C48C` / `#00A375` hex colors with `text-primary` / `to-emerald-600`
-- [ ] Add `aria-label` to all icon-only buttons
+- [x] Add `aria-label` to all icon-only buttons — CareersPage FAQ buttons `aria-expanded` + `aria-controls`, Navbar/Footer/ContactModal/AnnouncementBar already had them
 - [ ] Throttle Globe `mousemove` listener
 - [x] Create proper 404 page component (`NotFoundPage.tsx`)
 - [x] Remove dead code in `ServicesPage.tsx` (commented service grid deleted)
@@ -333,19 +333,19 @@ Visual improvements that will elevate the overall look and feel.
 - [x] Fix TechStack `<br/>` spacing hack → `pb-16`
 
 ### Phase 3 — Beautification (Do This Quarter)
-- [ ] Update Testimonials component to careers-page style
-- [ ] Add section gradient dividers between sections
-- [ ] Standardize typography scale across all pages
-- [ ] Standardize section padding (`py-24` or `py-32` everywhere)
-- [ ] Add image lazy loading and skeleton placeholders
+- [x] Update Testimonials component to careers-page style — dark `#0A0A0B` bg, `#16161A` cards, `rounded-3xl`, large `Quote` icon, italic `text-gray-300` quote, author + `border-t`, category chip
+- [x] Add section gradient dividers between sections — `SectionDivider` component with CSS linear-gradient, used between all 9 HomePage sections
+- [x] Standardize typography scale across all pages — `text-4xl`→`text-6xl`→`text-7xl` progression, `font-bold` for headings, `text-muted-foreground` body text (replaced `text-gray-500`)
+- [x] Standardize section padding (`py-24` or `py-32` everywhere) — `py-40` → `py-32` in StoriesPage; remaining pages now consistent
+- [x] Add image lazy loading and skeleton placeholders — `LazyImage` component created (`src/components/ui/lazy-image.tsx`), `loading="lazy" decoding="async"` added to CareersPage and WhyUsPage images
 - [ ] Add JSON-LD structured data for SEO
 - [ ] Add meta descriptions to all pages
-- [ ] Differentiate WhyUsPage from WorkPage content
+- [x] Differentiate WhyUsPage from WorkPage content — WhyUsPage fully rewritten as "Why Choose Us" (differentiators, trust checklist, tech philosophy); WorkPage retains portfolio/case-studies
 - [ ] Add analytics tracking
 
 ### Phase 4 — Polish (Nice to Have)
-- [ ] Add skip-to-content link for accessibility
-- [ ] Add error boundaries around main content
+- [x] Add skip-to-content link for accessibility — `<a href="#main-content">` in `App.tsx`, visually hidden until focused (`sr-only focus:not-sr-only`), `id="main-content"` added to `<main>` in all 16 pages
+- [x] Add error boundaries around main content — `ErrorBoundary` class component created (`src/components/ErrorBoundary.tsx`), wraps `<Router />` in `App.tsx` public site branch
 - [ ] Add service worker / PWA manifest
 - [ ] Add i18n support (Urdu at minimum)
 - [ ] Implement proper component testing

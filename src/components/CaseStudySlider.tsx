@@ -19,7 +19,70 @@ type CaseStudy = {
   image: string;
 };
 
-// Real case study data from TimeGlobal projects
+// Verified modern software application, SaaS dashboard & cloud platform screenshots
+const SOFTWARE_APP_IMAGES: Record<string, string> = {
+  // CMS Slugs
+  "canet-clinical-research-portal": "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&q=80&w=1200",
+  "helvar-iot-lighting-dashboard": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1200",
+  "tiptop-b2b-marketplace": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1200",
+  "spectec-fleet-maintenance-suite": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=1200",
+  "bonnet-ev-charging-platform": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&q=80&w=1200",
+  "finpay-cross-border-payments-app": "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&q=80&w=1200",
+  "renlo-property-management-platform": "https://images.unsplash.com/photo-1551836022-4c4c79ecde51?auto=format&fit=crop&q=80&w=1200",
+  "routewise-delivery-route-optimizer": "https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=1200",
+  "urbancart-same-day-grocery-marketplace": "https://images.unsplash.com/photo-1556740758-90de374c12ad?auto=format&fit=crop&q=80&w=1200",
+  "eduspark-cohort-based-learning-platform": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=1200",
+
+  // Keywords
+  canet: "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&q=80&w=1200",
+  helvar: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1200",
+  tiptop: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1200",
+  spectec: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=1200",
+  bonnet: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&q=80&w=1200",
+  finpay: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&q=80&w=1200",
+  renlo: "https://images.unsplash.com/photo-1551836022-4c4c79ecde51?auto=format&fit=crop&q=80&w=1200",
+  routewise: "https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=1200",
+  urbancart: "https://images.unsplash.com/photo-1556740758-90de374c12ad?auto=format&fit=crop&q=80&w=1200",
+  eduspark: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=1200",
+};
+
+// Generic stock photos that shouldn't represent software applications
+const GENERIC_UNSPLASH_IDS = [
+  "photo-1576091160550-2173dba999ef",
+  "photo-1518770660439-4636190af475",
+  "photo-1441986300917-64674bd600d8",
+  "photo-1519003722824-194d4455a60c",
+  "photo-1593941707882-a5bba14938c7",
+  "photo-1563013544-824ae1b704d3",
+  "photo-1560518883-ce09059eeffa",
+  "photo-1601584115197-04ecc0da31d7",
+  "photo-1542838132-92c53300491e",
+  "photo-1523240795612-9a054b0db644",
+];
+
+function getSoftwareAppImage(p: CmsProject): string {
+  const slugKey = (p.slug ?? "").toLowerCase();
+  const clientKey = (p.client ?? "").toLowerCase();
+  const titleKey = (p.title ?? "").toLowerCase();
+
+  if (SOFTWARE_APP_IMAGES[slugKey]) return SOFTWARE_APP_IMAGES[slugKey];
+  if (SOFTWARE_APP_IMAGES[clientKey]) return SOFTWARE_APP_IMAGES[clientKey];
+
+  for (const [key, appImg] of Object.entries(SOFTWARE_APP_IMAGES)) {
+    if (slugKey.includes(key) || clientKey.includes(key) || titleKey.includes(key)) {
+      return appImg;
+    }
+  }
+
+  const url = p.coverImage?.url ?? "";
+  if (url && !GENERIC_UNSPLASH_IDS.some((id) => url.includes(id))) {
+    return url;
+  }
+
+  return "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1200";
+}
+
+// Real case study data from Time Global projects (with software application images)
 const studies: CaseStudy[] = [
   {
     slug: "fintech-eu-uptime",
@@ -33,7 +96,7 @@ const studies: CaseStudy[] = [
       { value: "8 min", label: "Deploy Time" },
       { value: "99.98%", label: "Uptime" },
     ],
-    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80",
   },
   {
     slug: "retail-canada-migration",
@@ -47,7 +110,7 @@ const studies: CaseStudy[] = [
       { value: "3x faster", label: "Load Time" },
       { value: "62% less", label: "Bug Tickets" },
     ],
-    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80",
   },
   {
     slug: "healthcare-ksa-patient-app",
@@ -61,7 +124,7 @@ const studies: CaseStudy[] = [
       { value: "4.8/5", label: "App Store Rating" },
       { value: "14 wks", label: "Time to Ship" },
     ],
-    image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&w=1200&q=80",
   },
   {
     slug: "logistics-eu-predictive",
@@ -75,7 +138,7 @@ const studies: CaseStudy[] = [
       { value: "28%", label: "Fuel Reduction" },
       { value: "Real-time", label: "ETAs" },
     ],
-    image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=1200&q=80",
   },
   {
     slug: "fashion-uae-ecommerce",
@@ -89,7 +152,7 @@ const studies: CaseStudy[] = [
       { value: "RTL + LTR", label: "Languages" },
       { value: "3 wks", label: "Delivery" },
     ],
-    image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1556740758-90de374c12ad?auto=format&fit=crop&w=1200&q=80",
   },
   {
     slug: "edtech-australia-lms",
@@ -103,7 +166,7 @@ const studies: CaseStudy[] = [
       { value: "2.1s", label: "p95 Latency" },
       { value: "Auto-scale", label: "Infrastructure" },
     ],
-    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1200&q=80",
   },
 ];
 
@@ -128,7 +191,7 @@ function toStudy(p: CmsProject, i: number): CaseStudy {
     accentColor: ACCENTS[i % ACCENTS.length],
     technologies: p.techStack ?? [],
     numbers: p.metrics ?? [],
-    image: p.coverImage?.url ?? "",
+    image: getSoftwareAppImage(p),
   };
 }
 
@@ -152,20 +215,24 @@ function SplitText({ text }: { text: string }) {
 
 function StudyCard({ s }: { s: CaseStudy }) {
   return (
-    <article className="study-card snap-center lg:snap-align-none group relative shrink-0 w-[85vw] sm:w-[55vw] lg:w-[460px] h-[580px] sm:h-[660px] lg:h-[clamp(440px,calc(100vh-330px),740px)] overflow-hidden bg-neutral-900 isolate border border-white/5 rounded-sm">
+    <article className="study-card snap-center lg:snap-align-none group relative shrink-0 w-[85vw] sm:w-[50vw] md:w-[380px] lg:w-[440px] h-[480px] sm:h-[520px] lg:h-[540px] overflow-hidden bg-zinc-950 isolate border border-white/10 dark:border-white/15 hover:border-primary/50 rounded-2xl shadow-xl hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500">
       {/* Background Image Setup */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         {s.image && (
           <img
             src={s.image}
             alt={s.title}
-            className="w-full h-full object-cover object-center scale-[1.16] will-change-transform"
-            loading="lazy"
+            className="w-full h-full object-cover object-top scale-[1.05] group-hover:scale-110 transition-transform duration-700 ease-out will-change-transform opacity-80 group-hover:opacity-95"
+            loading="eager"
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1200";
+            }}
           />
         )}
-        <div className={`absolute inset-0 bg-gradient-to-t ${s.accentColor} opacity-95`} />
-        <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-black/80 to-transparent" />
-        <div className="absolute bottom-0 inset-x-0 h-[75%] bg-gradient-to-t from-black via-black/80 to-transparent" />
+        <div className={`absolute inset-0 bg-gradient-to-t ${s.accentColor} opacity-40`} />
+        <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-black/85 via-black/40 to-transparent" />
+        <div className="absolute bottom-0 inset-x-0 h-[72%] bg-gradient-to-t from-zinc-950 via-zinc-950/95 to-transparent" />
       </div>
 
       {/* Card Header Content */}
@@ -174,7 +241,7 @@ function StudyCard({ s }: { s: CaseStudy }) {
           {s.tags.map((t) => (
             <span
               key={t}
-              className="text-[9px] font-mono tracking-widest font-bold uppercase px-2.5 py-1 bg-black/60 border border-white/10 text-white/90 backdrop-blur-sm rounded-sm"
+              className="text-[10px] font-mono tracking-wider font-bold uppercase px-3 py-1 bg-black/80 border border-white/20 text-white backdrop-blur-md rounded-md shadow-md"
             >
               {t}
             </span>
@@ -182,22 +249,29 @@ function StudyCard({ s }: { s: CaseStudy }) {
         </div>
         <Link
           href={`/work/${s.slug}`}
-          className="shrink-0 flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white hover:bg-white hover:text-black transition-all duration-300 transform group-hover:rotate-45"
+          className="shrink-0 flex h-10 w-10 items-center justify-center rounded-full border border-primary/40 bg-black/60 text-primary hover:bg-primary hover:text-black transition-all duration-300 shadow-md transform group-hover:scale-110 group-hover:rotate-45"
           aria-label={`View ${s.title}`}
         >
-          <ArrowUpRight className="h-4 w-4" />
+          <ArrowUpRight className="h-5 w-5" />
         </Link>
       </div>
 
       {/* Card Body Content */}
-      <div className="absolute bottom-0 inset-x-0 z-10 p-6 sm:p-8 flex flex-col justify-end min-h-[50%]">
-        <h3 className="text-2xl sm:text-3xl font-bold tracking-tight mb-2 text-white line-clamp-2">{s.title}</h3>
-        <p className="text-xs sm:text-sm text-neutral-300 mb-4 leading-relaxed font-light line-clamp-3">{s.description}</p>
+      <div className="absolute bottom-0 inset-x-0 z-10 p-6 sm:p-8 flex flex-col justify-end min-h-[52%]">
+        <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-2.5 text-white line-clamp-2 drop-shadow-md group-hover:text-primary transition-colors duration-300">
+          {s.title}
+        </h3>
+        <p className="text-sm text-gray-200/95 mb-4 leading-relaxed font-normal line-clamp-3 drop-shadow-sm">
+          {s.description}
+        </p>
 
         {/* Applied Technologies Pill Badges */}
-        <div className="flex flex-wrap gap-1.5 mb-5 opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+        <div className="flex flex-wrap gap-1.5 mb-5">
           {s.technologies.map((tech) => (
-            <span key={tech} className="text-[10px] font-mono font-medium text-muted-foreground bg-white/5 border border-white/5 px-2 py-0.5 rounded">
+            <span
+              key={tech}
+              className="text-[11px] font-mono font-semibold text-emerald-300/95 bg-emerald-950/60 border border-emerald-500/35 px-2.5 py-1 rounded-md backdrop-blur-sm shadow-sm"
+            >
               {tech}
             </span>
           ))}
@@ -205,11 +279,11 @@ function StudyCard({ s }: { s: CaseStudy }) {
 
         {/* Analytics Metadata Row */}
         {s.numbers.length > 0 && (
-          <div className="grid grid-cols-3 gap-3 border-t border-white/10 pt-4">
+          <div className="grid grid-cols-3 gap-3 border-t border-white/15 bg-black/60 -mx-6 -mb-6 sm:-mx-8 sm:-mb-8 px-6 sm:px-8 pb-6 pt-4 backdrop-blur-md">
             {s.numbers.map((n) => (
               <div key={n.label} className="overflow-hidden">
-                <p className="text-sm sm:text-base font-mono font-bold text-white truncate">{n.value}</p>
-                <p className="text-[9px] uppercase tracking-wider text-neutral-400 mt-1 block leading-tight">{n.label}</p>
+                <p className="text-base sm:text-lg font-mono font-extrabold text-primary truncate tracking-tight">{n.value}</p>
+                <p className="text-[10px] uppercase font-bold tracking-wider text-gray-300 mt-1 block leading-tight">{n.label}</p>
               </div>
             ))}
           </div>
@@ -221,9 +295,9 @@ function StudyCard({ s }: { s: CaseStudy }) {
 
 function CtaCard() {
   return (
-    <article className="study-card snap-center lg:snap-align-none group relative shrink-0 w-[85vw] sm:w-[65vw] lg:w-[600px] h-[580px] sm:h-[660px] lg:h-[clamp(440px,calc(100vh-330px),740px)] bg-secondary border border-white/5 isolate flex flex-col justify-between rounded-sm">
+    <article className="study-card snap-center lg:snap-align-none group relative shrink-0 w-[85vw] sm:w-[50vw] md:w-[380px] lg:w-[480px] h-[480px] sm:h-[520px] lg:h-[540px] bg-gradient-to-br from-zinc-900 to-zinc-950 border border-white/10 dark:border-white/15 hover:border-primary/40 shadow-xl isolate flex flex-col justify-between rounded-2xl transition-all duration-300">
       <div className="p-6 sm:p-8">
-        <span className="text-[9px] font-mono tracking-widest font-bold uppercase px-2.5 py-1 bg-muted border border-border text-muted-foreground">
+        <span className="text-[10px] font-mono tracking-widest font-bold uppercase px-3 py-1.5 bg-primary/10 border border-primary/30 text-primary rounded-full">
           Next Step
         </span>
       </div>
@@ -231,14 +305,14 @@ function CtaCard() {
       <div className="p-8 sm:p-10 md:p-14">
         <a
           href="/work"
-          className="inline-flex items-center gap-4 group/link text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-foreground hover:text-primary transition-colors duration-300"
+          className="inline-flex items-center gap-4 group/link text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white hover:text-primary transition-colors duration-300"
         >
           <span>See all projects</span>
-          <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full border border-border bg-muted group-hover/link:bg-primary group-hover/link:text-primary-foreground transition-all duration-300">
+          <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full border border-primary/30 bg-primary/10 text-primary group-hover/link:bg-primary group-hover/link:text-black transition-all duration-300 shadow-md">
             <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover/link:translate-x-1" />
           </div>
         </a>
-        <p className="text-sm text-neutral-400 max-w-sm font-light leading-relaxed mt-4">
+        <p className="text-sm text-gray-300/90 max-w-sm font-normal leading-relaxed mt-4">
           Explore our full production pipeline of digital designs built for elite industries globally.
         </p>
       </div>
@@ -249,7 +323,7 @@ function CtaCard() {
 export function CaseStudySlider() {
   // Published projects from the admin panel; the bundled studies only cover
   // an empty or unreachable CMS.
-  const { data: cmsProjects } = useProjects([]);
+  const { data: cmsProjects } = useProjects();
   const shown: CaseStudy[] = cmsProjects.length > 0 ? cmsProjects.map(toStudy) : studies;
 
   const sectionRef = useRef<HTMLElement>(null);
@@ -286,19 +360,18 @@ export function CaseStudySlider() {
 
       // Cards stagger in from the right as the rail first enters the viewport
       gsap.from(".study-card", {
-        x: 80,
-        opacity: 0,
-        duration: 1,
-        stagger: 0.08,
-        ease: "power3.out",
-        scrollTrigger: { trigger: trackRef.current, start: "top 90%", toggleActions: "play none none reverse" },
+        x: 50,
+        duration: 0.8,
+        stagger: 0.05,
+        ease: "power2.out",
+        scrollTrigger: { trigger: trackRef.current, start: "top 95%", once: true },
       });
 
       const track = trackRef.current;
       const section = sectionRef.current;
 
-      // Horizontal pinning is desktop-only; mobile scrolls the rail natively
-      if (track && section && window.matchMedia("(min-width: 1024px)").matches) {
+      // Horizontal pinning is desktop-only; only pin if screen has enough vertical height
+      if (track && section && window.matchMedia("(min-width: 1024px)").matches && window.innerHeight >= 620) {
         const getDistance = () => track.scrollWidth - window.innerWidth;
 
         const total = track.querySelectorAll(".study-card").length;
@@ -337,10 +410,10 @@ export function CaseStudySlider() {
         gsap.utils.toArray<HTMLElement>(".study-card img").forEach((img) => {
           gsap.fromTo(
             img,
-            { xPercent: -8, scale: 1.16 },
+            { xPercent: -8, scale: 1.12 },
             {
               xPercent: 8,
-              scale: 1.16,
+              scale: 1.12,
               ease: "none",
               scrollTrigger: {
                 trigger: img.closest(".study-card") as Element,
@@ -361,48 +434,45 @@ export function CaseStudySlider() {
   }, [shown.length]);
 
   return (
-    <section ref={sectionRef} className="relative bg-secondary text-foreground w-full py-12 md:py-20 lg:py-0 border-b border-border/50">
-      {/* Full viewport height + vertical centering only on lg, where the
-          pinned horizontal scroll needs it. Below lg the old min-h-screen
-          centered the content and left a huge dead band above the header. */}
-      <div className="flex flex-col lg:justify-center lg:h-screen">
+    <section ref={sectionRef} className="relative bg-secondary/25 dark:bg-background text-foreground w-full py-12 md:py-16 lg:py-20 border-b border-border/50">
+      <div className="flex flex-col justify-center">
 
         {/* Header Title Grid */}
-        <div className="w-full px-4 sm:px-6 mb-10 lg:mb-8 shrink-0">
+        <div className="w-full px-4 sm:px-6 mb-8 lg:mb-10 shrink-0">
           <div className="max-w-7xl mx-auto lg:pl-10 grid lg:grid-cols-2 gap-8 items-end">
             <div>
               {/* Eyebrow chip matches every other section on the page */}
-              <div className="head-reveal inline-block px-4 py-1.5 rounded-lg bg-primary/10 text-primary font-mono text-sm font-bold mb-6 border border-primary/20">
+              <div className="head-reveal inline-block px-4 py-1.5 rounded-lg bg-primary/15 text-primary font-mono text-sm font-bold mb-6 border border-primary/30 shadow-sm shadow-primary/10">
                 {"<Our Portfolio/>"}
               </div>
               <h2
                 ref={headingRef}
-                className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-[1.05]"
+                className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.05] text-foreground"
               >
                 {/* Single line; accent on the second word per the site's
                     heading pattern */}
                 <SplitText text="Featured" />{" "}
-                <span className="text-primary">
+                <span className="text-primary drop-shadow-[0_0_24px_rgba(16,185,129,0.25)]">
                   <SplitText text="Projects" />
                 </span>
               </h2>
             </div>
 
             <div className="head-reveal lg:pb-2">
-              <p className="text-lg md:text-xl text-neutral-400 max-w-md leading-relaxed font-light">
+              <p className="text-lg md:text-xl text-foreground/80 dark:text-neutral-200 max-w-md leading-relaxed font-normal">
                 Real engagements, real numbers. Production systems we designed,
                 built and shipped for clients across five industries.
               </p>
               {/* Desktop scroll progress + card counter, driven by the scrub */}
               <div className="hidden lg:flex items-center gap-4 mt-6 max-w-md">
-                <div className="h-px flex-1 bg-white/10 overflow-hidden">
-                  <div className="slider-progress h-full w-full bg-primary origin-left scale-x-0" />
+                <div className="h-1.5 flex-1 bg-white/10 dark:bg-white/15 rounded-full overflow-hidden border border-white/5">
+                  <div className="slider-progress h-full w-full bg-primary origin-left scale-x-0 rounded-full" />
                 </div>
-                <span className="slider-count font-mono text-xs text-neutral-400 tabular-nums shrink-0">
+                <span className="slider-count font-mono text-sm text-foreground/90 tabular-nums shrink-0 font-bold">
                   01 / 07
                 </span>
               </div>
-              <p className="lg:hidden mt-4 text-xs font-mono uppercase tracking-widest text-neutral-400">
+              <p className="lg:hidden mt-4 text-xs font-mono uppercase tracking-widest text-primary font-bold">
                 Swipe to explore →
               </p>
             </div>
@@ -410,12 +480,10 @@ export function CaseStudySlider() {
         </div>
 
         {/* Horizontal Scroll Layout Container */}
-        {/* overflow-x-auto below lg: without it the pinned transform never
-            runs on mobile and every card after the first was unreachable */}
-        <div className="overflow-x-auto lg:overflow-hidden w-full shrink-0 snap-x snap-mandatory lg:snap-none scrollbar-none">
+        <div className="overflow-x-auto w-full shrink-0 snap-x snap-mandatory lg:snap-none scrollbar-none py-2">
           <div
             ref={trackRef}
-            className="flex gap-4 pl-4 sm:pl-6 lg:pl-[max(4rem,calc((100vw-80rem)/2+4rem))] will-change-transform"
+            className="flex gap-5 pl-4 sm:pl-6 lg:pl-[max(4rem,calc((100vw-80rem)/2+4rem))] will-change-transform"
             style={{ transform: "translate3d(0,0,0)" }}
           >
             {shown.map((s) => (

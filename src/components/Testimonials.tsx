@@ -9,7 +9,7 @@ const TESTIMONIALS = [
     name: "James Mitchell",
     title: "CTO, NovaCorp Health",
     tag: "<HealthTech/>",
-    quote: "TimeGlobalTech rebuilt our patient scheduling platform from the ground up. Appointment no-shows dropped by 40% and our staff saves 15 hours a week thanks to the intelligent automation they engineered.",
+    quote: "Time Global rebuilt our patient scheduling platform from the ground up. Appointment no-shows dropped by 40% and our staff saves 15 hours a week thanks to the intelligent automation they engineered.",
     color: "bg-emerald-100 text-emerald-700",
     location: "New York, USA",
     avatar: "https://i.pravatar.cc/80?img=12"
@@ -36,7 +36,7 @@ const TESTIMONIALS = [
     name: "Emma Thompson",
     title: "Head of Product, DataSync",
     tag: "<EdTech/>",
-    quote: "TimeGlobalTech turned a complex LMS vision into a polished product in just 4 months. Learner engagement went up 55% and educators love how intuitive the interface feels.",
+    quote: "Time Global turned a complex LMS vision into a polished product in just 4 months. Learner engagement went up 55% and educators love how intuitive the interface feels.",
     color: "bg-purple-100 text-purple-700",
     location: "Toronto, Canada",
     avatar: "https://i.pravatar.cc/80?img=44"
@@ -81,7 +81,7 @@ const TESTIMONIALS = [
     name: "David Park",
     title: "CEO, Studio Prime",
     tag: "<CreativeTech/>",
-    quote: "Our creative teams now collaborate in real time across three time zones thanks to the platform TimeGlobalTech engineered. Asset delivery time went from 3 days to same-day.",
+    quote: "Our creative teams now collaborate in real time across three time zones thanks to the platform Time Global engineered. Asset delivery time went from 3 days to same-day.",
     color: "bg-indigo-100 text-indigo-700",
     location: "Los Angeles, USA",
     avatar: "https://i.pravatar.cc/80?img=7"
@@ -222,7 +222,7 @@ export default function Testimonials() {
   const marqueeRef = useRef<HTMLDivElement>(null);
   // Approved CMS testimonials replace the bundled ones; if the CMS is empty
   // or unreachable we keep shipping the originals rather than an empty rail.
-  const { data: cms } = useTestimonials([]);
+  const { data: cms } = useTestimonials();
   const items: Card[] = cms.length > 0 ? cms.map(toCard) : TESTIMONIALS;
 
   useEffect(() => {

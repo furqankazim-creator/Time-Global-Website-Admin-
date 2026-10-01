@@ -128,7 +128,7 @@ export function PostCard({ post, index = 0 }: { post: BlogCard; index?: number }
 export default function BlogPreview() {
   // Published CMS posts replace the bundled previews; a scheduled post stays
   // hidden until its publish date, enforced server-side.
-  const { data: cms } = usePosts([]);
+  const { data: cms } = usePosts();
   const posts: BlogCard[] = cms.length > 0 ? cms.slice(0, 3).map(toPost) : BLOG_POSTS;
 
   return (

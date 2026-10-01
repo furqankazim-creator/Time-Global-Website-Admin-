@@ -114,7 +114,7 @@ export default function AboutPage() {
   // then newest-first, and a freshly added testimonial defaults to order 0 —
   // so a new entry from the admin panel enters the six and the oldest of the
   // ordered ones drops off. Bundled quotes only cover an empty CMS.
-  const { data: cmsQuotes } = useTestimonials([]);
+  const { data: cmsQuotes } = useTestimonials();
   const quotes: QuoteCard[] = (cmsQuotes.length > 0 ? cmsQuotes : FALLBACK_QUOTES).slice(0, 6);
 
   useEffect(() => {
@@ -126,7 +126,7 @@ export default function AboutPage() {
       <Navbar />
       <div className="h-[72px] shrink-0" />
 
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         {/* ── Hero ─────────────────────────────────────────────────────── */}
         <section className="relative bg-secondary text-foreground overflow-hidden">
           <div className="absolute inset-0 pointer-events-none">

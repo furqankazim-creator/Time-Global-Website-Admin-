@@ -46,7 +46,7 @@ export default function NotFoundPage() {
       <Navbar />
       <div className="h-[72px] shrink-0" />
 
-      <main className="flex-1 flex items-center justify-center px-6 py-32 relative overflow-hidden">
+      <main id="main-content" className="flex-1 flex items-center justify-center px-6 py-32 relative overflow-hidden">
         {/* Background glows */}
         <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
         <div className="absolute bottom-1/3 right-1/4 w-96 h-96 bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none" />

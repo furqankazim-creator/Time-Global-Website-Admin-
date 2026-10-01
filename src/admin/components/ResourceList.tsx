@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "wouter";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, Pencil, Trash2, RotateCcw, Archive } from "lucide-react";
 import { api } from "../lib/api";
 import { useAuth } from "../lib/auth";
 import { AdminLayout } from "./AdminLayout";
@@ -24,9 +24,9 @@ type Props<T> = {
 
 /**
  * Generic list screen. Every content module shares search, sort, pagination,
- * delete and RBAC behaviour — so they can't drift apart.
+ * delete, soft-delete trash toggle, and RBAC behaviour.
  */
-export function ResourceList<T extends { _id: string }>({
+export function ResourceList<T extends { _id: string; deletedAt?: string | null }>({
   title, resource, columns, labelOf, emptyMessage, defaultSort = "-createdAt",
   filters, extraParams, newLabel = "New",
 }: Props<T>) {
@@ -35,24 +35,43 @@ export function ResourceList<T extends { _id: string }>({
   const [page, setPage] = useState(1);
   const [q, setQ] = useState("");
   const [sort, setSort] = useState(defaultSort);
+  const [showTrash, setShowTrash] = useState(false);
 
-  const params = new URLSearchParams({ page: String(page), limit: "20", sort });
+  const params = new URLSearchParams({
+    page: String(page),
+    limit: "20",
+    sort,
+    includeDeleted: String(showTrash),
+  });
   if (q) params.set("q", q);
   for (const [k, v] of Object.entries(extraParams ?? {})) if (v) params.set(k, v);
 
   const { data, isLoading, error } = useQuery({
-    queryKey: [resource, page, q, sort, extraParams],
+    queryKey: [resource, page, q, sort, showTrash, extraParams],
     queryFn: () => api<{ data: T[]; meta: Meta }>(`/api/v1/admin/${resource}?${params}`),
   });
 
+  const invalidate = () => {
+    qc.invalidateQueries({ queryKey: [resource] });
+    qc.invalidateQueries({ queryKey: ["dashboard"] });
+  };
+
   const del = useMutation({
     mutationFn: (id: string) => api(`/api/v1/admin/${resource}/${id}`, { method: "DELETE" }),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: [resource] });
-      qc.invalidateQueries({ queryKey: ["dashboard"] });
-    },
-    meta: { success: "Deleted" },
+    onSuccess: invalidate,
+    meta: { success: "Moved to trash" },
   });
+
+  const restore = useMutation({
+    mutationFn: (id: string) => api(`/api/v1/admin/${resource}/${id}/restore`, { method: "POST" }),
+    onSuccess: invalidate,
+    meta: { success: "Restored from trash" },
+  });
+
+  // Filter rows if backend returned mixed deleted items when showTrash is true
+  const rows = (data?.data ?? []).filter((r) =>
+    showTrash ? r.deletedAt != null : r.deletedAt == null
+  );
 
   const withActions: Column<T>[] = [
     ...columns,
@@ -62,22 +81,37 @@ export function ResourceList<T extends { _id: string }>({
       className: "text-right",
       render: (row) => (
         <div className="flex items-center justify-end gap-1">
-          <Link
-            href={`/admin/${resource}/${row._id}`}
-            className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground"
-            aria-label={`Edit ${labelOf(row)}`}
-          >
-            <Pencil size={15} />
-          </Link>
-          {canEdit && (
-            <button
-              onClick={() => confirm(`Move "${labelOf(row)}" to trash?`) && del.mutate(row._id)}
-              disabled={del.isPending}
-              className="p-1.5 rounded-md hover:bg-destructive/10 text-muted-foreground hover:text-destructive disabled:opacity-40"
-              aria-label={`Delete ${labelOf(row)}`}
-            >
-              <Trash2 size={15} />
-            </button>
+          {showTrash ? (
+            canEdit && (
+              <button
+                onClick={() => confirm(`Restore "${labelOf(row)}"?`) && restore.mutate(row._id)}
+                disabled={restore.isPending}
+                className="flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground transition-colors disabled:opacity-40"
+                title={`Restore ${labelOf(row)}`}
+              >
+                <RotateCcw size={13} /> Restore
+              </button>
+            )
+          ) : (
+            <>
+              <Link
+                href={`/admin/${resource}/${row._id}`}
+                className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground"
+                aria-label={`Edit ${labelOf(row)}`}
+              >
+                <Pencil size={15} />
+              </Link>
+              {canEdit && (
+                <button
+                  onClick={() => confirm(`Move "${labelOf(row)}" to trash?`) && del.mutate(row._id)}
+                  disabled={del.isPending}
+                  className="p-1.5 rounded-md hover:bg-destructive/10 text-muted-foreground hover:text-destructive disabled:opacity-40"
+                  aria-label={`Delete ${labelOf(row)}`}
+                >
+                  <Trash2 size={15} />
+                </button>
+              )}
+            </>
           )}
         </div>
       ),
@@ -98,22 +132,49 @@ export function ResourceList<T extends { _id: string }>({
         )
       }
     >
+      <div className="mb-4 flex items-center justify-between gap-4">
+        <div className="flex items-center gap-1 p-1 bg-muted rounded-lg text-xs font-medium">
+          <button
+            onClick={() => {
+              setShowTrash(false);
+              setPage(1);
+            }}
+            className={`px-3 py-1.5 rounded-md transition-colors ${
+              !showTrash ? "bg-card text-foreground shadow-xs font-semibold" : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            Active
+          </button>
+          <button
+            onClick={() => {
+              setShowTrash(true);
+              setPage(1);
+            }}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md transition-colors ${
+              showTrash ? "bg-card text-foreground shadow-xs font-semibold" : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <Archive size={13} /> Trash / Soft Deleted
+          </button>
+        </div>
+      </div>
+
       <DataTable
         columns={withActions}
-        rows={data?.data ?? []}
+        rows={rows}
         meta={data?.meta}
         loading={isLoading}
         error={error ? (error as Error).message : null}
         search={q}
         onSearch={(v) => {
           setQ(v);
-          setPage(1); // a new search must reset the page or you land out of range
+          setPage(1);
         }}
         sort={sort}
         onSort={setSort}
         onPage={setPage}
         rowKey={(r) => r._id}
-        emptyMessage={emptyMessage}
+        emptyMessage={showTrash ? "Trash is empty." : emptyMessage}
         toolbar={filters}
       />
     </AdminLayout>

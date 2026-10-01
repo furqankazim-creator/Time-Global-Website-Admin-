@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
 import { useContactModal } from "@/hooks/use-contact-modal";
-import { X, Loader2, Send } from "lucide-react";
+import { X, Loader2, Send, ChevronDown, Check, SlidersHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const RATE_LIMIT_KEY = "tg_last_submit";
@@ -73,6 +73,33 @@ const EMPTY_FORM = {
   message: "",
 };
 
+const TOPIC_OPTIONS = [
+  "General enquiry",
+  "Project collaboration",
+  "Press & media",
+  "Careers",
+] as const;
+
+const STATS = [
+  { stat: "200+", label: "Projects delivered" },
+  { stat: "40+", label: "Global clients" },
+  { stat: "98%", label: "Client retention" },
+  { stat: "12+", label: "Years delivering" },
+] as const;
+
+const WHY_US = [
+  "Expert team with 12+ years of experience",
+  "Dedicated support, every time zone",
+  "Solutions that scale with you",
+  "A proven delivery track record",
+] as const;
+
+// Shared field styling — solid light input, dark text, clear focus ring.
+const FIELD_CLS =
+  "w-full rounded-lg border border-white/15 bg-white/95 px-3.5 py-2.5 text-[15px] font-medium text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary/25";
+const LABEL_CLS =
+  "mb-1.5 flex items-center text-[11px] font-bold uppercase tracking-[0.13em] text-primary/90";
+
 export default function ContactModal() {
   const { isOpen, closeModal } = useContactModal();
 
@@ -87,6 +114,7 @@ export default function ContactModal() {
   const openedAt = useRef<number>(0);
 
   const [formData, setFormData] = useState({ ...EMPTY_FORM });
+  const [showDetails, setShowDetails] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
@@ -123,6 +151,8 @@ export default function ContactModal() {
     const onMove = (e: MouseEvent) => {
       if (window.innerWidth < 1024) return;
       if (video.readyState < 2 || !video.duration || isNaN(video.duration)) return;
+      // Don't waste GPU video decoding when hovering or interacting with form controls
+      if ((e.target as HTMLElement)?.closest?.("form, input, select, textarea, button")) return;
       if (prevX === null) { prevX = e.clientX; return; }
       const delta = e.clientX - prevX;
       prevX = e.clientX;
@@ -204,6 +234,7 @@ export default function ContactModal() {
           setIsSuccess(false);
           setFormData({ ...EMPTY_FORM });
           setConsent(false);
+          setShowDetails(false);
           closeModal();
         }, 3500);
         return;
@@ -225,10 +256,47 @@ export default function ContactModal() {
   };
 
   // solid white inputs — dark text, clearly readable
-  const inputCls =
-    "w-full px-4 py-3.5 rounded-xl bg-white border-2 border-gray-200 text-gray-900 placeholder:text-muted-foreground text-base font-medium outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200";
+  const chevron = (
+    <ChevronDown
+      size={16}
+      className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-primary"
+    />
+  );
 
-  const labelCls = "text-xs font-bold text-primary uppercase tracking-widest";
+  const optional = (
+    <span className="ml-1.5 font-normal normal-case tracking-normal text-white/35">optional</span>
+  );
+
+  const trust = (
+    <div className="flex flex-col gap-7">
+      <div className="grid grid-cols-2 gap-2.5 sm:max-w-sm">
+        {STATS.map(({ stat, label }) => (
+          <div
+            key={label}
+            className="rounded-xl border border-primary/20 bg-primary/[0.08] p-3.5 backdrop-blur-sm"
+          >
+            <div className="text-xl font-black text-primary">{stat}</div>
+            <div className="mt-0.5 text-[11px] font-semibold leading-tight text-white/70">
+              {label}
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="space-y-3">
+        <h3 className="text-base font-bold text-white">Why teams choose us</h3>
+        <ul className="space-y-2">
+          {WHY_US.map((item) => (
+            <li key={item} className="flex items-start gap-2.5 text-sm text-white/80">
+              <span className="mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded-full bg-primary/20 text-primary">
+                <Check size={11} strokeWidth={3} />
+              </span>
+              {item}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
 
   return (
     <AnimatePresence>
@@ -244,308 +312,334 @@ export default function ContactModal() {
             className="fixed inset-0 bg-black/40 z-50"
           />
 
-          {/* Full-screen drawer sliding in from right */}
+          {/* Full-screen panel sliding in from right */}
           <motion.div
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "tween", ease: [0.25, 0.46, 0.45, 0.94], duration: 0.22 }}
-            className="fixed inset-0 z-50 overflow-hidden"
+            className="fixed inset-0 z-50 overflow-y-auto overscroll-contain font-sans antialiased"
           >
-            <div className="relative w-full min-h-screen bg-black font-sans antialiased flex items-center justify-start p-6 md:p-16 lg:p-24">
+            {/* Fixed backdrop: video + dark wash. Stays put while content scrolls. */}
+            <video
+              ref={videoRef}
+              muted
+              playsInline
+              preload="none"
+              onLoadedData={() => setIsVideoLoaded(true)}
+              className={cn(
+                "fixed inset-0 h-full w-full object-cover object-center pointer-events-none transition-opacity duration-700",
+                isVideoLoaded ? "opacity-30 lg:opacity-40" : "opacity-0"
+              )}
+              src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260601_110537_3a579fa0-7bbc-4d94-9d25-0e816c7840f5.mp4"
+            />
+            <div className="fixed inset-0 bg-gradient-to-br from-black via-black/85 to-black/95 pointer-events-none" />
 
-              {/* VIDEO */}
-              <video
-                ref={videoRef}
-                muted
-                playsInline
-                preload="auto"
-                onLoadedData={() => setIsVideoLoaded(true)}
-                className={cn(
-                  "absolute inset-0 w-full h-full object-cover object-center pointer-events-none transition-opacity duration-500",
-                  isVideoLoaded ? "opacity-85" : "opacity-0"
-                )}
-                src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260601_110537_3a579fa0-7bbc-4d94-9d25-0e816c7840f5.mp4"
-              />
+            {/* Close */}
+            <button
+              onClick={closeModal}
+              data-testid="button-close-modal"
+              aria-label="Close"
+              className="fixed right-4 top-4 z-20 grid h-10 w-10 place-items-center rounded-lg border border-primary/40 bg-black/40 text-primary backdrop-blur transition hover:bg-primary hover:text-black sm:right-6 sm:top-6"
+            >
+              <X size={18} strokeWidth={2.5} />
+            </button>
 
-              {/* Close button — sized up, green themed */}
-              <button
-                onClick={closeModal}
-                data-testid="button-close-modal"
-                className="absolute top-5 right-5 z-20 w-10 h-10 rounded-lg bg-primary/15 border border-primary/40 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all duration-200 shadow-md shadow-primary/10"
-              >
-                <X size={18} strokeWidth={2.5} />
-              </button>
+            {/* Content */}
+            <div className="relative z-10 mx-auto flex min-h-full w-full max-w-6xl flex-col justify-center px-5 py-16 sm:px-8 sm:py-20">
 
-              {/* Content */}
-              <div className="relative z-10 w-full max-w-6xl mr-auto">
-
-                {isSuccess ? (
-                  <div className="flex flex-col items-center justify-center text-center space-y-6 py-24">
-                    <div className="w-20 h-20 bg-primary/20 text-primary rounded-2xl flex items-center justify-center text-4xl font-mono border border-primary/40 shadow-lg shadow-primary/10">
-                      ✓
-                    </div>
-                    <div>
-                      <h2 className="text-3xl font-mono font-bold text-primary mb-3">{"<Thank you!/>"}</h2>
-                      <p className="text-white/70 text-lg mb-1">Your message has been received.</p>
-                      <p className="text-white font-semibold">We'll be in touch soon!</p>
-                    </div>
+              {isSuccess ? (
+                <div className="mx-auto flex max-w-md flex-col items-center gap-6 text-center">
+                  <div className="grid h-20 w-20 place-items-center rounded-2xl border border-primary/40 bg-primary/15 text-4xl text-primary shadow-lg shadow-primary/10">
+                    <Check size={36} strokeWidth={2.5} />
                   </div>
-                ) : (
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 xl:gap-20 items-start">
+                  <div className="space-y-2">
+                    <h2 className="text-3xl font-black text-white">Thank you!</h2>
+                    <p className="text-white/65">
+                      Your message has been received — we'll be in touch within one business day.
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1fr)] lg:gap-14">
 
-                    {/* LEFT — Form */}
-                    <div className="flex flex-col gap-8">
-                      <div className="space-y-2">
-                        <p className="text-primary text-sm font-bold uppercase tracking-widest">Let's connect</p>
-                        <h2 className="text-5xl md:text-6xl font-black text-white leading-tight">
-                          Get in Touch
-                        </h2>
+                  {/* LEFT — intro + trust (trust hidden on mobile, shown after the form) */}
+                  <div className="flex flex-col gap-9 lg:sticky lg:top-16">
+                    <div className="space-y-3">
+                      <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
+                        Let's connect
+                      </p>
+                      <h2 className="text-4xl font-black leading-[1.05] text-white sm:text-5xl">
+                        Get in Touch
+                      </h2>
+                      <p className="max-w-md text-sm leading-relaxed text-white/60">
+                        Tell us about your project and the team that fits it best will get back
+                        to you, usually within a business day.
+                      </p>
+                    </div>
+                    <div className="hidden lg:block">{trust}</div>
+                  </div>
+
+                  {/* RIGHT — form card */}
+                  <div className="w-full overflow-hidden rounded-2xl border border-white/12 bg-zinc-950/85 shadow-2xl shadow-black/50 backdrop-blur-md transform-gpu">
+                    <div className="h-1 w-full bg-gradient-to-r from-primary via-emerald-400 to-transparent" />
+
+                    <form onSubmit={handleSubmit} className="space-y-4 p-6 sm:p-7">
+                      {/* Honeypot */}
+                      <input type="text" name="_gotcha" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
+
+                      {/* Name */}
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className={LABEL_CLS}>First Name</label>
+                          <input
+                            type="text" name="firstName" value={formData.firstName}
+                            onChange={handleChange} placeholder="John" required
+                            className={FIELD_CLS}
+                          />
+                        </div>
+                        <div>
+                          <label className={LABEL_CLS}>Last Name</label>
+                          <input
+                            type="text" name="lastName" value={formData.lastName}
+                            onChange={handleChange} placeholder="Doe" required
+                            className={FIELD_CLS}
+                          />
+                        </div>
                       </div>
 
-                      {/* Form card */}
-                      <div className="rounded-2xl border border-white/10 bg-white/8 backdrop-blur-xl shadow-2xl shadow-black/50 overflow-hidden">
-                        {/* top accent bar */}
-                        <div className="h-1 w-full bg-gradient-to-r from-primary via-emerald-400 to-transparent" />
+                      {/* Email + Phone */}
+                      <div className="grid gap-3 sm:grid-cols-2">
+                        <div>
+                          <label className={LABEL_CLS}>Email Address</label>
+                          <input
+                            type="email" name="email" value={formData.email}
+                            onChange={handleChange} placeholder="hello@example.com" required
+                            className={FIELD_CLS}
+                          />
+                        </div>
+                        <div>
+                          <label className={LABEL_CLS}>Phone {optional}</label>
+                          <input
+                            type="tel" name="phone" value={formData.phone}
+                            onChange={handleChange} placeholder="+1 (555) 000-0000"
+                            className={FIELD_CLS}
+                          />
+                        </div>
+                      </div>
 
-                        <form onSubmit={handleSubmit} className="p-6 md:p-8 space-y-5">
-                          {/* Honeypot */}
-                          <input type="text" name="_gotcha" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
-
-                          {/* Name row */}
-                          <div className="grid grid-cols-2 gap-4">
-                            <div className="flex flex-col gap-2">
-                              <label className={labelCls}>First Name</label>
-                              <input
-                                type="text" name="firstName" value={formData.firstName}
-                                onChange={handleChange} placeholder="John" required
-                                className={inputCls}
-                              />
-                            </div>
-                            <div className="flex flex-col gap-2">
-                              <label className={labelCls}>Last Name</label>
-                              <input
-                                type="text" name="lastName" value={formData.lastName}
-                                onChange={handleChange} placeholder="Doe" required
-                                className={inputCls}
-                              />
-                            </div>
-                          </div>
-
-                          {/* Email */}
-                          <div className="flex flex-col gap-2">
-                            <label className={labelCls}>Email Address</label>
-                            <input
-                              type="email" name="email" value={formData.email}
-                              onChange={handleChange} placeholder="hello@example.com" required
-                              className={inputCls}
-                            />
-                          </div>
-
-                          {/* Phone */}
-                          <div className="flex flex-col gap-2">
-                            <label className={labelCls}>
-                              Phone Number{" "}
-                              <span className="normal-case text-white/40 font-normal tracking-normal">(optional)</span>
-                            </label>
-                            <input
-                              type="tel" name="phone" value={formData.phone}
-                              onChange={handleChange} placeholder="+1 (555) 000-0000"
-                              className={inputCls}
-                            />
-                          </div>
-
-                          {/* Company */}
-                          <div className="flex flex-col gap-2">
-                            <label className={labelCls}>
-                              Company Name{" "}
-                              <span className="normal-case text-white/40 font-normal tracking-normal">(optional)</span>
-                            </label>
-                            <input
-                              type="text" name="company" value={formData.company}
-                              onChange={handleChange} placeholder="Acme Corp"
-                              className={inputCls}
-                            />
-                          </div>
-
-                          {/* Topic */}
-                          <div className="flex flex-col gap-2">
-                            <label className={labelCls}>Topic</label>
-                            <div className="relative">
-                              <select
-                                name="topic" value={formData.topic}
-                                onChange={handleChange} required
-                                className={cn(inputCls, "appearance-none cursor-pointer pr-10")}
-                              >
-                                <option value="" disabled className="text-muted-foreground">Select a topic…</option>
-                                <option className="text-gray-900">General enquiry</option>
-                                <option className="text-gray-900">Project collaboration</option>
-                                <option className="text-gray-900">Press &amp; media</option>
-                                <option className="text-gray-900">Careers</option>
-                              </select>
-                              <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-primary text-xs font-bold">▼</div>
-                            </div>
-                          </div>
-
-                          {/* Industry */}
-                          <div className="flex flex-col gap-2">
-                            <label className={labelCls}>
-                              Industry{" "}
-                              <span className="normal-case text-white/40 font-normal tracking-normal">(optional)</span>
-                            </label>
-                            <div className="relative">
-                              <select
-                                name="industry" value={formData.industry}
-                                onChange={handleChange}
-                                className={cn(inputCls, "appearance-none cursor-pointer pr-10")}
-                              >
-                                <option value="" className="text-muted-foreground">Select an industry…</option>
-                                {INDUSTRY_OPTIONS.map((opt) => (
-                                  <option key={opt} value={opt} className="text-gray-900">{opt}</option>
-                                ))}
-                              </select>
-                              <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-primary text-xs font-bold">▼</div>
-                            </div>
-                          </div>
-
-                          {/* Budget + Preferred contact */}
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div className="flex flex-col gap-2">
-                              <label className={labelCls}>
-                                Budget Range{" "}
-                                <span className="normal-case text-white/40 font-normal tracking-normal">(optional)</span>
-                              </label>
-                              <div className="relative">
-                                <select
-                                  name="budgetRange" value={formData.budgetRange}
-                                  onChange={handleChange}
-                                  className={cn(inputCls, "appearance-none cursor-pointer pr-10")}
-                                >
-                                  <option value="" className="text-muted-foreground">Not specified</option>
-                                  {BUDGET_OPTIONS.map((opt) => (
-                                    <option key={opt} value={opt} className="text-gray-900">{opt}</option>
-                                  ))}
-                                </select>
-                                <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-primary text-xs font-bold">▼</div>
-                              </div>
-                            </div>
-                            <div className="flex flex-col gap-2">
-                              <label className={labelCls}>Preferred Contact</label>
-                              <div className="relative">
-                                <select
-                                  name="preferredContact" value={formData.preferredContact}
-                                  onChange={handleChange}
-                                  className={cn(inputCls, "appearance-none cursor-pointer pr-10")}
-                                >
-                                  {CONTACT_METHOD_OPTIONS.map((opt) => (
-                                    <option key={opt} value={opt} className="text-gray-900">{opt}</option>
-                                  ))}
-                                </select>
-                                <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-primary text-xs font-bold">▼</div>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Message */}
-                          <div className="flex flex-col gap-2">
-                            <label className={labelCls}>Your Message</label>
-                            <textarea
-                              name="message" value={formData.message}
-                              onChange={handleChange} rows={4} required
-                              placeholder="Tell us how we can help…"
-                              className={cn(inputCls, "resize-none")}
-                            />
-                          </div>
-
-                          {/* Consent — the API rejects a lead without it. */}
-                          <label className="flex items-start gap-2.5 cursor-pointer">
-                            <input
-                              type="checkbox"
-                              checked={consent}
-                              onChange={(e) => setConsent(e.target.checked)}
-                              required
-                              className="mt-0.5 w-4 h-4 accent-primary shrink-0"
-                            />
-                            <span className="text-xs text-gray-600 leading-relaxed">
-                              I agree that Time Global Tech may store and process my details in
-                              order to respond to this enquiry.
-                            </span>
-                          </label>
-
-                          {isError && (
-                            <p className="text-sm text-red-400 text-center bg-red-500/10 border border-red-500/20 rounded-lg py-2.5 px-4">
-                              {errorMsg ?? (
-                                <>
-                                  Something went wrong. Email us at{" "}
-                                  <a href="mailto:info@timeglobaltech.com" className="underline text-red-300">
-                                    info@timeglobaltech.com
-                                  </a>
-                                  .
-                                </>
+                      {/* Collapsible Project & Company Details Toggle */}
+                      <div className="pt-0.5">
+                        <button
+                          type="button"
+                          onClick={() => setShowDetails((prev) => !prev)}
+                          data-testid="button-toggle-details"
+                          className={cn(
+                            "group flex w-full items-center justify-between rounded-xl border px-3.5 py-2.5 text-xs font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/30",
+                            showDetails
+                              ? "border-primary/40 bg-primary/10 text-primary shadow-sm shadow-primary/10"
+                              : "border-white/10 bg-white/[0.04] text-white/80 hover:border-primary/30 hover:bg-white/[0.07] hover:text-white"
+                          )}
+                        >
+                          <div className="flex items-center gap-2.5">
+                            <div
+                              className={cn(
+                                "grid h-5 w-5 place-items-center rounded-md border text-[11px] font-bold transition-all",
+                                showDetails
+                                  ? "border-primary/50 bg-primary text-black"
+                                  : "border-white/20 bg-white/10 text-white/90 group-hover:border-primary/50 group-hover:text-primary"
                               )}
-                            </p>
-                          )}
-                          {spamBlocked && (
-                            <p className="text-sm text-amber-400 text-center bg-amber-500/10 border border-amber-500/20 rounded-lg py-2.5 px-4">
-                              Please wait a moment before submitting again.
-                            </p>
-                          )}
-
-                          {/* Submit */}
-                          <button
-                            type="submit" disabled={isLoading}
-                            data-testid="button-submit-contact"
-                            className="w-full bg-gradient-to-r from-primary to-emerald-500 hover:from-primary/90 hover:to-emerald-400 text-white rounded-xl px-6 py-4 font-bold flex items-center justify-center gap-3 transition-all duration-200 shadow-lg shadow-primary/30 hover:shadow-primary/50 hover:-translate-y-0.5 uppercase tracking-widest text-base disabled:opacity-50 disabled:cursor-not-allowed disabled:translate-y-0"
-                          >
-                            {isLoading ? (
-                              <><Loader2 size={20} className="animate-spin" /> Sending…</>
-                            ) : (
-                              <><span>Send Message</span><Send size={18} /></>
+                            >
+                              <SlidersHorizontal size={11} />
+                            </div>
+                            <span className="tracking-wide">
+                              {showDetails ? "Hide Project & Company Details" : "Add Project & Company Details"}
+                            </span>
+                            {!showDetails && (
+                              <span className="text-[11px] font-normal text-white/40">(Optional)</span>
                             )}
-                          </button>
-                        </form>
-                      </div>
-                    </div>
-
-                    {/* RIGHT — Stats + Why Choose Us */}
-                    <div className="flex flex-col gap-8 lg:mt-35">
-                      <div className="grid grid-cols-2 gap-3 w-full max-w-[360px]">
-                        {[
-                          { stat: "200+", label: "Projects Delivered" },
-                          { stat: "40+",  label: "Global Clients" },
-                          { stat: "98%",  label: "Client Retention" },
-                          { stat: "12+",  label: "Years Delivering" },
-                        ].map(({ stat, label }) => (
-                          <div key={label} className="p-4 rounded-xl bg-primary/10 border border-primary/25 hover:bg-primary/20 hover:border-primary/50 transition-all duration-200 backdrop-blur-sm">
-                            <h3 className="text-2xl font-black text-primary mb-0.5">{stat}</h3>
-                            <p className="text-xs font-bold text-white/80 leading-tight">{label}</p>
+                            {(formData.company || formData.industry || formData.topic || formData.budgetRange) && !showDetails && (
+                              <span className="rounded-full bg-primary/20 border border-primary/30 px-2 py-0.5 text-[10px] font-bold text-primary">
+                                Details added
+                              </span>
+                            )}
                           </div>
-                        ))}
+                          <ChevronDown
+                            size={15}
+                            className={cn(
+                              "transition-transform duration-300",
+                              showDetails ? "rotate-180 text-primary" : "text-white/50 group-hover:text-white"
+                            )}
+                          />
+                        </button>
                       </div>
 
-                      <div className="space-y-4">
-                        <h3 className="text-2xl font-black text-white">Why Choose Us?</h3>
-                        <ul className="space-y-3">
-                          {[
-                            "Expert team with 12+ years of experience",
-                            "24/7 dedicated support",
-                            "Scalable solutions",
-                            "Proven track record",
-                          ].map((item, i) => (
-                            <li key={i} className="flex items-start gap-3">
-                              <div className="w-5 h-5 rounded-full bg-primary/20 border border-primary/50 flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm shadow-primary/20">
-                                <div className="w-2 h-2 rounded-full bg-primary" />
+                      {/* Detailed Fields (Hardware-Accelerated Accordion) */}
+                      <div
+                        className={cn(
+                          "grid transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+                          showDetails
+                            ? "grid-rows-[1fr] opacity-100 my-1"
+                            : "grid-rows-[0fr] opacity-0 pointer-events-none"
+                        )}
+                      >
+                        <div className="min-h-0 overflow-hidden">
+                          <div className="my-1 space-y-3 rounded-xl border border-white/10 bg-black/40 p-3.5 backdrop-blur-sm">
+                            {/* Company + Industry */}
+                            <div className="grid gap-3 sm:grid-cols-2">
+                              <div>
+                                <label className={LABEL_CLS}>Company {optional}</label>
+                                <input
+                                  type="text"
+                                  name="company"
+                                  value={formData.company}
+                                  onChange={handleChange}
+                                  placeholder="Acme Corp"
+                                  className={FIELD_CLS}
+                                />
                               </div>
-                              <span className="text-white/90 font-semibold text-sm">{item}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
+                              <div>
+                                <label className={LABEL_CLS}>Industry {optional}</label>
+                                <div className="relative">
+                                  <select
+                                    name="industry"
+                                    value={formData.industry}
+                                    onChange={handleChange}
+                                    className={cn(FIELD_CLS, "cursor-pointer appearance-none pr-10")}
+                                  >
+                                    <option value="">Select…</option>
+                                    {INDUSTRY_OPTIONS.map((opt) => (
+                                      <option key={opt} value={opt}>{opt}</option>
+                                    ))}
+                                  </select>
+                                  {chevron}
+                                </div>
+                              </div>
+                            </div>
 
+                            {/* Topic */}
+                            <div>
+                              <label className={LABEL_CLS}>Topic {optional}</label>
+                              <div className="relative">
+                                <select
+                                  name="topic"
+                                  value={formData.topic}
+                                  onChange={handleChange}
+                                  className={cn(FIELD_CLS, "cursor-pointer appearance-none pr-10")}
+                                >
+                                  <option value="">Select a topic…</option>
+                                  {TOPIC_OPTIONS.map((opt) => (
+                                    <option key={opt} value={opt}>{opt}</option>
+                                  ))}
+                                </select>
+                                {chevron}
+                              </div>
+                            </div>
+
+                            {/* Budget + Preferred contact */}
+                            <div className="grid gap-3 sm:grid-cols-2">
+                              <div>
+                                <label className={LABEL_CLS}>Budget {optional}</label>
+                                <div className="relative">
+                                  <select
+                                    name="budgetRange"
+                                    value={formData.budgetRange}
+                                    onChange={handleChange}
+                                    className={cn(FIELD_CLS, "cursor-pointer appearance-none pr-10")}
+                                  >
+                                    <option value="">Not specified</option>
+                                    {BUDGET_OPTIONS.map((opt) => (
+                                      <option key={opt} value={opt}>{opt}</option>
+                                    ))}
+                                  </select>
+                                  {chevron}
+                                </div>
+                              </div>
+                              <div>
+                                <label className={LABEL_CLS}>Preferred Contact</label>
+                                <div className="relative">
+                                  <select
+                                    name="preferredContact"
+                                    value={formData.preferredContact}
+                                    onChange={handleChange}
+                                    className={cn(FIELD_CLS, "cursor-pointer appearance-none pr-10")}
+                                  >
+                                    {CONTACT_METHOD_OPTIONS.map((opt) => (
+                                      <option key={opt} value={opt}>{opt}</option>
+                                    ))}
+                                  </select>
+                                  {chevron}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Message */}
+                      <div>
+                        <label className={LABEL_CLS}>Your Message</label>
+                        <textarea
+                          name="message" value={formData.message}
+                          onChange={handleChange} rows={4} required
+                          placeholder="Tell us how we can help…"
+                          className={cn(FIELD_CLS, "resize-none")}
+                        />
+                      </div>
+
+                      {/* Consent — the API rejects a lead without it. */}
+                      <label className="flex cursor-pointer items-start gap-2.5 pt-1">
+                        <input
+                          type="checkbox"
+                          checked={consent}
+                          onChange={(e) => setConsent(e.target.checked)}
+                          required
+                          className="mt-0.5 h-4 w-4 shrink-0 accent-primary"
+                        />
+                        <span className="text-xs leading-relaxed text-white/55">
+                          I agree that Time Global may store and process my details in order
+                          to respond to this enquiry.
+                        </span>
+                      </label>
+
+                      {isError && (
+                        <p className="rounded-lg border border-red-500/25 bg-red-500/10 px-4 py-2.5 text-center text-sm text-red-300">
+                          {errorMsg ?? (
+                            <>
+                              Something went wrong. Email us at{" "}
+                              <a href="mailto:info@timeglobaltech.com" className="underline">
+                                info@timeglobaltech.com
+                              </a>
+                              .
+                            </>
+                          )}
+                        </p>
+                      )}
+                      {spamBlocked && (
+                        <p className="rounded-lg border border-amber-500/25 bg-amber-500/10 px-4 py-2.5 text-center text-sm text-amber-300">
+                          Please wait a moment before submitting again.
+                        </p>
+                      )}
+
+                      {/* Submit */}
+                      <button
+                        type="submit" disabled={isLoading}
+                        data-testid="button-submit-contact"
+                        className="flex w-full items-center justify-center gap-2.5 rounded-lg bg-gradient-to-r from-primary to-emerald-500 px-6 py-3.5 text-sm font-bold uppercase tracking-[0.12em] text-black shadow-lg shadow-primary/25 transition hover:shadow-primary/40 disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        {isLoading ? (
+                          <><Loader2 size={18} className="animate-spin" /> Sending…</>
+                        ) : (
+                          <><span>Send Message</span><Send size={16} /></>
+                        )}
+                      </button>
+                    </form>
                   </div>
-                )}
-              </div>
+
+                  {/* Trust — mobile only, below the form */}
+                  <div className="lg:hidden">{trust}</div>
+                </div>
+              )}
             </div>
           </motion.div>
         </>

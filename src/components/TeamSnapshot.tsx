@@ -26,7 +26,7 @@ function toMember(m: CmsTeamMember, i: number): Member {
 
 export default function TeamSnapshot() {
   // Published CMS team members replace the bundled four.
-  const { data: cms } = useTeam([]);
+  const { data: cms } = useTeam();
   const members: Member[] = cms.length > 0 ? cms.map(toMember) : TEAM_MEMBERS;
 
   return (

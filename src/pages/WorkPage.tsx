@@ -13,16 +13,17 @@ import FAQ from "@/components/FAQ";
 import CollaborateCTA from "@/components/CollaborateCTA";
 import { HeroAnimatedIcons } from "@/components/HeroAnimatedIcons";
 import { ProjectCard, type ProjectCardProps } from "@/components/ProjectCard";
+import { Search, Filter, Sparkles } from "lucide-react";
 
  
 // ─── Project image placeholders (swap for real imports once you have the files) ─
-const aviva        = "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1024&q=80"; // CRM / insurance dashboard
+const aviva        = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1024&q=80"; // CRM / analytics dashboard
 const aidify       = "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=1024&q=80"; // AI / recommendation engine
-const bnp          = "https://images.unsplash.com/photo-1601597111158-2fceff292cdc?w=1024&q=80"; // mobile banking app
-const brainly      = "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1024&q=80"; // students / edtech platform
-const caliber      = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1024&q=80"; // candidate / HR scoring
-const brainlyTutor = "https://images.unsplash.com/photo-1619209629065-e9a2b225b24b?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"; // 1-on-1 tutoring mobile
-const fitly        = "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=1024&q=80"; // fitness / running tracker
+const bnp          = "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=1024&q=80"; // mobile banking app
+const brainly      = "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1024&q=80"; // edtech code & learning platform
+const caliber      = "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=1024&q=80"; // candidate scoring & analytics dashboard
+const brainlyTutor = "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1024&q=80"; // 1-on-1 tutoring web platform
+const fitly        = "https://images.unsplash.com/photo-1524661135-423995f22d0b?w=1024&q=80"; // fitness telemetry & route tracker
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -64,7 +65,7 @@ const CASE_STUDIES = [
     title: "Patient App Serving 500k+ Users",
     outcome: "End-to-end React Native app with HL7 FHIR integration, shipped in 14 weeks.",
     metrics: ["500k+ users", "4.8★ App Store", "14 wks shipped"],
-    img: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=900",
+    img: "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&q=80&w=900",
     bgGradient: "linear-gradient(145deg, #1a0533, #3b0764, #2d0550)",
     span: "normal" as const,
   },
@@ -74,7 +75,7 @@ const CASE_STUDIES = [
     title: "Predictive Routing Saves $2M/Year",
     outcome: "Built an ML pipeline on top of the client's existing ERP — 28% reduction in fuel spend.",
     metrics: ["$2M saved", "28% less fuel", "Real-time ETAs"],
-    img: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=900",
+    img: "https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=900",
     bgGradient: "linear-gradient(145deg, #001a2e, #003052, #00213d)",
     span: "tall" as const,
   },
@@ -84,7 +85,7 @@ const CASE_STUDIES = [
     title: "D2C Store Hitting $1M GMV in Month 1",
     outcome: "Shopify Plus custom storefront with Arabic RTL support, launched 3 weeks before Ramadan.",
     metrics: ["$1M GMV/mo", "RTL + LTR", "3 wk delivery"],
-    img: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=900",
+    img: "https://images.unsplash.com/photo-1556740758-90de374c12ad?auto=format&fit=crop&q=80&w=900",
     bgGradient: "linear-gradient(145deg, #2d0a1a, #5c1030, #450d24)",
     span: "normal" as const,
   },
@@ -94,7 +95,7 @@ const CASE_STUDIES = [
     title: "LMS Scaling to 80k Concurrent Learners",
     outcome: "Video-first learning platform with adaptive quiz engine on serverless infrastructure.",
     metrics: ["80k concurrent", "2.1s p95", "Auto-scales"],
-    img: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=900",
+    img: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=900",
     bgGradient: "linear-gradient(145deg, #0a1a2e, #102a47, #0c2038)",
     span: "normal" as const,
   },
@@ -104,10 +105,66 @@ type CaseStudy = typeof CASE_STUDIES[0];
 
 // ─── Projects ─────────────────────────────────────────────────────────────────
 
+const SOFTWARE_APP_IMAGES: Record<string, string> = {
+  // CMS Slugs
+  "canet-clinical-research-portal": "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&q=80&w=1200",
+  "helvar-iot-lighting-dashboard": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1200",
+  "tiptop-b2b-marketplace": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1200",
+  "spectec-fleet-maintenance-suite": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=1200",
+  "bonnet-ev-charging-platform": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&q=80&w=1200",
+  "finpay-cross-border-payments-app": "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&q=80&w=1200",
+  "renlo-property-management-platform": "https://images.unsplash.com/photo-1551836022-4c4c79ecde51?auto=format&fit=crop&q=80&w=1200",
+  "routewise-delivery-route-optimizer": "https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=1200",
+  "urbancart-same-day-grocery-marketplace": "https://images.unsplash.com/photo-1556740758-90de374c12ad?auto=format&fit=crop&q=80&w=1200",
+  "eduspark-cohort-based-learning-platform": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=1200",
+
+  // Keywords
+  canet: "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&q=80&w=1200",
+  helvar: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1200",
+  tiptop: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1200",
+  spectec: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=1200",
+  bonnet: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&q=80&w=1200",
+  finpay: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&q=80&w=1200",
+  renlo: "https://images.unsplash.com/photo-1551836022-4c4c79ecde51?auto=format&fit=crop&q=80&w=1200",
+  routewise: "https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=1200",
+  urbancart: "https://images.unsplash.com/photo-1556740758-90de374c12ad?auto=format&fit=crop&q=80&w=1200",
+  eduspark: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=1200",
+};
+
+const GENERIC_UNSPLASH_IDS = [
+  "photo-1576091160550-2173dba999ef",
+  "photo-1518770660439-4636190af475",
+  "photo-1441986300917-64674bd600d8",
+  "photo-1519003722824-194d4455a60c",
+  "photo-1593941707882-a5bba14938c7",
+  "photo-1563013544-824ae1b704d3",
+  "photo-1560518883-ce09059eeffa",
+  "photo-1601584115197-04ecc0da31d7",
+  "photo-1542838132-92c53300491e",
+  "photo-1523240795612-9a054b0db644",
+];
+
+function getProjectImage(p: CmsProject): string {
+  const slugKey = (p.slug ?? "").toLowerCase();
+  const clientKey = (p.client ?? "").toLowerCase();
+  if (SOFTWARE_APP_IMAGES[slugKey]) return SOFTWARE_APP_IMAGES[slugKey];
+  if (SOFTWARE_APP_IMAGES[clientKey]) return SOFTWARE_APP_IMAGES[clientKey];
+  for (const [key, appImg] of Object.entries(SOFTWARE_APP_IMAGES)) {
+    if (slugKey.includes(key) || clientKey.includes(key) || p.title.toLowerCase().includes(key)) {
+      return appImg;
+    }
+  }
+  const url = p.coverImage?.url ?? "";
+  if (url && !GENERIC_UNSPLASH_IDS.some((id) => url.includes(id))) {
+    return url;
+  }
+  return "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1200";
+}
+
 /** CMS project → the ProjectCard shape this page already renders. */
 function toProjectCard(p: CmsProject, i: number): Omit<ProjectCardProps, "index"> {
   return {
-    image: p.coverImage?.url ?? "",
+    image: getProjectImage(p),
     title: p.title,
     description: p.client ? `${p.client} — ${p.category.replace("-", " ")}` : p.title,
     tags: [p.category.replace("-", " ")].filter(Boolean),
@@ -231,6 +288,10 @@ function PortfolioCard({ cs, index }: { cs: CaseStudy; index: number }) {
         <img
           src={cs.img}
           alt={cs.title}
+          onError={(e) => {
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=900";
+          }}
           className="w-full h-full object-cover"
           style={{
             opacity: hovered ? 0.18 : 0.1,
@@ -308,6 +369,10 @@ function PortfolioCard({ cs, index }: { cs: CaseStudy; index: number }) {
               <img
                 src={cs.img}
                 alt=""
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=900";
+                }}
                 className="w-full h-full object-cover"
                 style={{ opacity: 0.7, borderRadius: "inherit" }}
               />
@@ -373,9 +438,27 @@ export default function WorkPage() {
 
   // Published projects from the admin panel replace the bundled samples;
   // the bundled ones only cover an empty or unreachable CMS.
-  const { data: cmsProjects } = useProjects([]);
+  const { data: cmsProjects } = useProjects();
   const shownProjects =
     cmsProjects.length > 0 ? cmsProjects.map(toProjectCard) : projects;
+
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const categories = ["All", "FinTech", "AI", "Mobile", "EdTech", "Web", "Health"];
+
+  const filteredProjects = shownProjects.filter((p) => {
+    const matchesCat =
+      selectedCategory === "All" ||
+      (p.tags ?? []).some((t) => t.toLowerCase().includes(selectedCategory.toLowerCase()));
+    const q = searchQuery.toLowerCase().trim();
+    const matchesSearch =
+      !q ||
+      p.title.toLowerCase().includes(q) ||
+      p.description.toLowerCase().includes(q) ||
+      (p.technologies ?? []).some((tech) => tech.toLowerCase().includes(q));
+    return matchesCat && matchesSearch;
+  });
 
   const containerRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
@@ -412,7 +495,7 @@ export default function WorkPage() {
       <div className="min-h-[100dvh] w-full flex flex-col bg-background font-sans text-foreground overflow-x-hidden">
         <div className="h-[72px] shrink-0" />
 
-        <main className="flex-1" ref={containerRef}>
+        <main id="main-content" className="flex-1" ref={containerRef}>
 
           {/* 1. HERO */}
           <section ref={heroRef} className="relative pt-32 pb-64 px-6 overflow-hidden min-h-[100vh] flex items-center">
@@ -543,35 +626,101 @@ export default function WorkPage() {
           {/* 4. SELECTED WORK (ProjectCard grid) */}
           <section className="py-24 px-6 border-t border-border/40">
             <div className="max-w-7xl mx-auto">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.6 }}
-                className="mb-14"
-              >
-                <div className="inline-flex w-fit items-center gap-2 rounded-full border border-border/60 bg-background/60 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground backdrop-blur-md mb-6">
-                  <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-                  Selected Work
-                </div>
-                <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">
-                  Products we've built,
-                  <br />
-                  <span className="bg-gradient-to-r from-primary via-foreground to-primary bg-clip-text text-transparent">
-                    loved by millions.
-                  </span>
-                </h2>
-                <p className="text-muted-foreground max-w-xl leading-relaxed">
-                  A glimpse into recent collaborations spanning fintech, AI, education and more.
-                  Every project is engineered with craft, shipped with intent.
-                </p>
-              </motion.div>
+              <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-60px" }}
+                  transition={{ duration: 0.6 }}
+                >
+                  <div className="inline-flex w-fit items-center gap-2 rounded-full border border-border/60 bg-background/60 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground backdrop-blur-md mb-4">
+                    <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                    Selected Work
+                  </div>
+                  <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-2">
+                    Products we've built,
+                    <br />
+                    <span className="bg-gradient-to-r from-primary via-foreground to-primary bg-clip-text text-transparent">
+                      loved by millions.
+                    </span>
+                  </h2>
+                  <p className="text-muted-foreground max-w-xl text-sm leading-relaxed">
+                    A curated portfolio of platforms, applications, and architectures shipped for ambitious companies worldwide.
+                  </p>
+                </motion.div>
 
-              <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
-                {shownProjects.map((p, i) => (
-                  <ProjectCard key={p.title} index={i} {...p} />
-                ))}
+                {/* Search Input */}
+                <div className="relative w-full md:w-72">
+                  <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search by client or tech..."
+                    className="w-full h-10 pl-10 pr-4 rounded-xl bg-card border border-border text-xs focus:border-primary focus:outline-none shadow-sm"
+                  />
+                  {searchQuery && (
+                    <button
+                      onClick={() => setSearchQuery("")}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-muted-foreground hover:text-foreground"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
               </div>
+
+              {/* Category Filter Tabs */}
+              <div className="flex items-center justify-between gap-4 pb-6 mb-8 border-b border-border/40 overflow-x-auto no-scrollbar">
+                <div className="flex items-center gap-2 shrink-0">
+                  <Filter size={14} className="text-muted-foreground mr-1" />
+                  {categories.map((cat) => {
+                    const isActive = selectedCategory.toLowerCase() === cat.toLowerCase();
+                    return (
+                      <button
+                        key={cat}
+                        onClick={() => setSelectedCategory(cat)}
+                        className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold tracking-wide transition-all ${
+                          isActive
+                            ? "bg-primary text-primary-foreground shadow-sm shadow-primary/20 scale-105"
+                            : "bg-card border border-border/70 text-muted-foreground hover:text-foreground hover:bg-muted"
+                        }`}
+                      >
+                        {cat}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <span className="text-xs text-muted-foreground font-mono shrink-0 hidden sm:block">
+                  {filteredProjects.length} {filteredProjects.length === 1 ? "project" : "projects"}
+                </span>
+              </div>
+
+              {/* Projects Grid */}
+              {filteredProjects.length === 0 ? (
+                <div className="rounded-2xl border border-dashed border-border p-12 text-center bg-card/40 my-8">
+                  <p className="text-sm font-semibold mb-1">No projects found</p>
+                  <p className="text-xs text-muted-foreground mb-4">
+                    No case studies match "{searchQuery}" under {selectedCategory}.
+                  </p>
+                  <button
+                    onClick={() => {
+                      setSelectedCategory("All");
+                      setSearchQuery("");
+                    }}
+                    className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-semibold"
+                  >
+                    Reset Filter
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+                  {filteredProjects.map((p, i) => (
+                    <ProjectCard key={p.title} index={i} {...p} />
+                  ))}
+                </div>
+              )}
             </div>
           </section>
 

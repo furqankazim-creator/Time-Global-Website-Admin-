@@ -7,6 +7,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ContactModalProvider } from "@/hooks/use-contact-modal";
 import { ThemeProvider } from "@/hooks/use-theme";
 import { Preloader } from "@/components/Preloader";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { JsonLd, TIME_GLOBAL_ORG } from "@/components/JsonLd";
+import { useAnalytics } from "@/hooks/use-analytics";
 import HomePage from "@/pages/HomePage";
 import WorkPage from "@/pages/WorkPage";
 import ServicesPage from "@/pages/ServicesPage";
@@ -23,6 +26,7 @@ import CookiePolicy from "@/pages/CookiePolicy";
 import RefundPolicy from "@/pages/RefundPolicy";
 import NotFoundPage from "@/pages/NotFoundPage";
 import ContactModal from "@/components/ContactModal";
+import ChatWidget from "@/components/ChatWidget";
 
 // Lazy: keeps the admin bundle out of the public site's initial load.
 const AdminApp = lazy(() => import("@/admin/AdminApp"));
@@ -87,6 +91,12 @@ function Router() {
   );
 }
 
+/** Fires a page-view event on every SPA route change. */
+function AnalyticsWatcher() {
+  useAnalytics();
+  return null;
+}
+
 const AdminFallback = () => (
   <div className="min-h-[100dvh] grid place-items-center bg-background text-muted-foreground text-sm">
     Loading admin…
@@ -118,9 +128,39 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <ContactModalProvider>
+            {/*
+             * Skip-to-content: visually hidden until focused via keyboard Tab.
+             * Targets #main-content which every page's <main> carries.
+             * sr-only + focus:not-sr-only pattern keeps it out of the visual
+             * flow while remaining fully accessible.
+             */}
+            <a
+              href="#main-content"
+              className={[
+                "sr-only focus:not-sr-only",
+                "fixed top-4 left-4 z-[9999]",
+                "px-6 py-3 rounded-xl",
+                "bg-primary text-white font-bold text-sm",
+                "focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary",
+                "transition-all",
+              ].join(" ")}
+            >
+              Skip to main content
+            </a>
+
             <Preloader />
-            <Router />
+
+            {/* Organization JSON-LD — injected once, covers every public page */}
+            <JsonLd schema={TIME_GLOBAL_ORG} />
+
+            {/* ErrorBoundary catches any unhandled JS error in the page tree */}
+            <ErrorBoundary>
+              <AnalyticsWatcher />
+              <Router />
+            </ErrorBoundary>
+
             <ContactModal />
+            <ChatWidget />
             <Toaster />
           </ContactModalProvider>
         </TooltipProvider>

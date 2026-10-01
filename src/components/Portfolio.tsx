@@ -55,7 +55,7 @@ function toStory(p: CmsProject, i: number): Story {
 
 export default function Portfolio() {
   // Published CMS projects replace the bundled list.
-  const { data: cms } = useProjects([]);
+  const { data: cms } = useProjects();
   const stories: Story[] = cms.length > 0 ? cms.map(toStory) : STORIES_LIST;
 
   const sectionRef = useRef<HTMLDivElement>(null);

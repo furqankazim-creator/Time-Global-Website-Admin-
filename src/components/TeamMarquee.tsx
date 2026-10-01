@@ -68,7 +68,7 @@ export default function TeamMarquee() {
 
   // Every published team member from the admin panel appears here — adding
   // a member is expected to add a card.
-  const { data: cmsTeam } = useTeam([]);
+  const { data: cmsTeam } = useTeam();
   const stories: Story[] = cmsTeam.length > 0 ? cmsTeam.map(toStory) : EMPLOYEE_STORIES;
 
   useEffect(() => {

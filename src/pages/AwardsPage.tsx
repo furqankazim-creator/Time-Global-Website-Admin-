@@ -5,8 +5,10 @@ import {
   ArrowRight, ChevronLeft, ChevronRight, Star,
   ShieldCheck, Trophy, ImageIcon,
 } from "lucide-react";
+import { CtaButton } from "@/components/ui/cta-button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import CollaborateCTA from "@/components/CollaborateCTA";
 
 /* ------------------------------- DATA ------------------------------- */
 
@@ -226,7 +228,7 @@ export default function AwardsPage() {
       <Navbar />
       <div className="h-[72px] shrink-0" />
 
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         {/* ----------------------------- HERO ----------------------------- */}
         <section className="relative bg-secondary text-foreground overflow-hidden">
           {/* Background image */}
@@ -274,16 +276,15 @@ export default function AwardsPage() {
               backed by real client results and verified reviews.
             </motion.p>
 
-            <motion.a
-              href="#recognition"
+            <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="group inline-flex items-center gap-2 px-8 py-4 rounded-full bg-primary text-primary-foreground font-bold text-lg hover:shadow-2xl hover:shadow-primary/30 hover:scale-105 transition-all"
             >
-              Explore Our Recognition
-              <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-            </motion.a>
+              <CtaButton size="lg" variant="primary" href="#recognition" arrow>
+                Explore Our Recognition
+              </CtaButton>
+            </motion.div>
           </div>
         </section>
 
@@ -293,6 +294,8 @@ export default function AwardsPage() {
 <img
   src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&q=80"
   alt="Server room"
+  loading="lazy"
+  decoding="async"
   className="rounded-2xl aspect-[16/10] shadow-2xl object-cover w-full"
 />
             <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed">
@@ -310,6 +313,8 @@ export default function AwardsPage() {
 <img
   src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=900&q=80"
   alt="Team collaboration"
+  loading="lazy"
+  decoding="async"
   className="rounded-2xl aspect-[4/3] shadow-xl object-cover w-full md:order-2 order-1"
 />
           </div>
@@ -461,6 +466,9 @@ export default function AwardsPage() {
             </div>
           </div>
         </section>
+
+        {/* ----------------------- CLOSING CTA --------------------------- */}
+        <CollaborateCTA />
 
       </main>
 

@@ -3,6 +3,7 @@ import { useContactModal } from "@/hooks/use-contact-modal";
 import { motion, AnimatePresence } from "framer-motion";
 import { Shape3D } from "./Shape3D";
 import { useServices, type CmsService } from "@/lib/cms";
+import { CtaButton } from "@/components/ui/cta-button";
 
 const SERVICES = [
   {
@@ -72,7 +73,7 @@ function toSvc(s: CmsService, i: number): Svc {
 export default function Services() {
   // Published CMS services replace the bundled list; empty/unreachable CMS
   // keeps the originals so the section never renders blank.
-  const { data: cms } = useServices([]);
+  const { data: cms } = useServices();
   const items: Svc[] = cms.length > 0 ? cms.map(toSvc) : SERVICES;
 
   const [activeTab, setActiveTab] = useState(0);
@@ -120,7 +121,7 @@ export default function Services() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -16 }}
               transition={{ duration: 0.25 }}
-              className="bg-background rounded-2xl p-10 h-full flex flex-col justify-center border border-border shadow-lg relative overflow-hidden"
+              className="bg-background rounded-2xl p-8 h-full flex flex-col justify-center border border-border shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden"
             >
               <div className="absolute right-0 top-0 w-48 h-48 bg-primary/5 rounded-bl-full pointer-events-none" />
               <div className="mb-8">
@@ -133,12 +134,9 @@ export default function Services() {
                 {SERVICES[activeTab].desc}
               </p>
               <div className="mt-8 relative z-10">
-                <button
-                  onClick={openModal}
-                  className="px-6 py-2.5 rounded-lg bg-primary text-white font-semibold text-sm hover:opacity-90 transition-opacity"
-                >
-                  let's talk →
-                </button>
+                <CtaButton size="md" arrow onClick={openModal}>
+                  let's talk
+                </CtaButton>
               </div>
             </motion.div>
           </AnimatePresence>

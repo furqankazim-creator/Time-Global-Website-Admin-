@@ -14,7 +14,14 @@ export default function Navbar() {
   const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
+    let prev = false;
+    const handleScroll = () => {
+      const isPast = window.scrollY > 20;
+      if (isPast !== prev) {
+        prev = isPast;
+        setScrolled(isPast);
+      }
+    };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -49,27 +56,35 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop — industry pills */}
-        <div className="hidden lg:flex items-center gap-3">
-          <div className="px-3 py-1 rounded-lg bg-primary/10 text-primary text-sm font-medium tracking-wide border border-primary/20">
+        <div className="hidden lg:flex items-center gap-2.5">
+          <Link
+            href="/services#services-breakdown"
+            className="px-3 py-1 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary text-xs font-semibold tracking-wide border border-primary/20 hover:border-primary/40 transition-all cursor-pointer shadow-sm hover:scale-[1.03] active:scale-[0.98]"
+            title="Explore Web & Software Development Services"
+          >
             Web & Software
-          </div>
-          <div className="px-3 py-1 rounded-lg bg-primary/10 text-primary text-sm font-medium tracking-wide border border-primary/20">
+          </Link>
+          <Link
+            href="/services#services-breakdown"
+            className="px-3 py-1 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary text-xs font-semibold tracking-wide border border-primary/20 hover:border-primary/40 transition-all cursor-pointer shadow-sm hover:scale-[1.03] active:scale-[0.98]"
+            title="Explore AI & Automation Solutions"
+          >
             AI & Automation
-          </div>
+          </Link>
         </div>
 
         {/* Desktop — nav links */}
         <div className="hidden lg:flex items-center gap-6 font-mono text-sm text-muted-foreground">
           {navLinks.map((link) => (
             link.href.startsWith("/") ? (
-              <Link key={link.href} href={link.href} className="hover:text-primary transition-colors duration-200 cursor-pointer">
+              <Link key={link.href} href={link.href} className={`${location === link.href ? "text-primary font-bold" : "text-muted-foreground"} hover:text-primary transition-colors duration-200 cursor-pointer`}>
                 {link.label}
               </Link>
             ) : (
               <a
                 key={link.href}
                 href={link.href}
-                className="hover:text-primary transition-colors duration-200"
+                className={`${location === link.href ? "text-primary font-bold" : "text-muted-foreground"} hover:text-primary transition-colors duration-200`}
               >
                 {link.label}
               </a>
@@ -87,7 +102,7 @@ export default function Navbar() {
           >
             {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
           </button>
-          <CtaButton onClick={openModal} data-testid="button-lets-talk-nav" className="px-6 py-2.5 text-base font-semibold rounded-lg">
+          <CtaButton onClick={openModal} data-testid="button-lets-talk-nav" size="md">
             let's talk
           </CtaButton>
         </div> 
@@ -97,6 +112,7 @@ export default function Navbar() {
           <button
             onClick={toggleTheme}
             className="w-9 h-9 rounded-lg border border-border flex items-center justify-center text-muted-foreground"
+            aria-label="Toggle theme"
           >
             {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
           </button>
@@ -104,6 +120,7 @@ export default function Navbar() {
             className="w-9 h-9 rounded-lg flex items-center justify-center text-foreground"
             onClick={() => setIsOpen(!isOpen)}
             data-testid="button-mobile-menu"
+            aria-label={isOpen ? "Close menu" : "Open menu"}
           >
             {isOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
@@ -121,12 +138,20 @@ export default function Navbar() {
           >
             <div className="px-6 py-6 flex flex-col gap-5">
               <div className="flex gap-3">
-                <div className="px-3 py-1 rounded-lg bg-primary/10 text-primary text-sm font-medium border border-primary/20">
-                  Web & Mobile
-                </div>
-                <div className="px-3 py-1 rounded-lg bg-primary/10 text-primary text-sm font-medium border border-primary/20">
-                  AI & Cloud
-                </div>
+                <Link
+                  href="/services#services-breakdown"
+                  onClick={() => setIsOpen(false)}
+                  className="px-3 py-1.5 rounded-lg bg-primary/10 text-primary text-xs font-semibold border border-primary/20 hover:bg-primary/20 transition-all cursor-pointer"
+                >
+                  Web & Software
+                </Link>
+                <Link
+                  href="/services#services-breakdown"
+                  onClick={() => setIsOpen(false)}
+                  className="px-3 py-1.5 rounded-lg bg-primary/10 text-primary text-xs font-semibold border border-primary/20 hover:bg-primary/20 transition-all cursor-pointer"
+                >
+                  AI & Automation
+                </Link>
               </div>
               <div className="flex flex-col gap-4">
                 {navLinks.map((link) => (
@@ -135,7 +160,7 @@ export default function Navbar() {
                       key={link.href}
                       href={link.href}
                       onClick={() => { setIsOpen(false); window.scrollTo(0, 0); }}
-                      className="font-mono text-base text-muted-foreground hover:text-primary transition-colors cursor-pointer"
+                      className={`font-mono text-base ${location === link.href ? "text-primary font-bold" : "text-muted-foreground"} hover:text-primary transition-colors cursor-pointer`}
                     >
                       {link.label}
                     </Link>
@@ -144,7 +169,7 @@ export default function Navbar() {
                       key={link.href}
                       href={link.href}
                       onClick={() => { setIsOpen(false); window.scrollTo(0, 0); }}
-                      className="font-mono text-base text-muted-foreground hover:text-primary transition-colors"
+                      className={`font-mono text-base ${location === link.href ? "text-primary font-bold" : "text-muted-foreground"} hover:text-primary transition-colors`}
                     >
                       {link.label}
                     </a>

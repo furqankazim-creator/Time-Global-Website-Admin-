@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useRef } from "react";
+import { Link } from "wouter";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useContactModal } from "@/hooks/use-contact-modal";
@@ -140,7 +141,7 @@ export default function HeroSection() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto lg:mx-0">
-            <div className="p-6 rounded-2xl bg-card border border-border shadow-sm hover:shadow-lg hover:border-primary/30 transition-all group cursor-pointer relative overflow-hidden hover:-translate-y-1 duration-200 text-left">
+            <Link href="/services" className="p-6 rounded-2xl bg-card border border-border shadow-sm hover:shadow-lg hover:border-primary/30 transition-all group cursor-pointer relative overflow-hidden hover:-translate-y-1 duration-200 text-left block">
               <div className="font-mono text-[10px] md:text-xs font-semibold text-primary mb-2 md:mb-3">
                 {"<industry/>"}
               </div>
@@ -151,8 +152,8 @@ export default function HeroSection() {
               <div className="absolute -right-4 -bottom-4 opacity-30 group-hover:opacity-80 transition-all group-hover:scale-110">
                 <Shape3D type="cube" className="w-16 md:w-20 h-16 md:h-20" />
               </div>
-            </div>
-            <div className="p-6 rounded-2xl bg-card border border-border shadow-sm hover:shadow-lg hover:border-primary/30 transition-all group cursor-pointer relative overflow-hidden hover:-translate-y-1 duration-200 text-left">
+            </Link>
+            <Link href="/services" className="p-6 rounded-2xl bg-card border border-border shadow-sm hover:shadow-lg hover:border-primary/30 transition-all group cursor-pointer relative overflow-hidden hover:-translate-y-1 duration-200 text-left block">
               <div className="font-mono text-[10px] md:text-xs font-semibold text-primary mb-2 md:mb-3">
                 {"<industry/>"}
               </div>
@@ -163,7 +164,7 @@ export default function HeroSection() {
               <div className="absolute -right-4 -bottom-4 opacity-30 group-hover:opacity-80 transition-all group-hover:scale-110">
                 <Shape3D type="half-round" className="w-16 md:w-20 h-16 md:h-20" />
               </div>
-            </div>
+            </Link>
           </div>
         </div>
 

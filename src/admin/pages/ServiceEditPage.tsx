@@ -5,6 +5,7 @@ import { ArrowLeft, Loader2, Save } from "lucide-react";
 import { ApiError, api } from "../lib/api";
 import { useAuth } from "../lib/auth";
 import { AdminLayout } from "../components/AdminLayout";
+import { RichTextEditor } from "../components/RichTextEditor";
 
 type Form = {
   title: string;
@@ -51,6 +52,7 @@ export default function ServiceEditPage({ id }: { id?: string }) {
         : api<{ data: { _id: string } }>(`/api/v1/admin/services/${id}`, { method: "PATCH", body }),
     onSuccess: (res) => {
       qc.invalidateQueries({ queryKey: ["services"] });
+      qc.invalidateQueries({ queryKey: ["cms"] });
       qc.invalidateQueries({ queryKey: ["service", id] });
       qc.invalidateQueries({ queryKey: ["dashboard"] });
       navigate(`/admin/services/${res.data._id}`);
@@ -143,16 +145,12 @@ export default function ServiceEditPage({ id }: { id?: string }) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1.5">Full description</label>
-            <textarea
+            <RichTextEditor
+              label="Full Description"
               value={form.fullDescription}
-              onChange={(e) => set("fullDescription", e.target.value)}
+              onChange={(v) => set("fullDescription", v)}
               rows={8}
-              className="w-full px-3 py-2 rounded-lg bg-background border border-border text-sm font-mono resize-y focus:outline-none focus:border-primary"
             />
-            <p className="text-xs text-muted-foreground mt-1">
-              HTML is sanitized server-side. Rich text editor arrives in Phase 4.
-            </p>
           </div>
         </section>
 

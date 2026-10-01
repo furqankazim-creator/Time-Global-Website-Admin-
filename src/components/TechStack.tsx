@@ -108,13 +108,13 @@ const GLOBAL_STYLES = `
     position: absolute;
     left: 50%;
     top: 50%;
-    will-change: transform;
+    transform-origin: center center;
     animation: orbit-cw var(--spd) linear infinite;
   }
 
   .orbit-item {
     position: absolute;
-    will-change: transform;
+    transform-origin: center center;
     animation: orbit-ccw var(--spd) linear infinite;
   }
 
@@ -153,28 +153,31 @@ function TechOrbitRing({
     >
       {entries.map((entry, i) => {
         const angle = (i / entries.length) * Math.PI * 2;
-        const x = radius + radius * Math.cos(angle) - 18;
-        const y = radius + radius * Math.sin(angle) - 18;
+        const x = radius + radius * Math.cos(angle) - 20;
+        const y = radius + radius * Math.sin(angle) - 20;
+        const isWhiteIcon = entry.color.toLowerCase() === "#ffffff";
         return (
           <div
             key={entry.label}
             className="orbit-item"
             style={{ left: x, top: y }}
           >
-            <div className="relative group">
-              {/* glow ring */}
-              <div className="absolute -inset-2 rounded-full bg-white/5 blur-sm group-hover:bg-purple-500/20 transition-colors duration-300" />
+            <div className="relative group cursor-pointer">
+              {/* ambient glow */}
+              <div className="absolute -inset-2 rounded-full bg-purple-500/10 dark:bg-white/5 blur-sm group-hover:bg-purple-500/25 transition-colors duration-300 pointer-events-none" />
               {/* icon bubble */}
-              <div className="relative w-9 h-9 flex items-center justify-center bg-secondary border border-white/10 rounded-full shadow-lg group-hover:border-purple-400/50 transition-all duration-300">
+              <div className="relative w-10 h-10 flex items-center justify-center bg-card dark:bg-[#151528] border border-border/80 dark:border-white/15 rounded-full shadow-sm group-hover:border-primary/50 dark:group-hover:border-purple-400/60 group-hover:shadow-md group-hover:scale-110 transition-all duration-300">
                 <entry.icon
-                  size={18}
-                  style={{ color: entry.color }}
-                  className="opacity-70 group-hover:opacity-100 transition-opacity duration-200"
+                  size={19}
+                  style={isWhiteIcon ? undefined : { color: entry.color }}
+                  className={`opacity-90 group-hover:opacity-100 transition-opacity duration-200 ${
+                    isWhiteIcon ? "text-slate-800 dark:text-white" : ""
+                  }`}
                 />
               </div>
               {/* tooltip */}
-              <div className="absolute -bottom-7 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-50">
-                <div className="bg-black/90 backdrop-blur-md border border-white/10 px-2 py-0.5 rounded text-[9px] text-white whitespace-nowrap">
+              <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-50">
+                <div className="bg-slate-900/95 dark:bg-black/95 backdrop-blur-md border border-slate-700/50 dark:border-white/10 px-2.5 py-1 rounded-md text-[10px] text-white font-medium whitespace-nowrap shadow-xl">
                   {entry.label}
                 </div>
               </div>
@@ -222,9 +225,9 @@ function CountryOrbitRing({
             className="orbit-item"
             style={{ left: x, top: y }}
           >
-            <div className="relative group">
-              <div className="absolute -inset-2 rounded-full bg-white/5 blur-sm group-hover:bg-blue-500/20 transition-colors duration-300" />
-              <div className="relative w-11 h-11 flex items-center justify-center bg-secondary border border-white/10 rounded-full shadow-lg group-hover:border-blue-400/40 transition-all duration-300 overflow-hidden">
+            <div className="relative group cursor-pointer">
+              <div className="absolute -inset-2 rounded-full bg-emerald-500/10 dark:bg-emerald-400/5 blur-sm group-hover:bg-emerald-500/25 transition-colors duration-300 pointer-events-none" />
+              <div className="relative w-11 h-11 flex items-center justify-center bg-card dark:bg-[#151528] border border-border/80 dark:border-emerald-400/35 rounded-full shadow-md group-hover:border-emerald-400/80 group-hover:shadow-[0_0_15px_rgba(16,185,129,0.35)] group-hover:scale-110 transition-all duration-300 overflow-hidden">
                 <img
                   src={`https://flagcdn.com/w40/${country.flag}.png`}
                   srcSet={`https://flagcdn.com/w80/${country.flag}.png 2x`}
@@ -237,11 +240,11 @@ function CountryOrbitRing({
               </div>
               {/* tooltip */}
               <div className="absolute -bottom-14 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-50">
-                <div className="bg-black/90 backdrop-blur-md border border-white/10 px-3 py-1.5 rounded-lg text-[9px] text-white whitespace-nowrap">
+                <div className="bg-slate-900/95 dark:bg-black/95 backdrop-blur-md border border-slate-700/50 dark:border-white/10 px-3 py-1.5 rounded-lg text-[9px] text-white whitespace-nowrap shadow-xl">
                   <div className="font-semibold">{country.name}</div>
-                  <div className="flex gap-2 text-white/50 mt-0.5">
+                  <div className="flex gap-2 text-slate-300 dark:text-white/60 mt-0.5">
                     <span>{country.revenue}</span>
-                    <span className="text-green-400">{country.growth}</span>
+                    <span className="text-emerald-400 font-medium">{country.growth}</span>
                   </div>
                 </div>
               </div>
@@ -260,16 +263,9 @@ function CentralCard() {
       initial={{ opacity: 0, scale: 0.92 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      style={{ position: "absolute", zIndex: 30, width: 280 }}
+      className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-30 w-[275px] pointer-events-auto"
     >
-      <div
-        className="rounded-[24px] overflow-hidden border border-white/10 shadow-2xl"
-        style={{
-          background: "rgba(14,14,24,0.94)",
-          backdropFilter: "blur(28px)",
-          boxShadow: "0 0 60px rgba(124,58,237,0.15), 0 20px 60px rgba(0,0,0,0.6)",
-        }}
-      >
+      <div className="rounded-[24px] overflow-hidden border border-border/80 dark:border-white/10 shadow-2xl bg-card/95 dark:bg-[#0E0E18]/95 backdrop-blur-2xl transition-colors duration-300">
         {/* gradient tint overlay */}
         <div
           className="absolute inset-0 rounded-[24px] pointer-events-none"
@@ -280,10 +276,10 @@ function CentralCard() {
         />
 
         {/* Header */}
-        <div className="flex items-center justify-between px-4 pt-4 pb-3 border-b border-white/[0.06]">
+        <div className="flex items-center justify-between px-4 pt-4 pb-3 border-b border-border/70 dark:border-white/[0.06]">
           <div className="flex items-center gap-2.5">
             <div
-              className="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
+              className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 shadow-md"
               style={{
                 background: "linear-gradient(135deg,#7c3aed,#3b82f6)",
                 boxShadow: "0 4px 14px rgba(124,58,237,0.35)",
@@ -296,29 +292,26 @@ function CentralCard() {
               </svg>
             </div>
             <div>
-              <p className="text-white font-bold text-[13px] leading-none">Time Global</p>
-              <p style={{ color: "rgba(255,255,255,0.3)", fontSize: "9px", fontFamily: "monospace", marginTop: 3 }}>
+              <p className="text-foreground dark:text-white font-bold text-[13px] leading-none">Time Global</p>
+              <p className="text-muted-foreground dark:text-white/40 text-[9px] font-mono mt-1">
                 timeglobal.com
               </p>
             </div>
           </div>
           {/* LIVE badge */}
-          <div
-            className="flex items-center gap-1.5 rounded-full px-2.5 py-1"
-            style={{ background: "rgba(34,197,94,0.12)", border: "1px solid rgba(34,197,94,0.25)" }}
-          >
+          <div className="flex items-center gap-1.5 rounded-full px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/25">
             <span className="relative flex h-1.5 w-1.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500" />
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />
             </span>
-            <span style={{ color: "#4ade80", fontSize: "8px", fontFamily: "monospace", fontWeight: 700, letterSpacing: "0.04em" }}>
+            <span className="text-emerald-600 dark:text-emerald-400 text-[8px] font-mono font-bold tracking-wider">
               LIVE
             </span>
           </div>
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-3 border-b border-white/[0.06]">
+        <div className="grid grid-cols-3 border-b border-border/70 dark:border-white/[0.06]">
           {[
             { value: "13+",  label: "Years"     },
             { value: "150+", label: "Projects"  },
@@ -326,11 +319,12 @@ function CentralCard() {
           ].map((s, i) => (
             <div
               key={s.label}
-              className="flex flex-col items-center py-3"
-              style={{ borderRight: i < 2 ? "1px solid rgba(255,255,255,0.06)" : "none" }}
+              className={`flex flex-col items-center py-3 ${
+                i < 2 ? "border-r border-border/70 dark:border-white/[0.06]" : ""
+              }`}
             >
-              <span className="text-white font-bold" style={{ fontSize: "15px" }}>{s.value}</span>
-              <span style={{ color: "rgba(255,255,255,0.22)", fontSize: "7.5px", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 3 }}>
+              <span className="text-foreground dark:text-white font-bold text-[15px]">{s.value}</span>
+              <span className="text-muted-foreground dark:text-white/40 text-[7.5px] uppercase tracking-wider mt-1">
                 {s.label}
               </span>
             </div>
@@ -339,12 +333,12 @@ function CentralCard() {
 
         {/* Description */}
         <div className="px-4 pt-3 pb-4">
-          <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "10px", lineHeight: 1.65 }}>
-            <span style={{ color: "rgba(255,255,255,0.9)", fontWeight: 600 }}>Time Global</span>{" "}
+          <p className="text-muted-foreground dark:text-white/60 text-[10px] leading-relaxed">
+            <span className="text-foreground dark:text-white font-semibold">Time Global</span>{" "}
             is an AI-first digital agency helping startups and businesses launch websites, SaaS
             platforms, automation systems, and AI solutions faster. Since 2013, our mission has
             been simple:
-            <span style={{ color: "rgba(255,255,255,0.85)", fontWeight: 600 }}>
+            <span className="text-foreground/90 dark:text-white/90 font-semibold">
               {" "}quick delivery, efficient execution, and measurable results.
             </span>
           </p>
@@ -354,6 +348,30 @@ function CentralCard() {
   );
 }
 
+// Guide rings with distinct theme-adaptive colors and glow so orbits are clearly defined
+const GUIDE_RINGS = [
+  {
+    diameter: 360,
+    border: "border border-purple-500/40 dark:border-purple-400/35",
+    shadow: "shadow-[0_0_20px_rgba(168,85,247,0.15)]",
+  },
+  {
+    diameter: 580,
+    border: "border border-cyan-500/35 dark:border-cyan-400/30",
+    shadow: "shadow-[0_0_20px_rgba(6,182,212,0.12)]",
+  },
+  {
+    diameter: 820,
+    border: "border border-blue-500/35 dark:border-blue-400/30",
+    shadow: "shadow-[0_0_20px_rgba(59,130,246,0.12)]",
+  },
+  {
+    diameter: 1050,
+    border: "border border-emerald-500/40 dark:border-emerald-400/35",
+    shadow: "shadow-[0_0_25px_rgba(16,185,129,0.18)]",
+  },
+];
+
 // ─── Main section ────────────────────────────────────────────────────────────
 export default function TechStack() {
   const innerIcons  = useMemo(() => TECH_ICONS.filter(e => e.ring === "inner"),  []);
@@ -362,81 +380,84 @@ export default function TechStack() {
 
   return (
     <section
-      className="overflow-hidden relative flex flex-col items-center"
-      style={{ background: "#0D0D18", minHeight: "140vh", paddingTop: "5rem", paddingBottom: "4rem" }}
+      className="overflow-hidden relative flex flex-col items-center bg-secondary/40 dark:bg-[#0A0A14] py-16 sm:py-20 md:py-24 transition-colors duration-300"
     >
       {/* Inject CSS keyframes once */}
       <style dangerouslySetInnerHTML={{ __html: GLOBAL_STYLES }} />
 
-      {/* Background glows */}
+      {/* Ambient glows */}
       <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
-        style={{ width: 900, height: 900, background: "radial-gradient(circle, rgba(124,58,237,0.07) 0%, transparent 70%)" }}
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none opacity-40 dark:opacity-100 transition-opacity duration-300"
+        style={{ width: 900, height: 900, background: "radial-gradient(circle, rgba(124,58,237,0.08) 0%, transparent 70%)" }}
       />
       <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
-        style={{ width: 600, height: 600, background: "radial-gradient(circle, rgba(59,130,246,0.06) 0%, transparent 70%)" }}
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none opacity-40 dark:opacity-100 transition-opacity duration-300"
+        style={{ width: 600, height: 600, background: "radial-gradient(circle, rgba(59,130,246,0.07) 0%, transparent 70%)" }}
       />
 
-      <div className="max-w-7xl w-full mx-auto px-6 relative" style={{ zIndex: 2 }}>
+      <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 relative z-10">
 
-        {/* Section header — framer only for the one-time fade-in, NOT looping */}
-        <div className="text-center mb-16">
+        {/* Section header */}
+        <div className="text-center mb-8 sm:mb-10">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
             transition={{ duration: 0.5, ease: "easeOut" }}
-            className="inline-block px-4 py-1.5 rounded-full font-mono text-sm font-bold mb-5 border"
-            style={{ background: "rgba(124,58,237,0.1)", color: "#a78bfa", borderColor: "rgba(124,58,237,0.2)" }}
+            className="inline-block px-4 py-1.5 rounded-full font-mono text-xs sm:text-sm font-semibold mb-4 sm:mb-5 border bg-primary/10 text-primary border-primary/20 dark:bg-purple-500/10 dark:text-purple-300 dark:border-purple-500/25"
           >
             {"<ecosystem>"}
           </motion.div>
 
           <motion.h2
             initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
-            className="font-bold text-white leading-tight mb-4"
-            style={{ fontSize: "clamp(2rem,5vw,3.5rem)" }}
+            className="font-bold text-foreground dark:text-white leading-tight mb-3 text-3xl sm:text-4xl md:text-5xl lg:text-6xl"
           >
             All the tech that{" "}
-            <span style={{ backgroundImage: "linear-gradient(to right,#a78bfa,#60a5fa)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+            <span className="bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 dark:from-purple-400 dark:via-indigo-300 dark:to-blue-400 bg-clip-text text-transparent">
               powers your vision
             </span>
           </motion.h2>
+
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.15, ease: "easeOut" }}
+            className="text-muted-foreground text-sm sm:text-base max-w-xl mx-auto"
+          >
+            From modern frontend stacks and high-availability cloud backends to cutting-edge AI and international deployments.
+          </motion.p>
         </div>
 
-        {/* Orbit area */}
-        <div className="relative flex items-center justify-center" style={{ height: 1100 }}>
+        {/* Orbit responsive scaling viewport — generous vertical space so top and bottom orbits are never cut off */}
+        <div className="relative w-full flex items-center justify-center overflow-hidden h-[360px] min-[390px]:h-[400px] min-[480px]:h-[480px] sm:h-[640px] md:h-[780px] lg:h-[970px] xl:h-[1190px] 2xl:h-[1210px]">
+          {/* Inner 1160px orbit system, smoothly scaled for mobile/tablet screens */}
+          <div className="relative flex items-center justify-center w-[1160px] h-[1160px] shrink-0 scale-[0.29] min-[390px]:scale-[0.32] min-[480px]:scale-[0.39] sm:scale-[0.52] md:scale-[0.64] lg:scale-[0.80] xl:scale-[0.98] 2xl:scale-100 origin-center transition-transform duration-300">
 
-          {/* Static decorative ring guides */}
-          {[360, 580, 820, 1050].map((d, i) => (
-            <div
-              key={d}
-              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
-              style={{
-                width: d,
-                height: d,
-                border: i === 3
-                  ? "1px solid rgba(96,165,250,0.12)"
-                  : "1px solid rgba(255,255,255,0.04)",
-                zIndex: 1,
-              }}
-            />
-          ))}
+            {/* Clearly visible static decorative ring guides with themed glowing paths */}
+            {GUIDE_RINGS.map((ring) => (
+              <div
+                key={ring.diameter}
+                className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none transition-colors duration-300 ${ring.border} ${ring.shadow}`}
+                style={{ width: ring.diameter, height: ring.diameter, zIndex: 1 }}
+              />
+            ))}
 
-          {/* Rings — pure CSS, zero JS per frame */}
-          <TechOrbitRing    entries={innerIcons}   radius={180} speed={42}  />
-          <TechOrbitRing    entries={middleIcons}  radius={290} speed={68}  />
-          <TechOrbitRing    entries={outerIcons}   radius={410} speed={88}  />
-          <CountryOrbitRing countries={COUNTRIES} radius={525} speed={115} />
+            {/* Concentric rotating rings — pure CSS animations */}
+            <TechOrbitRing    entries={innerIcons}   radius={180} speed={42}  />
+            <TechOrbitRing    entries={middleIcons}  radius={290} speed={68}  />
+            <TechOrbitRing    entries={outerIcons}   radius={410} speed={88}  />
+            <CountryOrbitRing countries={COUNTRIES} radius={525} speed={115} />
 
-          {/* Central card — framer only for the one-time mount animation */}
-          <CentralCard />
+            {/* Central card */}
+            <CentralCard />
+          </div>
         </div>
       </div>
-      <div className="pb-16" />
-
     </section>
   );
 }

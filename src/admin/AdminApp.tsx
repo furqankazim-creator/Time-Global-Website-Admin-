@@ -9,6 +9,9 @@ import MediaPage from "./pages/MediaPage";
 import HomeManagerPage from "./pages/HomeManagerPage";
 import LeadsPage from "./pages/LeadsPage";
 import SettingsPage from "./pages/SettingsPage";
+import UsersPage from "./pages/UsersPage";
+import RedirectsPage from "./pages/RedirectsPage";
+import AuditLogPage from "./pages/AuditLogPage";
 import {
   ProjectsListPage, PostsListPage, TestimonialsListPage, TeamListPage,
 } from "./pages/lists";
@@ -79,6 +82,10 @@ function Guarded() {
       <Route path="/admin/settings" component={SettingsPage} />
       <Route path="/admin/settings/:tab" component={SettingsPage} />
       <Route path="/admin/notifications" component={NotificationsPage} />
+
+      <Route path="/admin/users" component={UsersPage} />
+      <Route path="/admin/redirects" component={RedirectsPage} />
+      <Route path="/admin/audit-logs" component={AuditLogPage} />
 
       <Route>{() => <NotBuilt title="Page not found" />}</Route>
     </Switch>
