@@ -46,7 +46,7 @@ function useResourceForm<T extends object>(resource: string, id: string | undefi
       qc.invalidateQueries({ queryKey: ["dashboard"] });
       navigate(`/admin/${resource}/${res.data._id}`);
     },
-    meta: { success: `${singular(resource)} saved` },
+    meta: { success: resource === "projects" ? "Case study saved" : `${singular(resource)} saved` },
   });
 
   const submit = async (e: FormEvent, transform?: (f: T) => object) => {
@@ -146,11 +146,11 @@ const EMPTY_PROJECT: ProjectForm = {
 export function ProjectEditPage({ id }: { id?: string }) {
   const { canEdit } = useAuth();
   const f = useResourceForm<ProjectForm>("projects", id, EMPTY_PROJECT);
-  if (!f.isNew && f.isLoading) return <AdminLayout title="Project"><p className="text-muted-foreground">Loading…</p></AdminLayout>;
+  if (!f.isNew && f.isLoading) return <AdminLayout title="Case Study"><p className="text-muted-foreground">Loading…</p></AdminLayout>;
 
   return (
     <EditShell
-      title={f.isNew ? "New project" : f.form.title || "Edit project"}
+      title={f.isNew ? "New Case Study" : f.form.title || "Edit Case Study"}
       resource="projects"
       saving={f.save.isPending}
       canEdit={canEdit}

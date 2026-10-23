@@ -73,6 +73,10 @@ function Router() {
       <Route path="/" component={HomePage} />
       <Route path="/work" component={WorkPage} />
       <Route path="/work/:slug">{(p) => <ProjectPage slug={p.slug} />}</Route>
+      <Route path="/case-studies" component={WorkPage} />
+      <Route path="/case-study" component={WorkPage} />
+      <Route path="/case-studies/:slug">{(p) => <ProjectPage slug={p.slug} />}</Route>
+      <Route path="/case-study/:slug">{(p) => <ProjectPage slug={p.slug} />}</Route>
       <Route path="/services" component={ServicesPage} />
       <Route path="/stories" component={StoriesPage} />
       <Route path="/story" component={StoriesPage} />

@@ -443,7 +443,7 @@ export function CaseStudySlider() {
             <div>
               {/* Eyebrow chip matches every other section on the page */}
               <div className="head-reveal inline-block px-4 py-1.5 rounded-lg bg-primary/15 text-primary font-mono text-sm font-bold mb-6 border border-primary/30 shadow-sm shadow-primary/10">
-                {"<Our Portfolio/>"}
+                {"<Case Studies/>"}
               </div>
               <h2
                 ref={headingRef}
@@ -453,7 +453,7 @@ export function CaseStudySlider() {
                     heading pattern */}
                 <SplitText text="Featured" />{" "}
                 <span className="text-primary drop-shadow-[0_0_24px_rgba(16,185,129,0.25)]">
-                  <SplitText text="Projects" />
+                  <SplitText text="Case Studies" />
                 </span>
               </h2>
             </div>

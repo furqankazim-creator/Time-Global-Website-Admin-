@@ -163,12 +163,14 @@ function getProjectImage(p: CmsProject): string {
 
 /** CMS project → the ProjectCard shape this page already renders. */
 function toProjectCard(p: CmsProject, i: number): Omit<ProjectCardProps, "index"> {
+  const categoryTag = p.category ? p.category.replace("-", " ") : "";
+  const techTags = p.techStack ?? [];
   return {
     image: getProjectImage(p),
     title: p.title,
-    description: p.client ? `${p.client} — ${p.category.replace("-", " ")}` : p.title,
-    tags: [p.category.replace("-", " ")].filter(Boolean),
-    technologies: p.techStack ?? [],
+    description: p.client ? `${p.client} — ${categoryTag}` : p.title,
+    tags: [categoryTag, ...techTags].filter(Boolean),
+    technologies: techTags,
     // Card links to the case study; every third one spans wide for rhythm.
     liveUrl: `/work/${p.slug}`,
     wide: i % 3 === 0,
@@ -434,23 +436,24 @@ function PortfolioCard({ cs, index }: { cs: CaseStudy; index: number }) {
 // ─── WorkPage ─────────────────────────────────────────────────────────────────
 
 export default function WorkPage() {
-  usePageMeta({ title: "Our Work", description: "Case studies with real numbers: platforms, apps and systems we designed, built and shipped." });
+  usePageMeta({ title: "Case Studies & Work", description: "Case studies with real numbers: platforms, apps and systems we designed, built and shipped." });
 
   // Published projects from the admin panel replace the bundled samples;
   // the bundled ones only cover an empty or unreachable CMS.
   const { data: cmsProjects } = useProjects();
   const shownProjects =
-    cmsProjects.length > 0 ? cmsProjects.map(toProjectCard) : projects;
+    (cmsProjects && cmsProjects.length > 0) ? cmsProjects.map(toProjectCard) : projects;
 
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const categories = ["All", "FinTech", "AI", "Mobile", "EdTech", "Web", "Health"];
+  const categories = ["All", "Web", "Mobile", "Custom Software", "E-Commerce", "FinTech", "AI"];
 
   const filteredProjects = shownProjects.filter((p) => {
     const matchesCat =
       selectedCategory === "All" ||
-      (p.tags ?? []).some((t) => t.toLowerCase().includes(selectedCategory.toLowerCase()));
+      (p.tags ?? []).some((t) => t.toLowerCase().includes(selectedCategory.toLowerCase())) ||
+      (p.technologies ?? []).some((tech) => tech.toLowerCase().includes(selectedCategory.toLowerCase()));
     const q = searchQuery.toLowerCase().trim();
     const matchesSearch =
       !q ||
@@ -635,7 +638,7 @@ export default function WorkPage() {
                 >
                   <div className="inline-flex w-fit items-center gap-2 rounded-full border border-border/60 bg-background/60 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground backdrop-blur-md mb-4">
                     <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-                    Selected Work
+                    Case Studies & Portfolio
                   </div>
                   <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-2">
                     Products we've built,
@@ -645,7 +648,7 @@ export default function WorkPage() {
                     </span>
                   </h2>
                   <p className="text-muted-foreground max-w-xl text-sm leading-relaxed">
-                    A curated portfolio of platforms, applications, and architectures shipped for ambitious companies worldwide.
+                    A curated portfolio of case studies, applications, and architectures shipped for ambitious companies worldwide.
                   </p>
                 </motion.div>
 

@@ -13,7 +13,7 @@ import {
 // Mirrors the navbar — the footer used to omit about/blog/awards entirely.
 const NAV_LINKS = [
   { label: "<about>", href: "/about" },
-  { label: "<work>", href: "/work" },
+  { label: "<case studies>", href: "/work" },
   { label: "<services>", href: "/services" },
   { label: "<stories>", href: "/stories" },
   { label: "<blog>", href: "/blog" },

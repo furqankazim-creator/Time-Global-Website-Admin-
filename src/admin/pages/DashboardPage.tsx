@@ -167,7 +167,7 @@ export default function DashboardPage() {
           href="/admin/posts"
         />
         <KpiCard
-          label="Projects"
+          label="Case Studies"
           value={isLoading ? null : data?.cards.projects ?? 0}
           hint={`${data?.cards.activeProjects ?? 0} published`}
           icon={Briefcase}
@@ -305,7 +305,7 @@ export default function DashboardPage() {
           <div className="rounded-xl border border-border bg-card divide-y divide-border overflow-hidden">
             {[
               { label: "Write blog post", href: "/admin/posts/new", icon: FileText },
-              { label: "Add project case study", href: "/admin/projects/new", icon: Briefcase },
+              { label: "Add case study", href: "/admin/projects/new", icon: Briefcase },
               { label: "Create service", href: "/admin/services/new", icon: Wrench },
               { label: "Upload media", href: "/admin/media", icon: Image },
               { label: "Manage users & roles", href: "/admin/users", icon: Shield },

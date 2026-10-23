@@ -6,7 +6,6 @@ import DashboardPage from "./pages/DashboardPage";
 import ServicesListPage from "./pages/ServicesListPage";
 import ServiceEditPage from "./pages/ServiceEditPage";
 import MediaPage from "./pages/MediaPage";
-import HomeManagerPage from "./pages/HomeManagerPage";
 import LeadsPage from "./pages/LeadsPage";
 import SettingsPage from "./pages/SettingsPage";
 import UsersPage from "./pages/UsersPage";
@@ -51,7 +50,6 @@ function Guarded() {
   return (
     <Switch>
       <Route path="/admin" component={DashboardPage} />
-      <Route path="/admin/home" component={HomeManagerPage} />
 
       <Route path="/admin/services" component={ServicesListPage} />
       <Route path="/admin/services/new">{() => <ServiceEditPage />}</Route>
@@ -60,6 +58,10 @@ function Guarded() {
       <Route path="/admin/projects" component={ProjectsListPage} />
       <Route path="/admin/projects/new">{() => <ProjectEditPage />}</Route>
       <Route path="/admin/projects/:id">{(p) => <ProjectEditPage id={p.id} />}</Route>
+
+      <Route path="/admin/case-studies" component={ProjectsListPage} />
+      <Route path="/admin/case-studies/new">{() => <ProjectEditPage />}</Route>
+      <Route path="/admin/case-studies/:id">{(p) => <ProjectEditPage id={p.id} />}</Route>
 
       <Route path="/admin/posts" component={PostsListPage} />
       <Route path="/admin/posts/new">{() => <PostEditPage />}</Route>

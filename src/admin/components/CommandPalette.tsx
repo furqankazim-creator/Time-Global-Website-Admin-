@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { Command } from "cmdk";
 import {
-  LayoutDashboard, FolderOpen, Home, Wrench, Briefcase, FileText,
+  LayoutDashboard, FolderOpen, Wrench, Briefcase, FileText,
   Quote, Users, BriefcaseBusiness, Inbox, Settings, Bell, Image,
   Plus, Search, ArrowRight, Shield, RefreshCw, History, Sun, Moon
 } from "lucide-react";
@@ -111,15 +111,6 @@ export function CommandPalette({
                 <ArrowRight size={13} className="text-muted-foreground opacity-60" />
               </Command.Item>
               <Command.Item
-                onSelect={() => run(() => setLocation("/admin/home"))}
-                className="flex items-center justify-between px-3 py-2 rounded-lg text-sm cursor-pointer aria-selected:bg-muted transition-colors"
-              >
-                <span className="flex items-center gap-2.5">
-                  <Home size={15} /> Home Page Manager
-                </span>
-                <ArrowRight size={13} className="text-muted-foreground opacity-60" />
-              </Command.Item>
-              <Command.Item
                 onSelect={() => run(() => setLocation("/admin/services"))}
                 className="flex items-center justify-between px-3 py-2 rounded-lg text-sm cursor-pointer aria-selected:bg-muted transition-colors"
               >
@@ -133,7 +124,7 @@ export function CommandPalette({
                 className="flex items-center justify-between px-3 py-2 rounded-lg text-sm cursor-pointer aria-selected:bg-muted transition-colors"
               >
                 <span className="flex items-center gap-2.5">
-                  <Briefcase size={15} /> Portfolio & Case Studies
+                  <Briefcase size={15} /> Case Studies
                 </span>
                 <ArrowRight size={13} className="text-muted-foreground opacity-60" />
               </Command.Item>

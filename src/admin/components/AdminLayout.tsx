@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from "react";
 import { Link, useLocation } from "wouter";
 import {
-  LayoutDashboard, FolderOpen, Home, Wrench, Briefcase, FileText, Quote,
+  LayoutDashboard, FolderOpen, Wrench, Briefcase, FileText, Quote,
   Users, BriefcaseBusiness, Inbox, Settings, Bell, Menu, X, LogOut,
   ChevronDown, Image, Shield, RefreshCw, History, Search, Sun, Moon
 } from "lucide-react";
@@ -21,9 +21,8 @@ const NAV: NavEntry[] = [
     label: "Content",
     icon: FolderOpen,
     items: [
-      { label: "Home Page", href: "/admin/home", icon: Home },
       { label: "Services", href: "/admin/services", icon: Wrench },
-      { label: "Portfolio", href: "/admin/projects", icon: Briefcase },
+      { label: "Case Studies", href: "/admin/projects", icon: Briefcase },
       { label: "Blog", href: "/admin/posts", icon: FileText },
       { label: "Testimonials", href: "/admin/testimonials", icon: Quote },
       { label: "Team", href: "/admin/team", icon: Users },
@@ -60,7 +59,10 @@ const NAV: NavEntry[] = [
 
 function NavLink({ item, onNavigate }: { item: NavItem; onNavigate?: () => void }) {
   const [location] = useLocation();
-  const active = location === item.href;
+  const active =
+    location === item.href ||
+    (item.href !== "/admin" && location.startsWith(item.href)) ||
+    (item.href === "/admin/projects" && (location.startsWith("/admin/case-studies") || location.startsWith("/admin/projects")));
   const Icon = item.icon;
 
   if (item.soon) {

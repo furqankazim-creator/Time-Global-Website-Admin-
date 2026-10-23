@@ -16,7 +16,7 @@ const Title = ({ href, main, sub }: { href: string; main: string; sub?: string }
 const filterCls =
   "h-9 px-3 rounded-lg bg-card border border-border text-sm focus:outline-none focus:border-primary";
 
-/* ----------------------------- Portfolio ------------------------------ */
+/* ----------------------------- Case Studies --------------------------- */
 type Project = {
   _id: string; title: string; slug: string; client: string;
   category: string; status: string; featured: boolean;
@@ -26,7 +26,7 @@ export function ProjectsListPage() {
   const [category, setCategory] = useState("");
 
   const columns: Column<Project>[] = [
-    { key: "title", header: "Project", sortable: true, render: (r) => <Title href={`/admin/projects/${r._id}`} main={r.title} sub={`/${r.slug}`} /> },
+    { key: "title", header: "Case Study", sortable: true, render: (r) => <Title href={`/admin/projects/${r._id}`} main={r.title} sub={`/${r.slug}`} /> },
     { key: "client", header: "Client", sortable: true, render: (r) => r.client || <span className="text-muted-foreground/40">—</span> },
     { key: "category", header: "Category", render: (r) => <span className="text-xs capitalize">{r.category.replace("-", " ")}</span> },
     { key: "status", header: "Status", sortable: true, render: (r) => <StatusPill status={r.status} /> },
@@ -35,13 +35,13 @@ export function ProjectsListPage() {
 
   return (
     <ResourceList<Project>
-      title="Portfolio"
+      title="Case Studies"
       resource="projects"
-      newLabel="New project"
+      newLabel="New Case Study"
       defaultSort="order"
       columns={columns}
       labelOf={(r) => r.title}
-      emptyMessage="No projects yet."
+      emptyMessage="No case studies yet."
       extraParams={{ category }}
       filters={
         <select value={category} onChange={(e) => setCategory(e.target.value)} className={filterCls}>

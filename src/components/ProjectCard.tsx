@@ -339,7 +339,7 @@ export function ProjectCard({
                 href={liveUrl}
                 className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-full bg-white px-3 py-2 text-xs font-semibold text-black transition-transform hover:scale-[1.02]"
               >
-                <ExternalLink className="h-3.5 w-3.5" /> View Project
+                <ExternalLink className="h-3.5 w-3.5" /> View Case Study
               </Link>
             ) : (
               <a
@@ -348,7 +348,7 @@ export function ProjectCard({
                 rel="noreferrer"
                 className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-full bg-white px-3 py-2 text-xs font-semibold text-black transition-transform hover:scale-[1.02]"
               >
-                <ExternalLink className="h-3.5 w-3.5" /> View Project
+                <ExternalLink className="h-3.5 w-3.5" /> View Case Study
               </a>
             )}
             <a

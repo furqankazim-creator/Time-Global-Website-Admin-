@@ -28,11 +28,17 @@ export default function Navbar() {
 
   const navLinks = [
     { label: "<about>", href: "/about" },
-    { label: "<work>", href: "/work" },
+    { label: "<case studies>", href: "/work" },
     { label: "<services>", href: "/services" },
     { label: "<stories>", href: "/stories" },
     { label: "<careers>", href: "/careers" },
   ];
+
+  const isLinkActive = (href: string) => {
+    if (location === href) return true;
+    if (href === "/work" && (location.startsWith("/work") || location.startsWith("/case-stud"))) return true;
+    return false;
+  };
 
   return (
     <nav
@@ -77,14 +83,14 @@ export default function Navbar() {
         <div className="hidden lg:flex items-center gap-6 font-mono text-sm text-muted-foreground">
           {navLinks.map((link) => (
             link.href.startsWith("/") ? (
-              <Link key={link.href} href={link.href} className={`${location === link.href ? "text-primary font-bold" : "text-muted-foreground"} hover:text-primary transition-colors duration-200 cursor-pointer`}>
+              <Link key={link.href} href={link.href} className={`${isLinkActive(link.href) ? "text-primary font-bold" : "text-muted-foreground"} hover:text-primary transition-colors duration-200 cursor-pointer`}>
                 {link.label}
               </Link>
             ) : (
               <a
                 key={link.href}
                 href={link.href}
-                className={`${location === link.href ? "text-primary font-bold" : "text-muted-foreground"} hover:text-primary transition-colors duration-200`}
+                className={`${isLinkActive(link.href) ? "text-primary font-bold" : "text-muted-foreground"} hover:text-primary transition-colors duration-200`}
               >
                 {link.label}
               </a>
@@ -160,7 +166,7 @@ export default function Navbar() {
                       key={link.href}
                       href={link.href}
                       onClick={() => { setIsOpen(false); window.scrollTo(0, 0); }}
-                      className={`font-mono text-base ${location === link.href ? "text-primary font-bold" : "text-muted-foreground"} hover:text-primary transition-colors cursor-pointer`}
+                      className={`font-mono text-base ${isLinkActive(link.href) ? "text-primary font-bold" : "text-muted-foreground"} hover:text-primary transition-colors cursor-pointer`}
                     >
                       {link.label}
                     </Link>
@@ -169,7 +175,7 @@ export default function Navbar() {
                       key={link.href}
                       href={link.href}
                       onClick={() => { setIsOpen(false); window.scrollTo(0, 0); }}
-                      className={`font-mono text-base ${location === link.href ? "text-primary font-bold" : "text-muted-foreground"} hover:text-primary transition-colors`}
+                      className={`font-mono text-base ${isLinkActive(link.href) ? "text-primary font-bold" : "text-muted-foreground"} hover:text-primary transition-colors`}
                     >
                       {link.label}
                     </a>
