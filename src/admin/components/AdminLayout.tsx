@@ -3,7 +3,8 @@ import { Link, useLocation } from "wouter";
 import {
   LayoutDashboard, FolderOpen, Wrench, Briefcase, FileText, Quote,
   Users, BriefcaseBusiness, Inbox, Settings, Bell, Menu, X, LogOut,
-  ChevronDown, Image, Shield, RefreshCw, History, Search, Sun, Moon
+  ChevronDown, Image, Shield, RefreshCw, History, Search, Sun, Moon,
+  Sparkles
 } from "lucide-react";
 import { useAuth } from "../lib/auth";
 import { useTheme } from "../../hooks/use-theme";
@@ -23,6 +24,7 @@ const NAV: NavEntry[] = [
     items: [
       { label: "Services", href: "/admin/services", icon: Wrench },
       { label: "Case Studies", href: "/admin/projects", icon: Briefcase },
+      { label: "Stories", href: "/admin/stories", icon: Sparkles },
       { label: "Blog", href: "/admin/posts", icon: FileText },
       { label: "Testimonials", href: "/admin/testimonials", icon: Quote },
       { label: "Team", href: "/admin/team", icon: Users },

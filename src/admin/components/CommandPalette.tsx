@@ -4,7 +4,8 @@ import { Command } from "cmdk";
 import {
   LayoutDashboard, FolderOpen, Wrench, Briefcase, FileText,
   Quote, Users, BriefcaseBusiness, Inbox, Settings, Bell, Image,
-  Plus, Search, ArrowRight, Shield, RefreshCw, History, Sun, Moon
+  Plus, Search, ArrowRight, Shield, RefreshCw, History, Sun, Moon,
+  Sparkles
 } from "lucide-react";
 import { useTheme } from "../../hooks/use-theme";
 
@@ -76,6 +77,13 @@ export function CommandPalette({
                 <span>Add new project case study</span>
               </Command.Item>
               <Command.Item
+                onSelect={() => run(() => setLocation("/admin/stories/new"))}
+                className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm cursor-pointer aria-selected:bg-primary/10 aria-selected:text-primary transition-colors"
+              >
+                <Plus size={15} className="text-primary" />
+                <span>Create client story</span>
+              </Command.Item>
+              <Command.Item
                 onSelect={() => run(() => setLocation("/admin/services/new"))}
                 className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm cursor-pointer aria-selected:bg-primary/10 aria-selected:text-primary transition-colors"
               >
@@ -125,6 +133,15 @@ export function CommandPalette({
               >
                 <span className="flex items-center gap-2.5">
                   <Briefcase size={15} /> Case Studies
+                </span>
+                <ArrowRight size={13} className="text-muted-foreground opacity-60" />
+              </Command.Item>
+              <Command.Item
+                onSelect={() => run(() => setLocation("/admin/stories"))}
+                className="flex items-center justify-between px-3 py-2 rounded-lg text-sm cursor-pointer aria-selected:bg-muted transition-colors"
+              >
+                <span className="flex items-center gap-2.5">
+                  <Sparkles size={15} /> Stories (Wins & Lessons)
                 </span>
                 <ArrowRight size={13} className="text-muted-foreground opacity-60" />
               </Command.Item>

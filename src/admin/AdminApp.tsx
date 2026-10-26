@@ -12,10 +12,10 @@ import UsersPage from "./pages/UsersPage";
 import RedirectsPage from "./pages/RedirectsPage";
 import AuditLogPage from "./pages/AuditLogPage";
 import {
-  ProjectsListPage, PostsListPage, TestimonialsListPage, TeamListPage,
+  ProjectsListPage, PostsListPage, TestimonialsListPage, TeamListPage, StoriesListPage,
 } from "./pages/lists";
 import {
-  ProjectEditPage, PostEditPage, TestimonialEditPage, TeamEditPage, JobEditPage,
+  ProjectEditPage, PostEditPage, TestimonialEditPage, TeamEditPage, JobEditPage, StoryEditPage,
 } from "./pages/edits";
 import { JobsListPage, NotificationsPage } from "./pages/careers";
 import { AdminLayout } from "./components/AdminLayout";
@@ -58,6 +58,10 @@ function Guarded() {
       <Route path="/admin/projects" component={ProjectsListPage} />
       <Route path="/admin/projects/new">{() => <ProjectEditPage />}</Route>
       <Route path="/admin/projects/:id">{(p) => <ProjectEditPage id={p.id} />}</Route>
+
+      <Route path="/admin/stories" component={StoriesListPage} />
+      <Route path="/admin/stories/new">{() => <StoryEditPage />}</Route>
+      <Route path="/admin/stories/:id">{(p) => <StoryEditPage id={p.id} />}</Route>
 
       <Route path="/admin/case-studies" component={ProjectsListPage} />
       <Route path="/admin/case-studies/new">{() => <ProjectEditPage />}</Route>

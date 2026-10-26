@@ -718,3 +718,264 @@ export function JobEditPage({ id }: { id?: string }) {
     </EditShell>
   );
 }
+
+/* -------------------------------- Story ------------------------------- */
+type StoryForm = {
+  title: string;
+  slug: string;
+  type: "success" | "lesson";
+  tag: string;
+  desc: string;
+  impact: string;
+  lesson: string;
+  challenge: string;
+  solution: string;
+  fix: string;
+  color: string;
+  image: any;
+  imageUrl: string;
+  order: number;
+  status: "draft" | "published" | "archived";
+};
+
+const EMPTY_STORY: StoryForm = {
+  title: "",
+  slug: "",
+  type: "success",
+  tag: "",
+  desc: "",
+  impact: "",
+  lesson: "",
+  challenge: "",
+  solution: "",
+  fix: "",
+  color: "from-emerald-500/20 to-teal-500/20",
+  image: null,
+  imageUrl: "",
+  order: 0,
+  status: "published",
+};
+
+const STORY_TYPE_OPTS = [
+  { value: "success", label: "Success Story (Win)" },
+  { value: "lesson", label: "Hard Lesson (Failure / Wisdom)" },
+];
+
+const GRADIENT_PRESETS = [
+  { label: "Emerald (Success)", value: "from-emerald-500/20 to-teal-500/20" },
+  { label: "Blue / Indigo (Tech)", value: "from-blue-500/20 to-indigo-500/20" },
+  { label: "Rose / Orange (Lesson)", value: "from-rose-500/20 to-orange-500/20" },
+  { label: "Amber / Yellow (Lesson)", value: "from-amber-500/20 to-yellow-500/20" },
+  { label: "Violet / Purple", value: "from-violet-500/20 to-purple-500/20" },
+];
+
+export function StoryEditPage({ id }: { id?: string }) {
+  const { can } = useAuth();
+  const canEdit = can("content:edit");
+  const f = useResourceForm<StoryForm>("stories", id, EMPTY_STORY);
+
+  const previewImage = f.form.imageUrl || f.form.image?.url;
+
+  return (
+    <EditShell
+      title={f.isNew ? "New Story" : `Edit Story: ${f.form.title || ""}`}
+      resource="stories"
+      saving={f.save.isPending}
+      canEdit={canEdit}
+      error={f.error}
+      onSubmit={(e) =>
+        f.submit(e, (v) => ({
+          ...v,
+          slug: v.slug || undefined,
+          // Sync solution/fix and impact/lesson so either field is populated
+          solution: v.type === "lesson" ? (v.fix || v.solution) : (v.solution || v.fix),
+          fix: v.type === "lesson" ? (v.fix || v.solution) : (v.solution || v.fix),
+          impact: v.type === "lesson" ? (v.lesson || v.impact) : (v.impact || v.lesson),
+          lesson: v.type === "lesson" ? (v.lesson || v.impact) : (v.impact || v.lesson),
+        }))
+      }
+    >
+      <Card title="Story Overview">
+        <Field label="Title" required error={f.fields.title}>
+          <Text
+            value={f.form.title}
+            onChange={(v) => {
+              f.set("title", v);
+              if (f.isNew && !f.form.slug) {
+                f.set(
+                  "slug",
+                  v.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")
+                );
+              }
+            }}
+            required
+            placeholder="e.g. A Checkout Redesign That Tripled Revenue"
+          />
+        </Field>
+
+        <div className="grid sm:grid-cols-2 gap-4">
+          <Field label="Story Type" required>
+            <Select
+              value={f.form.type}
+              onChange={(v) => {
+                const newType = v as "success" | "lesson";
+                f.set("type", newType);
+                if (newType === "lesson" && f.form.color.includes("emerald")) {
+                  f.set("color", "from-rose-500/20 to-orange-500/20");
+                } else if (newType === "success" && f.form.color.includes("rose")) {
+                  f.set("color", "from-emerald-500/20 to-teal-500/20");
+                }
+              }}
+              options={STORY_TYPE_OPTS}
+            />
+          </Field>
+
+          <Field label="Tag / Domain" required hint="e.g. E-commerce & UI/UX, Mobile App, Web Development">
+            <Text
+              value={f.form.tag}
+              onChange={(v) => f.set("tag", v)}
+              placeholder="e.g. E-commerce & UI/UX"
+              required
+            />
+          </Field>
+        </div>
+
+        <Field label="Slug" error={f.fields.slug} hint="URL identifier">
+          <Text value={f.form.slug} onChange={(v) => f.set("slug", v)} placeholder="checkout-redesign-tripled-revenue" />
+        </Field>
+
+        <Field label="Story Narrative" required hint="The core narrative text shown on the story card">
+          <Area
+            value={f.form.desc}
+            onChange={(v) => f.set("desc", v)}
+            rows={4}
+            required
+            placeholder="A fashion retailer had strong brand recognition and steady traffic — but was bleeding customers at checkout..."
+          />
+        </Field>
+      </Card>
+
+      <Card title={f.form.type === "lesson" ? "The Failure & The Lesson" : "The Challenge & The Results"}>
+        {f.form.type === "success" ? (
+          <Field
+            label="Key Metric / Impact"
+            hint="Highlighted metric badge with zap icon"
+          >
+            <Text
+              value={f.form.impact}
+              onChange={(v) => f.set("impact", v)}
+              placeholder="e.g. 3× Conversion Rate · 58% Drop in Abandonment"
+            />
+          </Field>
+        ) : (
+          <Field
+            label="Key Lesson / Hard Truth"
+            hint="Core wisdom badge or quote from the experience"
+          >
+            <Text
+              value={f.form.lesson}
+              onChange={(v) => f.set("lesson", v)}
+              placeholder="e.g. Speed without resilience isn't delivery — it's a delayed disaster."
+            />
+          </Field>
+        )}
+
+        <Field
+          label={f.form.type === "lesson" ? "What Went Wrong (The Challenge)" : "The Challenge"}
+          required
+        >
+          <Area
+            value={f.form.challenge}
+            onChange={(v) => f.set("challenge", v)}
+            rows={3}
+            required
+            placeholder="A 6-step desktop-only checkout that was losing 74% of mobile visitors before they ever reached payment."
+          />
+        </Field>
+
+        <Field
+          label={f.form.type === "lesson" ? "How We Fixed It" : "What We Built (The Solution)"}
+          required
+        >
+          <Area
+            value={f.form.type === "lesson" ? (f.form.fix || f.form.solution) : (f.form.solution || f.form.fix)}
+            onChange={(v) => {
+              f.set("solution", v);
+              f.set("fix", v);
+            }}
+            rows={3}
+            required
+            placeholder="Mobile-first Shopify redesign with one-tap checkout, smart product recommendations, and a streamlined 2-step purchase flow."
+          />
+        </Field>
+      </Card>
+
+      <Card title="Visuals & Image">
+        <div className="space-y-4">
+          <div className="grid sm:grid-cols-2 gap-6">
+            <MediaPicker
+              label="Select from Media Library"
+              value={f.form.image}
+              onChange={(v) => f.set("image", v)}
+              folder="stories"
+              hint="Pick or upload an image from the TG Admin media library."
+            />
+
+            <div className="space-y-2">
+              <Field
+                label="Direct Image URL"
+                hint="Or paste an external image link directly (Unsplash, Cloudinary, S3, etc.)"
+              >
+                <Text
+                  value={f.form.imageUrl}
+                  onChange={(v) => f.set("imageUrl", v)}
+                  placeholder="https://images.unsplash.com/photo-..."
+                />
+              </Field>
+
+              <Field label="Gradient Backdrop">
+                <Select
+                  value={f.form.color}
+                  onChange={(v) => f.set("color", v)}
+                  options={GRADIENT_PRESETS}
+                />
+              </Field>
+            </div>
+          </div>
+
+          {previewImage && (
+            <div className="pt-2">
+              <span className="text-xs font-medium text-muted-foreground block mb-2">Live Image Preview:</span>
+              <div className="relative h-48 w-full max-w-md rounded-xl overflow-hidden border border-border shadow-md">
+                <div className={`absolute inset-0 bg-gradient-to-br ${f.form.color} opacity-40 z-10`} />
+                <img
+                  src={previewImage}
+                  alt={f.form.title || "Preview"}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-background/90 text-xs font-mono font-bold z-20">
+                  {f.form.tag || "Preview Tag"}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </Card>
+
+      <Card title="Publishing">
+        <div className="grid sm:grid-cols-2 gap-4">
+          <Field label="Status">
+            <Select
+              value={f.form.status}
+              onChange={(v) => f.set("status", v as any)}
+              options={STATUS_OPTS}
+            />
+          </Field>
+          <Field label="Display Order" hint="Lower numbers appear first">
+            <Num value={f.form.order} onChange={(v) => f.set("order", v)} min={0} />
+          </Field>
+        </div>
+      </Card>
+    </EditShell>
+  );
+}

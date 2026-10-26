@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { usePageMeta } from "@/lib/usePageMeta";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
+import { useStories } from "@/lib/cms";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Navbar from "@/components/Navbar";
@@ -87,6 +88,22 @@ const FAILURE_STORIES = [
   },
 ];
 
+function getStoryIcon(story: any, index: number) {
+  if (story.icon && typeof story.icon !== "string") return story.icon;
+  if (story.type === "lesson") {
+    return index % 2 === 0 ? (
+      <Frown className="text-rose-500" size={32} />
+    ) : (
+      <AlertCircle className="text-amber-500" size={32} />
+    );
+  }
+  return index % 2 === 0 ? (
+    <Trophy className="text-emerald-500" size={32} />
+  ) : (
+    <Rocket className="text-blue-500" size={32} />
+  );
+}
+
 const GLOBAL_STATS = [
   { label: "Projects Delivered",   value: 60, suffix: "+", icon: <Rocket size={24} /> },
   { label: "Client Retention Rate", value: 94, suffix: "%", icon: <Users size={24} /> },
@@ -127,6 +144,21 @@ export default function StoriesPage() {
   usePageMeta({ title: "Stories", description: "Wins we're proud of and lessons we earned — the honest record of a decade of shipping software." });
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const { data: stories } = useStories();
+
+  const successStories = useMemo(() => {
+    const filtered = (stories || []).filter(
+      (s) => s.type !== "lesson" && s.status !== "draft" && s.status !== "archived"
+    );
+    return filtered.length > 0 ? filtered : SUCCESS_STORIES;
+  }, [stories]);
+
+  const failureStories = useMemo(() => {
+    const filtered = (stories || []).filter(
+      (s) => s.type === "lesson" && s.status !== "draft" && s.status !== "archived"
+    );
+    return filtered.length > 0 ? filtered : FAILURE_STORIES;
+  }, [stories]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -160,13 +192,6 @@ export default function StoriesPage() {
           gsap.fromTo(image,
             { x: 120 * -dir, opacity: 0 },
             { x: 0, opacity: 1, duration: 1.5, ease: "power3.out",
-              /**
-               * play none none reverse: slide in on enter and stay put while
-               * the card is on screen. The old "play reverse play reverse"
-               * reversed the tween as soon as the card's top crossed 20% of
-               * the viewport — cards visibly slid away while being read.
-               * It only rewinds now when scrolling back above the card.
-               */
               scrollTrigger: { trigger: card, start: "top 85%", toggleActions: "play none none reverse" } }
           );
         }
@@ -180,8 +205,6 @@ export default function StoriesPage() {
       });
 
       // Section headers: badge, heading and intro cascade in together.
-      // Animating the parent's children (not just the badge) is what makes
-      // each section open with one coherent motion instead of a lone chip.
       gsap.utils.toArray(".reveal-up").forEach((badge: any) => {
         const head = badge.parentElement;
         if (!head) return;
@@ -238,7 +261,7 @@ export default function StoriesPage() {
     }, containerRef);
 
     return () => { clearTimeout(timer); ctx.revert(); };
-  }, []);
+  }, [successStories, failureStories]);
 
   return (
     <div className="min-h-screen bg-background flex flex-col" ref={containerRef}>
@@ -300,65 +323,75 @@ export default function StoriesPage() {
             </div>
 
             <div className="grid grid-cols-1 gap-48">
-              {SUCCESS_STORIES.map((story, i) => (
-                <div
-                  key={story.id}
-                  data-dir={i % 2 === 0 ? "normal" : "reverse"}
-                  className={`story-anim-card flex flex-col ${i % 2 === 0 ? "lg:flex-row" : "lg:flex-row-reverse"} gap-16 items-center`}
-                >
-                  {/* Image */}
-                  <div className="story-image-box flex-1 w-full relative group">
-                    <div className="relative h-[500px] md:h-[620px] overflow-hidden border border-border/30 shadow-2xl bg-card dark:bg-secondary">
-                      <div className={`absolute inset-0 bg-gradient-to-br ${story.color} opacity-40 group-hover:opacity-10 transition-opacity duration-500 z-10`} />
-                      <img
-                        src={story.image} alt={story.title}
-                        width="1200" height="620"
-                        className="w-full h-full object-cover scale-105 group-hover:scale-110 transition-transform duration-[1.5s] ease-out will-change-transform"
-                        loading="lazy"
-                      />
-                      <div className="absolute top-8 left-8 px-5 py-2 rounded-full bg-background/90 backdrop-blur-xl border border-white/10 text-primary font-mono text-sm font-bold z-20">
-                        {story.tag}
+              {successStories.map((story: any, i: number) => {
+                const storyImg = story.imageUrl || story.image?.url || story.image || "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&q=80&w=1200";
+                const storyColor = story.color || (i % 2 === 0 ? "from-emerald-500/20 to-teal-500/20" : "from-blue-500/20 to-indigo-500/20");
+                const storyImpact = story.impact || story.lesson || "";
+                const storySolution = story.solution || story.fix || "";
+                return (
+                  <div
+                    key={story._id || story.id || story.slug || i}
+                    data-dir={i % 2 === 0 ? "normal" : "reverse"}
+                    className={`story-anim-card flex flex-col ${i % 2 === 0 ? "lg:flex-row" : "lg:flex-row-reverse"} gap-16 items-center`}
+                  >
+                    {/* Image */}
+                    <div className="story-image-box flex-1 w-full relative group">
+                      <div className="relative h-[500px] md:h-[620px] overflow-hidden border border-border/30 shadow-2xl bg-card dark:bg-secondary">
+                        <div className={`absolute inset-0 bg-gradient-to-br ${storyColor} opacity-40 group-hover:opacity-10 transition-opacity duration-500 z-10`} />
+                        <img
+                          src={storyImg} alt={story.title}
+                          width="1200" height="620"
+                          className="w-full h-full object-cover scale-105 group-hover:scale-110 transition-transform duration-[1.5s] ease-out will-change-transform"
+                          loading="lazy"
+                        />
+                        <div className="absolute top-8 left-8 px-5 py-2 rounded-full bg-background/90 backdrop-blur-xl border border-white/10 text-primary font-mono text-sm font-bold z-20">
+                          {story.tag}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="story-content-box flex-1 space-y-8">
+                      <div className="flex items-center gap-4">
+                        <div className="w-14 h-14 rounded-2xl bg-card border border-border flex items-center justify-center shadow-lg">
+                          {getStoryIcon(story, i)}
+                        </div>
+                        {storyImpact && (
+                          <span className="text-emerald-400 flex items-center gap-2 font-mono text-sm font-bold">
+                            <Zap size={14} /> {storyImpact}
+                          </span>
+                        )}
+                      </div>
+
+                      <h3 className="text-3xl md:text-5xl font-bold leading-[1.1] tracking-tight">{story.title}</h3>
+                      <p className="text-lg text-muted-foreground leading-relaxed font-light">{story.desc}</p>
+
+                      <div className="space-y-6 pt-8 border-t border-border/50">
+                        <div className="flex gap-5">
+                          <div className="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+                            <Target className="text-primary" size={20} />
+                          </div>
+                          <div>
+                            <p className="text-xs font-bold uppercase text-muted-foreground mb-1 tracking-[0.2em] font-mono">The Challenge</p>
+                            <p className="text-base font-medium leading-relaxed">{story.challenge}</p>
+                          </div>
+                        </div>
+                        {storySolution && (
+                          <div className="flex gap-5">
+                            <div className="w-11 h-11 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0 mt-0.5">
+                              <CheckCircle2 className="text-emerald-500" size={20} />
+                            </div>
+                            <div>
+                              <p className="text-xs font-bold uppercase text-muted-foreground mb-1 tracking-[0.2em] font-mono">What We Built</p>
+                              <p className="text-base font-medium leading-relaxed">{storySolution}</p>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
-
-                  {/* Content */}
-                  <div className="story-content-box flex-1 space-y-8">
-                    <div className="flex items-center gap-4">
-                      <div className="w-14 h-14 rounded-2xl bg-card border border-border flex items-center justify-center shadow-lg">
-                        {story.icon}
-                      </div>
-                      <span className="text-emerald-400 flex items-center gap-2 font-mono text-sm font-bold">
-                        <Zap size={14} /> {story.impact}
-                      </span>
-                    </div>
-
-                    <h3 className="text-3xl md:text-5xl font-bold leading-[1.1] tracking-tight">{story.title}</h3>
-                    <p className="text-lg text-muted-foreground leading-relaxed font-light">{story.desc}</p>
-
-                    <div className="space-y-6 pt-8 border-t border-border/50">
-                      <div className="flex gap-5">
-                        <div className="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
-                          <Target className="text-primary" size={20} />
-                        </div>
-                        <div>
-                          <p className="text-xs font-bold uppercase text-muted-foreground mb-1 tracking-[0.2em] font-mono">The Challenge</p>
-                          <p className="text-base font-medium leading-relaxed">{story.challenge}</p>
-                        </div>
-                      </div>
-                      <div className="flex gap-5">
-                        <div className="w-11 h-11 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0 mt-0.5">
-                          <CheckCircle2 className="text-emerald-500" size={20} />
-                        </div>
-                        <div>
-                          <p className="text-xs font-bold uppercase text-muted-foreground mb-1 tracking-[0.2em] font-mono">What We Built</p>
-                          <p className="text-base font-medium leading-relaxed">{story.solution}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </section>
@@ -410,73 +443,83 @@ export default function StoriesPage() {
             </div>
 
             <div className="grid grid-cols-1 gap-48">
-              {FAILURE_STORIES.map((story, i) => (
-                <div
-                  key={story.id}
-                  data-dir={i % 2 !== 0 ? "normal" : "reverse"}
-                  className={`story-anim-card flex flex-col ${i % 2 !== 0 ? "lg:flex-row" : "lg:flex-row-reverse"} gap-16 items-center`}
-                >
-                  {/* Image */}
-                  <div className="story-image-box flex-1 w-full group">
-                    <div className="relative h-[500px] md:h-[620px] overflow-hidden border border-border/30 shadow-2xl bg-card dark:bg-secondary">
-                      <div className={`absolute inset-0 bg-gradient-to-br ${story.color} opacity-60 group-hover:opacity-20 transition-opacity duration-500 z-10`} />
-                      <img
-                        src={story.image} alt={story.title}
-                        width="1200" height="620"
-                        className="w-full h-full object-cover scale-105 group-hover:scale-110 grayscale-[80%] group-hover:grayscale-0 transition-all duration-[1.5s] ease-out will-change-transform"
-                        loading="lazy"
-                      />
-                      <div className="absolute top-8 left-8 px-5 py-2 rounded-full bg-background/90 backdrop-blur-xl border border-white/10 text-rose-400 font-mono text-sm font-bold z-20">
-                        {story.tag}
+              {failureStories.map((story: any, i: number) => {
+                const storyImg = story.imageUrl || story.image?.url || story.image || "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80&w=1200";
+                const storyColor = story.color || (i % 2 === 0 ? "from-rose-500/20 to-orange-500/20" : "from-amber-500/20 to-yellow-500/20");
+                const storyFix = story.fix || story.solution || "";
+                const storyLesson = story.lesson || story.impact || "";
+                return (
+                  <div
+                    key={story._id || story.id || story.slug || i}
+                    data-dir={i % 2 !== 0 ? "normal" : "reverse"}
+                    className={`story-anim-card flex flex-col ${i % 2 !== 0 ? "lg:flex-row" : "lg:flex-row-reverse"} gap-16 items-center`}
+                  >
+                    {/* Image */}
+                    <div className="story-image-box flex-1 w-full group">
+                      <div className="relative h-[500px] md:h-[620px] overflow-hidden border border-border/30 shadow-2xl bg-card dark:bg-secondary">
+                        <div className={`absolute inset-0 bg-gradient-to-br ${storyColor} opacity-60 group-hover:opacity-20 transition-opacity duration-500 z-10`} />
+                        <img
+                          src={storyImg} alt={story.title}
+                          width="1200" height="620"
+                          className="w-full h-full object-cover scale-105 group-hover:scale-110 grayscale-[80%] group-hover:grayscale-0 transition-all duration-[1.5s] ease-out will-change-transform"
+                          loading="lazy"
+                        />
+                        <div className="absolute top-8 left-8 px-5 py-2 rounded-full bg-background/90 backdrop-blur-xl border border-white/10 text-rose-400 font-mono text-sm font-bold z-20">
+                          {story.tag}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="story-content-box flex-1 space-y-8">
+                      <div className="w-14 h-14 rounded-2xl bg-card border border-border flex items-center justify-center shadow-lg">
+                        {getStoryIcon(story, i)}
+                      </div>
+                      <h3 className="text-3xl md:text-5xl font-bold leading-[1.1] tracking-tight">{story.title}</h3>
+                      <p className="text-lg text-muted-foreground leading-relaxed font-light">{story.desc}</p>
+
+                      <div className="space-y-6 pt-8 border-t border-border/50">
+                        <div className="flex gap-5">
+                          <div className="w-11 h-11 rounded-full bg-rose-500/10 flex items-center justify-center shrink-0 mt-0.5">
+                            <AlertCircle className="text-rose-500" size={20} />
+                          </div>
+                          <div>
+                            <p className="text-xs font-bold uppercase text-muted-foreground mb-1 tracking-[0.2em] font-mono">What Went Wrong</p>
+                            <p className="text-base font-medium leading-relaxed">{story.challenge}</p>
+                          </div>
+                        </div>
+
+                        {storyFix && (
+                          <div className="flex gap-5">
+                            <div className="w-11 h-11 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0 mt-0.5">
+                              <ShieldCheck className="text-emerald-500" size={20} />
+                            </div>
+                            <div>
+                              <p className="text-xs font-bold uppercase text-muted-foreground mb-1 tracking-[0.2em] font-mono">How We Fixed It</p>
+                              <p className="text-base font-medium leading-relaxed">{storyFix}</p>
+                            </div>
+                          </div>
+                        )}
+
+                        {storyLesson && (
+                          <div className="flex gap-5 relative pt-2">
+                            <div className="absolute -left-1 -top-1 text-primary/10">
+                              <Quote size={40} />
+                            </div>
+                            <div className="w-11 h-11 rounded-full bg-amber-500/10 flex items-center justify-center shrink-0 relative z-10 mt-0.5">
+                              <Lightbulb className="text-amber-500" size={20} />
+                            </div>
+                            <div className="relative z-10">
+                              <p className="text-xs font-bold uppercase text-muted-foreground mb-2 tracking-[0.2em] font-mono">The Lesson</p>
+                              <p className="text-xl font-bold leading-relaxed italic text-foreground/90">"{storyLesson}"</p>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
-
-                  {/* Content */}
-                  <div className="story-content-box flex-1 space-y-8">
-                    <div className="w-14 h-14 rounded-2xl bg-card border border-border flex items-center justify-center shadow-lg">
-                      {story.icon}
-                    </div>
-                    <h3 className="text-3xl md:text-5xl font-bold leading-[1.1] tracking-tight">{story.title}</h3>
-                    <p className="text-lg text-muted-foreground leading-relaxed font-light">{story.desc}</p>
-
-                    <div className="space-y-6 pt-8 border-t border-border/50">
-                      <div className="flex gap-5">
-                        <div className="w-11 h-11 rounded-full bg-rose-500/10 flex items-center justify-center shrink-0 mt-0.5">
-                          <AlertCircle className="text-rose-500" size={20} />
-                        </div>
-                        <div>
-                          <p className="text-xs font-bold uppercase text-muted-foreground mb-1 tracking-[0.2em] font-mono">What Went Wrong</p>
-                          <p className="text-base font-medium leading-relaxed">{story.challenge}</p>
-                        </div>
-                      </div>
-
-                      <div className="flex gap-5">
-                        <div className="w-11 h-11 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0 mt-0.5">
-                          <ShieldCheck className="text-emerald-500" size={20} />
-                        </div>
-                        <div>
-                          <p className="text-xs font-bold uppercase text-muted-foreground mb-1 tracking-[0.2em] font-mono">How We Fixed It</p>
-                          <p className="text-base font-medium leading-relaxed">{story.fix}</p>
-                        </div>
-                      </div>
-
-                      <div className="flex gap-5 relative pt-2">
-                        <div className="absolute -left-1 -top-1 text-primary/10">
-                          <Quote size={40} />
-                        </div>
-                        <div className="w-11 h-11 rounded-full bg-amber-500/10 flex items-center justify-center shrink-0 relative z-10 mt-0.5">
-                          <Lightbulb className="text-amber-500" size={20} />
-                        </div>
-                        <div className="relative z-10">
-                          <p className="text-xs font-bold uppercase text-muted-foreground mb-2 tracking-[0.2em] font-mono">The Lesson</p>
-                          <p className="text-xl font-bold leading-relaxed italic text-foreground/90">"{story.lesson}"</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </section>

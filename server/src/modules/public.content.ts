@@ -7,6 +7,7 @@ import { Post } from "../models/Post.js";
 import { Project } from "../models/Project.js";
 import { TeamMember } from "../models/TeamMember.js";
 import { Testimonial } from "../models/Testimonial.js";
+import { Story } from "../models/Story.js";
 
 /**
  * Read-only public content. Every query hardcodes its published/approved
@@ -162,5 +163,21 @@ publicContentRouter.get(
       json[k] = (json[k] ?? []).filter(Boolean);
     }
     res.json({ data: json });
+  })
+);
+
+/* ------------------------------- Stories ------------------------------ */
+publicContentRouter.get(
+  "/stories",
+  asyncHandler(async (req, res) => {
+    const filter: Record<string, unknown> = { ...PUB };
+    if (req.query.type) filter.type = String(req.query.type);
+
+    const data = await Story.find(filter)
+      .select(HIDE)
+      .sort({ order: 1, createdAt: 1 })
+      .populate("image", "url alt width height")
+      .lean();
+    res.json({ data });
   })
 );

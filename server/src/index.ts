@@ -2,6 +2,7 @@ import { createApp } from "./app.js";
 import { connectDb, disconnectDb } from "./config/db.js";
 import { env } from "./config/env.js";
 import { logger } from "./lib/logger.js";
+import { seedInitialStories } from "./models/Story.js";
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -44,6 +45,7 @@ async function listen(app: ReturnType<typeof createApp>, attempt = 1): Promise<i
 
 async function main() {
   await connectDb();
+  await seedInitialStories().catch((err) => logger.warn({ err }, "failed to auto-seed initial stories"));
 
   const server = await listen(createApp());
 

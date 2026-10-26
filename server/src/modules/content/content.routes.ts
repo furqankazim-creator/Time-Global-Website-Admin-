@@ -12,6 +12,7 @@ import { Category, Post, Tag, type TaxonomyModel } from "../../models/Post.js";
 import { Project, PROJECT_CATEGORIES } from "../../models/Project.js";
 import { TeamMember } from "../../models/TeamMember.js";
 import { Testimonial } from "../../models/Testimonial.js";
+import { Story, STORY_TYPES } from "../../models/Story.js";
 import * as S from "./content.schemas.js";
 
 /** Wires a crudFactory into a router with the standard route shape. */
@@ -174,4 +175,21 @@ homeRouter.put(
     audit(req, { action: "home.update", model: "HomePage", docId: doc!._id, diff: req.body });
     res.json({ data: doc });
   })
+);
+
+/* -------------------------------- Story ------------------------------- */
+export const storiesRouter = crudRouter(
+  crudFactory({
+    name: "story",
+    model: Story,
+    slugFrom: "title",
+    urlPrefix: "stories",
+    sortable: ["title", "type", "order", "status", "createdAt"],
+    searchable: ["title", "tag", "desc", "challenge", "solution"],
+    populate: "image",
+    filters: (q) => (q.type ? { type: q.type } : {}),
+  }),
+  S.createStorySchema,
+  S.updateStorySchema,
+  listQuerySchema.extend({ type: z.enum(STORY_TYPES).optional() })
 );

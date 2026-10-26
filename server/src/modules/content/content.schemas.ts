@@ -178,3 +178,24 @@ export const updateHomeSchema = z.object({
     .max(8)
     .optional(),
 });
+
+/* -------------------------------- Story ------------------------------- */
+export const createStorySchema = z.object({
+  title: z.string().trim().min(1, "Title is required").max(200),
+  slug: z.string().trim().max(200).optional(),
+  type: z.enum(["success", "lesson"]).default("success"),
+  tag: z.string().trim().max(100).optional(),
+  desc: z.string().trim().optional(),
+  impact: z.string().trim().max(200).optional(),
+  challenge: z.string().trim().optional(),
+  solution: z.string().trim().optional(),
+  image: objectId.nullable().optional(),
+  imageUrl: z.string().trim().optional(),
+  order: z.number().int().min(0).optional(),
+  featured: z.boolean().optional(),
+  status: status.optional(),
+  publishedAt: z.string().datetime().nullable().optional(),
+});
+export const updateStorySchema = createStorySchema
+  .partial()
+  .refine((v) => Object.keys(v).length > 0, { message: "No fields to update" });

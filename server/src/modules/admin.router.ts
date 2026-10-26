@@ -3,7 +3,7 @@ import { requireAuth } from "../middleware/auth.js";
 import { denyReadOnly } from "../middleware/rbac.js";
 import {
   categoriesRouter, homeRouter, postsRouter, projectsRouter,
-  tagsRouter, teamRouter, testimonialsRouter,
+  storiesRouter, tagsRouter, teamRouter, testimonialsRouter,
 } from "./content/content.routes.js";
 import { jobsRouter, notificationsRouter } from "./careers.routes.js";
 import { dashboardRouter } from "./dashboard/dashboard.routes.js";
@@ -28,6 +28,7 @@ adminRouter.use("/dashboard", dashboardRouter);
 adminRouter.use("/media", mediaRouter);
 adminRouter.use("/services", servicesRouter);
 adminRouter.use("/projects", projectsRouter);
+adminRouter.use("/stories", storiesRouter);
 adminRouter.use("/posts", postsRouter);
 adminRouter.use("/categories", categoriesRouter);
 adminRouter.use("/tags", tagsRouter);

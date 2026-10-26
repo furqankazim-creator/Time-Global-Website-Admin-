@@ -8,6 +8,7 @@ import { Lead } from "../../models/Lead.js";
 import { Service } from "../../models/Service.js";
 import { TeamMember } from "../../models/TeamMember.js";
 import { Testimonial } from "../../models/Testimonial.js";
+import { Story } from "../../models/Story.js";
 
 export const dashboardRouter = Router();
 
@@ -25,7 +26,7 @@ dashboardRouter.get(
     // Counts run in parallel — serially this would be N round trips.
     const [
       services, publishedServices, media, projects, activeProjects,
-      posts, publishedPosts, pendingTestimonials, testimonials, team,
+      posts, publishedPosts, pendingTestimonials, testimonials, team, stories,
       leadsToday, newLeads, activity, leadsTrend, leadsByStatus,
     ] = await Promise.all([
       Service.countDocuments({ deletedAt: null }),
@@ -38,6 +39,7 @@ dashboardRouter.get(
       Testimonial.countDocuments({ deletedAt: null, approvalStatus: "pending" }),
       Testimonial.countDocuments({ deletedAt: null }),
       TeamMember.countDocuments({ deletedAt: null }),
+      Story.countDocuments({ deletedAt: null }),
       Lead.countDocuments({ deletedAt: null, createdAt: { $gte: startOfToday } }),
       Lead.countDocuments({ deletedAt: null, status: "new" }),
       AuditLog.find({}).sort({ createdAt: -1 }).limit(12).lean(),
@@ -72,6 +74,7 @@ dashboardRouter.get(
           pendingTestimonials,
           testimonials,
           team,
+          stories,
         },
         leadsTrend: leadsTrend.map((t) => ({ date: t._id, count: t.count })),
         leadsByStatus: leadsByStatus.reduce((acc, curr) => {

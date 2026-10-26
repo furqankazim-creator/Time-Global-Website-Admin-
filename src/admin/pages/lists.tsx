@@ -188,3 +188,103 @@ export function TeamListPage() {
     />
   );
 }
+
+/* -------------------------------- Stories ----------------------------- */
+type StoryItem = {
+  _id: string;
+  title: string;
+  slug: string;
+  type: "success" | "lesson";
+  tag: string;
+  impact?: string;
+  lesson?: string;
+  order: number;
+  status: string;
+  imageUrl?: string;
+  image?: { url: string; alt?: string };
+};
+
+export function StoriesListPage() {
+  const [type, setType] = useState("");
+
+  const columns: Column<StoryItem>[] = [
+    {
+      key: "title",
+      header: "Story",
+      sortable: true,
+      render: (r) => (
+        <div className="flex items-center gap-3">
+          {(r.imageUrl || r.image?.url) && (
+            <img
+              src={r.imageUrl || r.image?.url}
+              alt={r.title}
+              className="w-10 h-10 rounded-lg object-cover border border-border shrink-0"
+            />
+          )}
+          <Title href={`/admin/stories/${r._id}`} main={r.title} sub={`/${r.slug}`} />
+        </div>
+      ),
+    },
+    {
+      key: "type",
+      header: "Category",
+      render: (r) => (
+        <span
+          className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium font-mono ${
+            r.type === "lesson"
+              ? "bg-rose-500/15 text-rose-400 border border-rose-500/20"
+              : "bg-emerald-500/15 text-emerald-400 border border-emerald-500/20"
+          }`}
+        >
+          {r.type === "lesson" ? "Hard Lesson" : "Success Story"}
+        </span>
+      ),
+    },
+    {
+      key: "tag",
+      header: "Tag",
+      render: (r) => <span className="text-xs text-muted-foreground">{r.tag || "—"}</span>,
+    },
+    {
+      key: "impact",
+      header: "Impact / Key Lesson",
+      render: (r) => (
+        <span className="text-xs text-muted-foreground line-clamp-1 max-w-[200px]">
+          {r.impact || r.lesson || "—"}
+        </span>
+      ),
+    },
+    {
+      key: "order",
+      header: "Order",
+      sortable: true,
+      render: (r) => <span className="text-xs font-mono">{r.order ?? 0}</span>,
+    },
+    {
+      key: "status",
+      header: "Status",
+      sortable: true,
+      render: (r) => <StatusPill status={r.status} />,
+    },
+  ];
+
+  return (
+    <ResourceList<StoryItem>
+      title="Stories (Wins & Lessons)"
+      resource="stories"
+      newLabel="New Story"
+      defaultSort="order"
+      columns={columns}
+      labelOf={(r) => r.title}
+      emptyMessage="No stories yet."
+      extraParams={{ type }}
+      filters={
+        <select value={type} onChange={(e) => setType(e.target.value)} className={filterCls}>
+          <option value="">All story types</option>
+          <option value="success">Success Stories (Wins)</option>
+          <option value="lesson">Hard Lessons (Failures)</option>
+        </select>
+      }
+    />
+  );
+}
