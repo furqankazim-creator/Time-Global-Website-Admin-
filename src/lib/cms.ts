@@ -33,7 +33,7 @@ export function setCachedCms<T>(key: string, data: T): void {
 }
 
 async function get<T>(path: string): Promise<T> {
-  const res = await fetch(`${BASE}/api/v1/public${path}`);
+  const res = await fetch(`${BASE}/api/v1/public${path}`, { cache: "no-store" });
   if (!res.ok) throw new Error(`CMS ${path} → ${res.status}`);
   return (await res.json()).data as T;
 }
@@ -66,9 +66,10 @@ function useCms<T>(key: string, path: string, fallback: T) {
       }
     },
     initialData: effectiveFallback,
-    staleTime: 60_000,
-    retry: 0,
-    refetchOnWindowFocus: false,
+    staleTime: 0,
+    retry: 1,
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
   });
 
   const finalData = q.data ?? effectiveFallback;

@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useServices } from "@/lib/cms";
 
 const SERVICES = [
   { label: "Software Product Development", href: "/services" },
@@ -18,6 +19,11 @@ const Separator = () => (
 );
 
 export default function ServiceMarquee() {
+  const { data: cms } = useServices();
+  const list = cms.length > 0
+    ? cms.map((s) => ({ label: s.title, href: "/services" }))
+    : SERVICES;
+
   return (
     <section className="py-20 bg-background border-y border-border/50 overflow-hidden select-none">
       <div className="relative flex items-center">
@@ -33,7 +39,7 @@ export default function ServiceMarquee() {
           {/* Duplicate for infinite loop */}
           {[...Array(2)].map((_, i) => (
             <div key={i} className="flex items-center">
-              {SERVICES.map((service, index) => (
+              {list.map((service, index) => (
                 <div key={index} className="flex items-center">
                   <a
                     href={service.href}

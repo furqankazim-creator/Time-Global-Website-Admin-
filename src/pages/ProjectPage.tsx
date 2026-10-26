@@ -95,7 +95,7 @@ export default function ProjectPage({ slug }: { slug: string }) {
     queryFn: async (): Promise<FullProject> => {
       // 1. Check live admin backend API
       try {
-        const res = await fetch(`${BASE}/api/v1/public/projects/${slug}`);
+        const res = await fetch(`${BASE}/api/v1/public/projects/${slug}`, { cache: "no-store" });
         if (res.ok) {
           const json = await res.json();
           if (json.data) {
@@ -126,7 +126,10 @@ export default function ProjectPage({ slug }: { slug: string }) {
       } catch {}
       return (staticFallback as unknown as FullProject) || undefined;
     },
-    retry: 0,
+    staleTime: 0,
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
+    retry: 1,
   });
 
   const { data: allProjects } = useProjects();

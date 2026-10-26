@@ -44,6 +44,9 @@ function useResourceForm<T extends object>(resource: string, id: string | undefi
       qc.invalidateQueries({ queryKey: [resource] });
       qc.invalidateQueries({ queryKey: ["cms"] });
       qc.invalidateQueries({ queryKey: ["dashboard"] });
+      try {
+        localStorage.setItem("tg_cms_updated_at", String(Date.now()));
+      } catch {}
       navigate(`/admin/${resource}/${res.data._id}`);
     },
     meta: { success: resource === "projects" ? "Case study saved" : `${singular(resource)} saved` },

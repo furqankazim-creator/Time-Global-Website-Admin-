@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { usePageMeta } from "@/lib/usePageMeta";
 import { useContactModal } from "@/hooks/use-contact-modal";
+import { useServices } from "@/lib/cms";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -198,6 +199,26 @@ const VALUE_PROPS = [
 export default function ServicesPage() {
   usePageMeta({ title: "Services", description: "Web and mobile development, cloud and DevOps, AI and enterprise automation — one partner for the whole stack." });
 
+  const { data: cmsServices } = useServices();
+
+  const activeServices = cmsServices.length > 0
+    ? cmsServices.map((cs, idx) => {
+        const match = DETAILED_SERVICES.find(
+          (d) => d.title.toLowerCase().includes(cs.title.toLowerCase()) || cs.title.toLowerCase().includes(d.title.toLowerCase())
+        ) || DETAILED_SERVICES[idx % DETAILED_SERVICES.length];
+
+        return {
+          title: cs.title,
+          desc: cs.shortDescription || cs.fullDescription || match.desc,
+          icon: match.icon,
+          badge: match.badge,
+          features: match.features,
+          gradient: match.gradient,
+          metric: match.metric,
+        };
+      })
+    : DETAILED_SERVICES;
+
   const [selectedCategory, setSelectedCategory] = useState<TechCategory>("all");
   const { openModal } = useContactModal();
 
@@ -299,7 +320,7 @@ export default function ServicesPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {DETAILED_SERVICES.map((srv, idx) => (
+              {activeServices.map((srv, idx) => (
                 <motion.div
                   key={srv.title}
                   initial={{ opacity: 0, y: 40 }}

@@ -125,13 +125,13 @@ export default function Services() {
             >
               <div className="absolute right-0 top-0 w-48 h-48 bg-primary/5 rounded-bl-full pointer-events-none" />
               <div className="mb-8">
-                <Shape3D type={SERVICES[activeTab].shape} className="w-16 h-16" />
+                <Shape3D type={items[activeTab]?.shape ?? "cube"} className="w-16 h-16" />
               </div>
               <h3 className="text-2xl md:text-3xl font-bold mb-4 relative z-10">
-                {SERVICES[activeTab].title}
+                {items[activeTab]?.title}
               </h3>
               <p className="text-muted-foreground leading-relaxed relative z-10 text-base">
-                {SERVICES[activeTab].desc}
+                {items[activeTab]?.desc}
               </p>
               <div className="mt-8 relative z-10">
                 <CtaButton size="md" arrow onClick={openModal}>

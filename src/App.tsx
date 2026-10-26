@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect } from "react";
 import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
-import { MutationCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { MutationCache, QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { toast } from "@/hooks/use-toast";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -109,6 +109,21 @@ function ScrollToTop() {
   return null;
 }
 
+/** Listens for admin content updates across all browser tabs and refreshes website live */
+function LiveCmsWatcher() {
+  const qc = useQueryClient();
+  useEffect(() => {
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === "tg_cms_updated_at") {
+        qc.invalidateQueries({ queryKey: ["cms"] });
+      }
+    };
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
+  }, [qc]);
+  return null;
+}
+
 const AdminFallback = () => (
   <div className="min-h-[100dvh] grid place-items-center bg-background text-muted-foreground text-sm">
     Loading admin…
@@ -168,6 +183,7 @@ function App() {
             {/* ErrorBoundary catches any unhandled JS error in the page tree */}
             <ErrorBoundary>
               <AnalyticsWatcher />
+              <LiveCmsWatcher />
               <Router />
             </ErrorBoundary>
 

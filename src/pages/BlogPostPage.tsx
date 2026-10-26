@@ -50,7 +50,7 @@ export default function BlogPostPage({ slug }: { slug: string }) {
     queryFn: async (): Promise<FullPost> => {
       // 1. Check live admin backend API
       try {
-        const res = await fetch(`${BASE}/api/v1/public/posts/${slug}`);
+        const res = await fetch(`${BASE}/api/v1/public/posts/${slug}`, { cache: "no-store" });
         if (res.ok) {
           const json = await res.json();
           if (json.data) {
@@ -81,7 +81,10 @@ export default function BlogPostPage({ slug }: { slug: string }) {
       } catch {}
       return (staticFallback as unknown as FullPost) || undefined;
     },
-    retry: 0,
+    staleTime: 0,
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
+    retry: 1,
   });
 
   // Fetch more articles for the "Keep Reading" section

@@ -55,6 +55,9 @@ export default function ServiceEditPage({ id }: { id?: string }) {
       qc.invalidateQueries({ queryKey: ["cms"] });
       qc.invalidateQueries({ queryKey: ["service", id] });
       qc.invalidateQueries({ queryKey: ["dashboard"] });
+      try {
+        localStorage.setItem("tg_cms_updated_at", String(Date.now()));
+      } catch {}
       navigate(`/admin/services/${res.data._id}`);
     },
     meta: { success: "Service saved" },

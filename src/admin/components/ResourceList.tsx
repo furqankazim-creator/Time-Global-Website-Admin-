@@ -53,7 +53,11 @@ export function ResourceList<T extends { _id: string; deletedAt?: string | null 
 
   const invalidate = () => {
     qc.invalidateQueries({ queryKey: [resource] });
+    qc.invalidateQueries({ queryKey: ["cms"] });
     qc.invalidateQueries({ queryKey: ["dashboard"] });
+    try {
+      localStorage.setItem("tg_cms_updated_at", String(Date.now()));
+    } catch {}
   };
 
   const del = useMutation({
