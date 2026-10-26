@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
 import { MutationCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -6,7 +6,6 @@ import { toast } from "@/hooks/use-toast";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ContactModalProvider } from "@/hooks/use-contact-modal";
 import { ThemeProvider } from "@/hooks/use-theme";
-import { Preloader } from "@/components/Preloader";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { JsonLd, TIME_GLOBAL_ORG } from "@/components/JsonLd";
 import { useAnalytics } from "@/hooks/use-analytics";
@@ -101,6 +100,15 @@ function AnalyticsWatcher() {
   return null;
 }
 
+/** Scrolls window to top instantly on every route change. */
+function ScrollToTop() {
+  const [pathname] = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
+  }, [pathname]);
+  return null;
+}
+
 const AdminFallback = () => (
   <div className="min-h-[100dvh] grid place-items-center bg-background text-muted-foreground text-sm">
     Loading admin…
@@ -152,7 +160,7 @@ function App() {
               Skip to main content
             </a>
 
-            <Preloader />
+            <ScrollToTop />
 
             {/* Organization JSON-LD — injected once, covers every public page */}
             <JsonLd schema={TIME_GLOBAL_ORG} />
