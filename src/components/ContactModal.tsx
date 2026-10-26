@@ -840,7 +840,7 @@ export default function ContactModal() {
                         type="submit"
                         disabled={isLoading}
                         data-testid="button-submit-contact"
-                        className="group/btn relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-xl bg-gradient-to-r from-primary via-emerald-400 to-teal-400 px-6 py-4 font-display text-sm font-black uppercase tracking-wider text-black shadow-lg shadow-primary/25 transition-all duration-300 hover:shadow-xl hover:shadow-primary/40 hover:scale-[1.01] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
+                        className="group/btn relative flex w-full h-14 items-center justify-center gap-3 overflow-hidden rounded-xl bg-gradient-to-r from-emerald-500 via-primary to-teal-400 px-6 font-display text-sm font-black uppercase tracking-wider text-black shadow-[0_4px_24px_rgba(16,185,129,0.35)] transition-all duration-300 hover:shadow-[0_8px_36px_rgba(16,185,129,0.55)] hover:scale-[1.01] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50 after:pointer-events-none after:absolute after:inset-x-4 after:top-0 after:h-[1px] after:bg-gradient-to-r after:from-transparent after:via-white/80 after:to-transparent"
                       >
                         {/* Shimmer light sweep */}
                         <span className="pointer-events-none absolute inset-y-0 -left-full w-1/2 skew-x-[-20deg] bg-white/30 transition-transform duration-700 ease-out group-hover/btn:translate-x-[350%]" />

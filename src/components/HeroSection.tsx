@@ -128,15 +128,26 @@ export default function HeroSection() {
           <p className="text-lg md:text-xl lg:text-2xl text-muted-foreground mb-8 md:mb-10 max-w-xl mx-auto lg:mx-0 font-light leading-relaxed">
             {hero.subheadline || FALLBACK.hero.subheadline}
           </p>
-          <div className="flex justify-center lg:justify-start gap-4 mb-12 md:mb-16 flex-wrap">
-            {/* An explicit ctaUrl navigates; otherwise open the contact modal. */}
+          <div className="flex justify-center lg:justify-start gap-4 mb-12 md:mb-16 flex-wrap items-center">
+            {/* Primary CTA */}
             <CtaButton
               size="lg"
               href={hero.ctaUrl || undefined}
               onClick={hero.ctaUrl ? undefined : openModal}
               data-testid="button-hero-cta"
+              arrow
             >
               {hero.ctaText || FALLBACK.hero.ctaText}
+            </CtaButton>
+
+            {/* Secondary Glass CTA */}
+            <CtaButton
+              size="lg"
+              variant="glass"
+              href="/work"
+              data-testid="button-hero-work"
+            >
+              Explore Case Studies
             </CtaButton>
           </div>
 

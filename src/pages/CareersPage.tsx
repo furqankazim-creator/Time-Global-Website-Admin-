@@ -306,9 +306,9 @@ export default function CareersPage() {
               We're looking for world-class engineers, designers, and thinkers to solve complex problems at scale.
             </p>
 
-            <div className="hero-text mt-12 flex flex-wrap justify-center gap-6">
-              <CtaButton size="lg" href="#openings">View Openings</CtaButton>
-              <CtaButton size="lg" variant="outline" href="#culture">Our Culture</CtaButton>
+            <div className="hero-text mt-12 flex flex-wrap justify-center gap-4">
+              <CtaButton size="lg" arrow href="#openings">View Openings</CtaButton>
+              <CtaButton size="lg" variant="glass" href="#culture">Our Culture</CtaButton>
             </div>
           </div>
         </section>

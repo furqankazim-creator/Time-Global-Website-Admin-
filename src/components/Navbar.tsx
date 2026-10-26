@@ -65,14 +65,14 @@ export default function Navbar() {
         <div className="hidden lg:flex items-center gap-2.5">
           <Link
             href="/services#services-breakdown"
-            className="px-3 py-1 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary text-xs font-semibold tracking-wide border border-primary/20 hover:border-primary/40 transition-all cursor-pointer shadow-sm hover:scale-[1.03] active:scale-[0.98]"
+            className="h-8 px-3.5 inline-flex items-center justify-center rounded-lg bg-primary/10 hover:bg-primary/20 text-primary font-display text-xs font-semibold tracking-wide border border-primary/20 hover:border-primary/40 transition-all cursor-pointer shadow-sm hover:scale-[1.03] active:scale-[0.98]"
             title="Explore Web & Software Development Services"
           >
             Web & Software
           </Link>
           <Link
             href="/services#services-breakdown"
-            className="px-3 py-1 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary text-xs font-semibold tracking-wide border border-primary/20 hover:border-primary/40 transition-all cursor-pointer shadow-sm hover:scale-[1.03] active:scale-[0.98]"
+            className="h-8 px-3.5 inline-flex items-center justify-center rounded-lg bg-primary/10 hover:bg-primary/20 text-primary font-display text-xs font-semibold tracking-wide border border-primary/20 hover:border-primary/40 transition-all cursor-pointer shadow-sm hover:scale-[1.03] active:scale-[0.98]"
             title="Explore AI & Automation Solutions"
           >
             AI & Automation
@@ -99,14 +99,14 @@ export default function Navbar() {
         </div>
 
         {/* Desktop — theme toggle + CTA */}
-         <div className="hidden lg:flex items-center gap-3">
+        <div className="hidden lg:flex items-center gap-3">
           <button
             onClick={toggleTheme}
             data-testid="button-theme-toggle"
-            className="w-9 h-9 rounded-lg border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-all"
+            className="w-11 h-11 rounded-xl border border-border/80 flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted/80 hover:border-primary/40 transition-all shadow-sm active:scale-95"
             aria-label="Toggle theme"
           >
-            {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
+            {theme === "dark" ? <Sun size={17} /> : <Moon size={17} />}
           </button>
           <CtaButton onClick={openModal} data-testid="button-lets-talk-nav" size="md">
             let's talk

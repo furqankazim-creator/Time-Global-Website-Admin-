@@ -107,7 +107,7 @@ export default function CollaborateCTA() {
             Let's discuss your idea
           </CtaButton>
 
-          <CtaButton size="lg" variant="outline" href="/about">
+          <CtaButton size="lg" variant="glass" href="/about">
             Learn more
           </CtaButton>
         </motion.div>
