@@ -15,6 +15,7 @@ import { usePageMeta } from "@/lib/usePageMeta";
 import { useProjects, getStaticProject, type CmsImage, type CmsProject } from "@/lib/cms";
 import { useContactModal } from "@/hooks/use-contact-modal";
 import { toast } from "@/hooks/use-toast";
+import { OrgpyurInteractiveShowcase } from "@/components/OrgpyurCaseStudySection";
 
 type FullProject = {
   _id: string;
@@ -372,6 +373,11 @@ export default function ProjectPage({ slug }: { slug: string }) {
                     body={project.result}
                     index={2}
                   />
+
+                  {/* If Orgpyur case study, inject bespoke interactive telemetry showcase */}
+                  {(slug.includes("orgpyur") || project.title.toLowerCase().includes("orgpyur")) && (
+                    <OrgpyurInteractiveShowcase />
+                  )}
                 </div>
 
                 {/* Right Column: Sticky Project Meta Specs */}

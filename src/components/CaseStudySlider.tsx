@@ -96,7 +96,7 @@ const studies: CaseStudy[] = [
       { value: "CIPO", label: "Trademark Dossier" },
       { value: "100%", label: "Board Sync" },
     ],
-    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80",
+    image: "/assets/projects/orgpyur-cover.png",
   },
   {
     slug: "fintech-eu-uptime",

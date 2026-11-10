@@ -129,18 +129,22 @@ export const STATIC_PROJECTS: (CmsProject & {
     result:
       "<p>Successfully bridged technical product development with institutional board governance and IP protection. Orgpyur Technologies Inc. attained full milestone transparency, secured their core brand assets with CIPO filing readiness, and aligned all engineering vendors with the live platform architecture at orgpyur.com.</p>",
     coverImage: {
-      url: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1200",
+      url: "/assets/projects/orgpyur-cover.png",
       alt: "Orgpyur Technologies MVP Governance & Operational Audit",
     },
     liveUrl: "https://orgpyur.com/",
     gallery: [
       {
-        url: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1200",
-        alt: "Orgpyur SaaS Telemetry and Governance Dashboard",
+        url: "/assets/projects/orgpyur-cover.png",
+        alt: "Orgpyur Platform Telemetry & Live Browser View",
       },
       {
-        url: "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&q=80&w=1200",
-        alt: "Operational Audit & Milestone Tracking",
+        url: "/assets/projects/orgpyur-topology.png",
+        alt: "Operational Audit & IP Alignment Topology Node Graph",
+      },
+      {
+        url: "/assets/projects/orgpyur-audit-matrix.png",
+        alt: "Cross-Industry Governance Deliverables Matrix",
       },
     ],
   },
