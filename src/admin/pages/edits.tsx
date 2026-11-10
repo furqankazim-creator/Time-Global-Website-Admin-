@@ -770,8 +770,7 @@ const GRADIENT_PRESETS = [
 ];
 
 export function StoryEditPage({ id }: { id?: string }) {
-  const { can } = useAuth();
-  const canEdit = can("content:edit");
+  const { canEdit } = useAuth();
   const f = useResourceForm<StoryForm>("stories", id, EMPTY_STORY);
 
   const previewImage = f.form.imageUrl || f.form.image?.url;

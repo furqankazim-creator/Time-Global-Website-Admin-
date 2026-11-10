@@ -108,6 +108,7 @@ type CaseStudy = typeof CASE_STUDIES[0];
 const SOFTWARE_APP_IMAGES: Record<string, string> = {
   // CMS Slugs
   "canet-clinical-research-portal": "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&q=80&w=1200",
+  "orgpyur-technologies-mvp-governance-audit": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1200",
   "helvar-iot-lighting-dashboard": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1200",
   "tiptop-b2b-marketplace": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1200",
   "spectec-fleet-maintenance-suite": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=1200",
@@ -119,6 +120,7 @@ const SOFTWARE_APP_IMAGES: Record<string, string> = {
   "eduspark-cohort-based-learning-platform": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=1200",
 
   // Keywords
+  orgpyur: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1200",
   canet: "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&q=80&w=1200",
   helvar: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1200",
   tiptop: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1200",

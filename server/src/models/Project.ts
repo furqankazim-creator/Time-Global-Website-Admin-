@@ -73,3 +73,33 @@ const projectSchema = new Schema<IProject, Model<IProject>>(
 projectSchema.index({ title: "text", client: "text" });
 
 export const Project = model<IProject>("Project", projectSchema);
+
+export async function seedInitialProjects() {
+  try {
+    const existing = await Project.findOne({ slug: "orgpyur-technologies-mvp-governance-audit" });
+    if (existing) return;
+
+    await Project.create({
+      title: "Orgpyur Technologies Inc. — MVP Governance & Operational Audit",
+      slug: "orgpyur-technologies-mvp-governance-audit",
+      client: "Orgpyur Technologies Inc.",
+      category: "custom-software",
+      techStack: ["Corporate Governance", "Enterprise SaaS", "CIPO Trademark", "Data Architecture", "Board Reporting"],
+      metrics: [
+        { value: "66%", label: "MVP Milestone" },
+        { value: "CIPO", label: "Trademark Dossier" },
+        { value: "100%", label: "Board Sync" },
+      ],
+      problem:
+        "<p>Growing enterprise SaaS ventures require stringent alignment between technical product execution, stakeholder communication, and legal IP protection. During a pivotal MVP phase, Orgpyur needed executive milestone tracking, structured board minutes documentation, a Canadian Intellectual Property Office (CIPO) trademark dossier, and vendor alignment across founders, board members, and technical vendors.</p>",
+      solution:
+        "<p>Time Global Tech established a comprehensive operational audit and corporate governance framework. We audited technical sprint progress, guiding the MVP roadmap to a 66% milestone completion. Simultaneously, we compiled the complete CIPO trademark application dossier, delivered quarterly executive progress reports, maintained meticulous board minutes, and formalized enterprise data storage & messaging architectures for engineering teams.</p>",
+      result:
+        "<p>Successfully bridged technical product development with institutional board governance and IP protection. Orgpyur Technologies Inc. attained full milestone transparency, secured their core brand assets with CIPO filing readiness, and aligned all engineering vendors with the live platform architecture at orgpyur.com.</p>",
+      liveUrl: "https://orgpyur.com/",
+      featured: true,
+      order: 1,
+      status: "published",
+    });
+  } catch {}
+}

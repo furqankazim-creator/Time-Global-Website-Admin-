@@ -85,6 +85,20 @@ function getSoftwareAppImage(p: CmsProject): string {
 // Real case study data from Time Global projects (with software application images)
 const studies: CaseStudy[] = [
   {
+    slug: "orgpyur-technologies-mvp-governance-audit",
+    tags: ["Strategy & Consulting", "Corporate Governance"],
+    title: "Orgpyur Technologies — MVP Governance & Operational Audit",
+    description: "Executive milestone tracking, board governance reporting, CIPO trademark dossier, and SaaS data architecture sync during a critical MVP development phase.",
+    accentColor: "from-emerald-950/95 via-teal-900/40 to-transparent",
+    technologies: ["Corporate Governance", "Enterprise SaaS", "CIPO Trademark", "Board Sync"],
+    numbers: [
+      { value: "66%", label: "MVP Milestone" },
+      { value: "CIPO", label: "Trademark Dossier" },
+      { value: "100%", label: "Board Sync" },
+    ],
+    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
     slug: "fintech-eu-uptime",
     tags: ["Cloud & DevOps", "Cost Optimization"],
     title: "99.98% Uptime, Zero Surprise Bills",

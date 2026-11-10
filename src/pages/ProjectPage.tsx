@@ -23,6 +23,7 @@ type FullProject = {
   client: string;
   category: string;
   techStack: string[];
+  metrics?: { value: string; label: string }[];
   liveUrl: string;
   problem: string;
   solution: string;
@@ -287,41 +288,59 @@ export default function ProjectPage({ slug }: { slug: string }) {
             {/* Impact Metric KPI Strip */}
             <div className="max-w-7xl mx-auto px-6 mt-8">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="rounded-2xl bg-card border border-border/70 p-5 flex items-center gap-4">
-                  <div className="p-3 rounded-xl bg-primary/10 text-primary">
-                    <TrendingUp size={22} />
-                  </div>
-                  <div>
-                    <span className="text-xs font-mono uppercase text-muted-foreground tracking-wider block">
-                      Performance
-                    </span>
-                    <span className="text-lg font-bold text-foreground">3x Faster Delivery</span>
-                  </div>
-                </div>
+                {project.metrics && project.metrics.length > 0 ? (
+                  project.metrics.slice(0, 3).map((m: { value: string; label: string }, idx: number) => (
+                    <div key={idx} className="rounded-2xl bg-card border border-border/70 p-5 flex items-center gap-4">
+                      <div className={`p-3 rounded-xl ${idx === 0 ? "bg-primary/10 text-primary" : idx === 1 ? "bg-emerald-500/10 text-emerald-500" : "bg-blue-500/10 text-blue-500"}`}>
+                        {idx === 0 ? <TrendingUp size={22} /> : idx === 1 ? <ShieldCheck size={22} /> : <Zap size={22} />}
+                      </div>
+                      <div>
+                        <span className="text-xs font-mono uppercase text-muted-foreground tracking-wider block">
+                          {m.label}
+                        </span>
+                        <span className="text-lg font-bold text-foreground">{m.value}</span>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <>
+                    <div className="rounded-2xl bg-card border border-border/70 p-5 flex items-center gap-4">
+                      <div className="p-3 rounded-xl bg-primary/10 text-primary">
+                        <TrendingUp size={22} />
+                      </div>
+                      <div>
+                        <span className="text-xs font-mono uppercase text-muted-foreground tracking-wider block">
+                          Performance
+                        </span>
+                        <span className="text-lg font-bold text-foreground">3x Faster Delivery</span>
+                      </div>
+                    </div>
 
-                <div className="rounded-2xl bg-card border border-border/70 p-5 flex items-center gap-4">
-                  <div className="p-3 rounded-xl bg-emerald-500/10 text-emerald-500">
-                    <ShieldCheck size={22} />
-                  </div>
-                  <div>
-                    <span className="text-xs font-mono uppercase text-muted-foreground tracking-wider block">
-                      Reliability
-                    </span>
-                    <span className="text-lg font-bold text-foreground">99.98% System Uptime</span>
-                  </div>
-                </div>
+                    <div className="rounded-2xl bg-card border border-border/70 p-5 flex items-center gap-4">
+                      <div className="p-3 rounded-xl bg-emerald-500/10 text-emerald-500">
+                        <ShieldCheck size={22} />
+                      </div>
+                      <div>
+                        <span className="text-xs font-mono uppercase text-muted-foreground tracking-wider block">
+                          Reliability
+                        </span>
+                        <span className="text-lg font-bold text-foreground">99.98% System Uptime</span>
+                      </div>
+                    </div>
 
-                <div className="rounded-2xl bg-card border border-border/70 p-5 flex items-center gap-4">
-                  <div className="p-3 rounded-xl bg-blue-500/10 text-blue-500">
-                    <Zap size={22} />
-                  </div>
-                  <div>
-                    <span className="text-xs font-mono uppercase text-muted-foreground tracking-wider block">
-                      Efficiency
-                    </span>
-                    <span className="text-lg font-bold text-foreground">Cloud Cost Reduction</span>
-                  </div>
-                </div>
+                    <div className="rounded-2xl bg-card border border-border/70 p-5 flex items-center gap-4">
+                      <div className="p-3 rounded-xl bg-blue-500/10 text-blue-500">
+                        <Zap size={22} />
+                      </div>
+                      <div>
+                        <span className="text-xs font-mono uppercase text-muted-foreground tracking-wider block">
+                          Efficiency
+                        </span>
+                        <span className="text-lg font-bold text-foreground">Cloud Cost Reduction</span>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
 
