@@ -6,6 +6,8 @@ import { api } from "../lib/api";
 import { useAuth } from "../lib/auth";
 import { AdminLayout } from "./AdminLayout";
 import { DataTable, type Column, type Meta } from "./DataTable";
+import { STATIC_PROJECTS, STATIC_SERVICES, STATIC_TESTIMONIALS } from "@/data/staticContent";
+import { STATIC_STORIES } from "@/lib/cms";
 
 type Props<T> = {
   title: string;
@@ -72,8 +74,34 @@ export function ResourceList<T extends { _id: string; deletedAt?: string | null 
     meta: { success: "Restored from trash" },
   });
 
-  // Filter rows if backend returned mixed deleted items when showTrash is true
-  const rows = (data?.data ?? []).filter((r) =>
+  // Fallback to static content library when backend is empty or offline
+  const fallbackData: T[] = (() => {
+    if (showTrash) return [];
+    if (resource === "projects") {
+      let list = STATIC_PROJECTS as unknown as T[];
+      if (extraParams?.category) {
+        list = list.filter((p: any) => p.category === extraParams.category);
+      }
+      if (q) {
+        const lower = q.toLowerCase();
+        list = list.filter((p: any) => p.title.toLowerCase().includes(lower) || p.client?.toLowerCase().includes(lower));
+      }
+      return list;
+    }
+    if (resource === "stories") {
+      return STATIC_STORIES as unknown as T[];
+    }
+    if (resource === "services") {
+      return STATIC_SERVICES as unknown as T[];
+    }
+    if (resource === "testimonials") {
+      return STATIC_TESTIMONIALS as unknown as T[];
+    }
+    return [];
+  })();
+
+  const rawData = (data?.data && data.data.length > 0) ? data.data : fallbackData;
+  const rows = rawData.filter((r) =>
     showTrash ? r.deletedAt != null : r.deletedAt == null
   );
 

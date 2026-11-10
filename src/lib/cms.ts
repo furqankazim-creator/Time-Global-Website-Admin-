@@ -10,7 +10,19 @@ import {
 } from "@/data/staticContent";
 
 const BASE = import.meta.env.VITE_API_URL ?? "http://localhost:4000";
-const CACHE_PREFIX = "tg_cms_cache_";
+const CACHE_PREFIX = "tg_cms_cache_v5_";
+
+// Proactively clear stale legacy caches so browsers always show real portfolio case studies
+if (typeof window !== "undefined") {
+  try {
+    for (let i = localStorage.length - 1; i >= 0; i--) {
+      const k = localStorage.key(i);
+      if (k && (k.startsWith("tg_cms_cache_") || k.startsWith("tg_project_")) && !k.startsWith(CACHE_PREFIX)) {
+        localStorage.removeItem(k);
+      }
+    }
+  } catch {}
+}
 
 /**
  * Retrieves cached content saved from previous admin panel activity.
@@ -18,7 +30,26 @@ const CACHE_PREFIX = "tg_cms_cache_";
 export function getCachedCms<T>(key: string): T | null {
   try {
     const raw = localStorage.getItem(`${CACHE_PREFIX}${key}`);
-    if (raw) return JSON.parse(raw) as T;
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      // If cached projects contains old dummy projects like bonnet, invalidate cache
+      if (key === "projects" && Array.isArray(parsed)) {
+        const hasDummy = parsed.some((p: any) => p.slug === "bonnet-ev-charging-platform" || p.slug === "finpay-cross-border-payments-app");
+        if (hasDummy) {
+          localStorage.removeItem(`${CACHE_PREFIX}${key}`);
+          return null;
+        }
+      }
+      // If cached stories contains checkout redesign, invalidate cache
+      if (key === "stories" && Array.isArray(parsed)) {
+        const hasDummy = parsed.some((s: any) => s.slug === "a-checkout-redesign-that-tripled-revenue");
+        if (hasDummy) {
+          localStorage.removeItem(`${CACHE_PREFIX}${key}`);
+          return null;
+        }
+      }
+      return parsed as T;
+    }
   } catch {}
   return null;
 }

@@ -61,8 +61,14 @@ const SOFTWARE_APP_IMAGES: Record<string, string> = {
   "dairy-farm-automation": "/assets/projects/dairy-farm-case-study-img-2.jpg",
   "reccon-engineering-profile": "https://images.unsplash.com/photo-1541888946425-d0fbb186156a?auto=format&fit=crop&q=80&w=1200",
   "rh-care-usa-motion": "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=1200",
+  "alstom-railops-fleet-operations": "/assets/projects/railops-alstom-case-study.html.png",
+  "barkat-foundation-donor-portal": "/assets/projects/Barkat_Org_Foundation_Final__Project_Case_Study_v2.pdf.jpg.jpeg",
+  "pcm-tool-cost-management-portal": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=1200",
 
   // Keywords
+  alstom: "/assets/projects/railops-alstom-case-study.html.png",
+  barkat: "/assets/projects/Barkat_Org_Foundation_Final__Project_Case_Study_v2.pdf.jpg.jpeg",
+  pcm: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=1200",
   orgpyur: "/assets/projects/orgpyur-cover.png",
   toyota: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&q=80&w=1200",
   tennis: "/assets/projects/Ontario_Tennis_Association_Case_Study_Updated-img-2.webp",
