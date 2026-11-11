@@ -105,7 +105,7 @@ export async function seedInitialProjects() {
         problem: "<p>Growing enterprise SaaS ventures require stringent alignment between technical product execution, stakeholder communication, and legal IP protection. During a pivotal MVP phase, Orgpyur needed executive milestone tracking, structured board minutes documentation, a Canadian Intellectual Property Office (CIPO) trademark dossier, and coordination across founders, executive board members, and technical vendors.</p>",
         solution: "<p>Time Global Tech established a comprehensive operational audit and corporate governance framework. We audited technical sprint progress, guiding the MVP roadmap to a 66% milestone completion. Simultaneously, we compiled the complete CIPO trademark application dossier, delivered quarterly executive progress reports, maintained meticulous board minutes, and formalized enterprise data storage & messaging architectures for engineering teams.</p>",
         result: "<p>Successfully bridged technical product development with institutional board governance and IP protection. Orgpyur Technologies Inc. attained full milestone transparency, secured their core brand assets with CIPO filing readiness, and aligned all engineering vendors with the live platform architecture at orgpyur.com.</p>",
-        coverImage: {"url": "/assets/projects/orgpyur-cover.png", "alt": "Orgpyur Technologies MVP Governance & Operational Audit"},
+        coverImage: {"url": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1200", "alt": "Orgpyur Technologies MVP Governance & Operational Audit"},
         liveUrl: "https://orgpyur.com/",
         featured: true,
         status: 'published'
@@ -120,7 +120,7 @@ export async function seedInitialProjects() {
         problem: "<p>The used automobile market in Pakistan suffered from severe information asymmetry, fraudulent mileage claims, and unstandardized vehicle evaluations. Dealerships operated on ad-hoc paper checklists, leaving car buyers skeptical and dealerships without a scalable nationwide inventory clearinghouse.</p>",
         solution: "<p>Time Global Tech engineered an enterprise-grade certified pre-owned automotive portal (toyotasure.com.pk) and comprehensive digital vehicle grading engine. We built standardized technician inspection workflows across 203 mechanical, structural, and electrical checkpoints, automated digital certificate generation, and provided real-time multi-dealership inventory synchronization with granular consumer search filters.</p>",
         result: "<p>Revolutionized Pakistan certified pre-owned automotive market by establishing ToyotaSure as the nationwide gold standard for pre-owned vehicle verification. Buyers achieved 100% transparency with tamper-evident digital inspection scorecards, while Toyota Indus Motors unified certified used vehicle inventory across authorized dealerships nationwide.</p>",
-        coverImage: {"url": "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&q=80&w=1200", "alt": "ToyotaSure Certified Pre-Owned Vehicle Portal"},
+        coverImage: {"url": "https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?auto=format&fit=crop&q=80&w=1200", "alt": "ToyotaSure Certified Pre-Owned Vehicle Portal"},
         liveUrl: "https://toyotasure.com.pk/",
         featured: true,
         status: 'published'
@@ -150,7 +150,7 @@ export async function seedInitialProjects() {
         problem: "<p>Premium Dubai real estate developers face an intensely competitive global acquisition landscape. AMZ Properties required distinctive, ultra-luxury marketing literature and digital visual educational assets to capture high-net-worth individual (HNWI) investors during major UAE calendar events like UAE National Day.</p>",
         solution: "<p>Time Global Tech created high-impact educational infographics breaking down Dubai freehold property laws, Golden Visa qualification pathways, and capital appreciation telemetry. We paired this with comprehensive neighborhood investment mind maps, bilingual digital campaigns, and executive pitch collateral crafted for international wealth advisors.</p>",
         result: "<p>Generated a 185% surge in qualified inbound HNWI investment inquiries, contributing to over AED 45M in prospective property transaction pipeline. The campaign firmly established AMZ Properties as an authority for overseas luxury asset diversification in prime Dubai sectors.</p>",
-        coverImage: {"url": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=1200", "alt": "AMZ Properties Dubai Luxury Real Estate"},
+        coverImage: {"url": "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&q=80&w=1200", "alt": "AMZ Properties Dubai Luxury Real Estate"},
         liveUrl: "https://amzproperties.ae/",
         featured: true,
         status: 'published'
@@ -165,7 +165,7 @@ export async function seedInitialProjects() {
         problem: "<p>APTA operated four disparate legacy web environments (main association portal, charitable foundation site, private staff intranet, and external member portal) on outdated infrastructure. Information was duplicated, mobile navigation was broken, and member transit authorities faced friction accessing critical regulatory documents.</p>",
         solution: "<p>Time Global Tech executed a complete enterprise digital overhaul unifying all four platforms under a single cohesive CMS architecture and responsive design system. The solution featured centralized Single Sign-On (SSO), dynamic legislative tracking feeds, an encrypted member-only committee workspace, and high-performance document discovery tools.</p>",
         result: "<p>Streamlined operational workflows for over 1,500 public and private-sector transit agencies across North America. Administrative content duplication was cut by 60%, mobile engagement doubled, and committee collaboration accelerated through instant document distribution.</p>",
-        coverImage: {"url": "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&q=80&w=1200", "alt": "APTA Enterprise Digital Overhaul"},
+        coverImage: {"url": "https://images.unsplash.com/photo-1555680202-c86f0e12f086?auto=format&fit=crop&q=80&w=1200", "alt": "APTA Enterprise Digital Overhaul"},
         liveUrl: "https://www.apta.com/",
         featured: true,
         status: 'published'
@@ -195,7 +195,7 @@ export async function seedInitialProjects() {
         problem: "<p>Commercial real estate investors in Florida relied on fragmented MLS listings and manual spreadsheets to evaluate Net Operating Income (NOI), capitalization rates, and multi-tenant cash flows, creating significant latency during fast-moving commercial acquisitions.</p>",
         solution: "<p>Engineered a high-throughput commercial property intelligence platform pairing automated web crawlers with an Elasticsearch indexing cluster. The platform calculates real-time financial metrics (Cap Rate, Cash-on-Cash Return, Debt Coverage Ratio) on the fly and integrates a dedicated investor CRM with automated deal-matching notifications.</p>",
         result: "<p>Indexed over 10,000 regional commercial properties with sub-50ms search response times. Brokers and institutional investors gained the capability to evaluate complex multi-unit commercial assets in seconds rather than days.</p>",
-        coverImage: {"url": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1200", "alt": "Tampa Property Choice Commercial RE Analytics"},
+        coverImage: {"url": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=1200", "alt": "Tampa Property Choice Commercial RE Analytics"},
         liveUrl: "https://tampapropertychoice.com/",
         featured: true,
         status: 'published'
@@ -210,7 +210,7 @@ export async function seedInitialProjects() {
         problem: "<p>A regional Canadian taxi operator struggled with legacy radio dispatch, inaccurate ETAs during harsh winter conditions, and rider churn due to the lack of an intuitive, modern ride-hailing smartphone application.</p>",
         solution: "<p>Built an end-to-end transportation ecosystem featuring a customer mobile booking app (iOS/Android), a driver dispatch application with real-time turn-by-turn routing, and a browser-based central control room. Developed an intelligent proximity-based auto-dispatch algorithm that assigns jobs to optimal drivers based on vector heading and traffic.</p>",
         result: "<p>Reduced dispatch latency to under 120ms, cut manual phone dispatch labor by 42%, improved fleet route efficiency by 34.8%, and delivered 99.99% system availability through peak winter storm operations.</p>",
-        coverImage: {"url": "https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=1200", "alt": "QTT Canada Fleet Dispatch & Ride Booking"},
+        coverImage: {"url": "https://images.unsplash.com/photo-1557223562-6c77ef16210f?auto=format&fit=crop&q=80&w=1200", "alt": "QTT Canada Fleet Dispatch & Ride Booking"},
         liveUrl: "https://quicktimetaxi.ca/",
         featured: true,
         status: 'published'
@@ -255,7 +255,7 @@ export async function seedInitialProjects() {
         problem: "<p>Developing an autonomous commercial cooking robot required validating complex multi-arm mechanical kinematics, thermal resistance near induction cooktops, vision AI ingredient identification, and food safety sanitation regulations before entering expensive physical manufacturing.</p>",
         solution: "<p>Conducted an end-to-end technical feasibility assessment and product architecture roadmap. Modeled 6-DOF robotic arm trajectories, evaluated sub-50ms machine vision algorithms for ingredient recognition and portion estimation, and outlined an automated modular cleaning protocol meeting NSF commercial kitchen standards.</p>",
         result: "<p>Delivered an actionable, investor-ready commercialization roadmap that validated full engineering feasibility, established hardware-in-the-loop testing protocols, and paved the way for successful prototype funding rounds.</p>",
-        coverImage: {"url": "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&q=80&w=1200", "alt": "Culinabot Robotics Autonomous Kitchen"},
+        coverImage: {"url": "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&q=80&w=1200", "alt": "Culinabot Robotics Autonomous Kitchen"},
         liveUrl: "https://culinabot.com/",
         featured: true,
         status: 'published'
@@ -270,7 +270,7 @@ export async function seedInitialProjects() {
         problem: "<p>Customers ordering personalized recognition plaques faced a clunky back-and-forth email proofing process to approve text layouts and company logos, leading to high cart abandonment rates and production errors.</p>",
         solution: "<p>Built a streamlined 5-page minimalist visual eCommerce storefront with an interactive HTML5 real-time plaque preview configurator. Customers can type custom dedication text, select fonts, upload vectorized corporate logos, and instantly see the engraved plaque simulation before placing their order.</p>",
         result: "<p>Increased checkout conversions by 65%, cut manual design proofing time by 80%, and virtually eliminated customer return requests caused by typographical layout misunderstandings.</p>",
-        coverImage: {"url": "https://images.unsplash.com/photo-1556740758-90de374c12ad?auto=format&fit=crop&q=80&w=1200", "alt": "Thank You Plaque eCommerce Storefront"},
+        coverImage: {"url": "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&q=80&w=1200", "alt": "Thank You Plaque eCommerce Storefront"},
         liveUrl: "https://thankyouplaque.com/",
         featured: true,
         status: 'published'
@@ -285,7 +285,7 @@ export async function seedInitialProjects() {
         problem: "<p>Mattressland UK operated brick-and-mortar retail showrooms and an emerging eCommerce website with disjointed visual branding, competing typography, and inconsistent in-store marketing collateral that diluted consumer trust.</p>",
         solution: "<p>Designed a comprehensive, unified brand identity system across both physical and digital retail touchpoints. Created bespoke corporate typography standards, in-store promotional signage, luxury packaging materials, and pixel-perfect UI guidelines for the web storefront.</p>",
         result: "<p>Elevated customer brand recall by 40% against high-street UK bedding competitors, achieved seamless visual continuity between retail showrooms and online channels, and boosted in-store promotional conversion rates.</p>",
-        coverImage: {"url": "/assets/projects/mattressland-case-study-img-1.png", "alt": "Mattressland UK Unified Retail Brand"},
+        coverImage: {"url": "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&q=80&w=1200", "alt": "Mattressland UK Unified Retail Brand"},
         liveUrl: "https://mattressland.co.uk/",
         featured: true,
         status: 'published'
@@ -300,7 +300,7 @@ export async function seedInitialProjects() {
         problem: "<p>An emerging B2B enterprise software provider had solid engineering capabilities but lacked an authoritative corporate identity, making it difficult to win credibility when pitching against established enterprise tech vendors.</p>",
         solution: "<p>Developed an end-to-end corporate visual identity, executive pitch presentation deck, digital marketing asset kit, and modern responsive company website designed to communicate institutional reliability and technological sophistication.</p>",
         result: "<p>Positioned Infotex as a tier-1 software partner in front of prospective enterprise clients and venture investors, directly supporting their client acquisition pipeline and brand confidence.</p>",
-        coverImage: {"url": "/assets/projects/infotex-case-study-img-1.png", "alt": "Infotex Technologies Enterprise Identity"},
+        coverImage: {"url": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1200", "alt": "Infotex Technologies Enterprise Identity"},
         liveUrl: "https://infotex.tech/",
         featured: true,
         status: 'published'
@@ -330,7 +330,7 @@ export async function seedInitialProjects() {
         problem: "<p>Reccon (Pvt) Limited possessed over 35 years of prestigious civil engineering accomplishments (highways, dams, industrial plants) but lacked modernized marketing literature and executive credential profiles needed for pre-qualification in multi-billion rupee international infrastructure bids.</p>",
         solution: "<p>Researched and synthesized decades of engineering contracts into an authoritative corporate profile, project dossier, and executive credentials suite. Designed a sleek, modern visual aesthetic that honored their civil engineering heritage while meeting stringent pre-qualification standards.</p>",
         result: "<p>Empowered Reccon to successfully pre-qualify for premier public and private sector civil infrastructure tenders, establishing an elite corporate presence that accurately reflects their 35+ years of operational excellence.</p>",
-        coverImage: {"url": "https://images.unsplash.com/photo-1541888946425-d0fbb186156a?auto=format&fit=crop&q=80&w=1200", "alt": "Reccon Corporate Profile & Heritage"},
+        coverImage: {"url": "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80&w=1200", "alt": "Reccon Corporate Profile & Heritage"},
         liveUrl: "https://reccon.com.pk/",
         featured: true,
         status: 'published'
@@ -345,7 +345,7 @@ export async function seedInitialProjects() {
         problem: "<p>Elderly home healthcare patients and their family members struggled to understand Medicare-mandated clinical intake questionnaires and remote care monitoring protocols, resulting in delayed care authorizations and administrative friction.</p>",
         solution: "<p>Scripted, storyboarded, and produced an engaging 2D motion graphic explainer video suite with synchronized warm voiceovers and step-by-step visual demonstrations. The videos walk patients clearly through home visit schedules, caregiver credentials, and telehealth check-ins.</p>",
         result: "<p>Boosted patient intake comprehension by 70%, reduced patient intake delays to zero, and provided R.H. Care with a high-trust digital onboarding asset deployed across myrhcare.com and patient outreach portals.</p>",
-        coverImage: {"url": "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=1200", "alt": "R.H. Care Healthcare Motion Branding"},
+        coverImage: {"url": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=1200", "alt": "R.H. Care Healthcare Motion Branding"},
         liveUrl: "https://myrhcare.com/",
         featured: true,
         status: 'published'
@@ -360,7 +360,7 @@ export async function seedInitialProjects() {
         problem: "<p>Managing multi-region passenger and freight rail fleets with distributed rolling-stock depots required unifying disparate IoT sensor telemetry, track condition alerts, and unscheduled maintenance workorders into a singular real-time operational cockpit.</p>",
         solution: "<p>Time Global Tech architected the RailOps enterprise digital portal for Alstom rolling stock, incorporating automated vibration and thermal sensor stream processing, component wear prediction algorithms, and dynamic depot workorder dispatching.</p>",
         result: "<p>Boosted fleet mission reliability to 99.98%, reduced unscheduled maintenance turnaround by 45%, and established a predictive maintenance benchmark for modern electrified rail systems.</p>",
-        coverImage: {"url": "/assets/projects/railops-alstom-case-study.html.png", "alt": "Alstom RailOps Fleet Operations Portal"},
+        coverImage: {"url": "https://images.unsplash.com/photo-1474487548417-781cb71495f3?auto=format&fit=crop&q=80&w=1200", "alt": "Alstom RailOps Fleet Operations Portal"},
         liveUrl: "https://www.alstom.com/",
         featured: true,
         status: 'published'
@@ -375,7 +375,7 @@ export async function seedInitialProjects() {
         problem: "<p>A global philanthropic foundation providing education, clean water, and disaster relief lacked a synchronized donor management platform. Manual bank receipt processing delayed emergency aid disbursement and reduced recurring donor retention.</p>",
         solution: "<p>Engineered an end-to-end philanthropic web portal featuring automated recurring donor sponsorship pipelines, real-time humanitarian field telemetry, and an open transparency ledger tracking aid delivery down to individual beneficiary communities.</p>",
         result: "<p>Facilitated the transparent deployment of over $2.4M in humanitarian aid, grew recurring monthly sponsorships by 140%, and gave donors instant photo and GPS verification of sponsored community water wells and clinics.</p>",
-        coverImage: {"url": "/assets/projects/Barkat_Org_Foundation_Final__Project_Case_Study_v2.pdf.jpg.jpeg", "alt": "Barkat Org Foundation Philanthropic Portal"},
+        coverImage: {"url": "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=1200", "alt": "Barkat Org Foundation Philanthropic Portal"},
         liveUrl: "https://barkatorg.org/",
         featured: true,
         status: 'published'
@@ -390,7 +390,7 @@ export async function seedInitialProjects() {
         problem: "<p>Hardware and manufacturing enterprises struggled with complex multi-tier Bill of Materials (BOM) cost estimation across volatile global supply chains, causing cost overruns before engineering designs were frozen.</p>",
         solution: "<p>Developed the PCM (Product Cost Management) digital platform: a high-precision cost modeling engine calculating raw material spot prices, manufacturing cycle times, tooling amortizations, and supplier tier margins on the fly.</p>",
         result: "<p>Reduced BOM cost variance by 30% across major product lines, modeled over 500,000 discrete manufacturing components, and enabled engineering squads to hit target cost constraints before physical tooling commitment.</p>",
-        coverImage: {"url": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=1200", "alt": "PCM Product Cost Management Engineering Tool"},
+        coverImage: {"url": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&q=80&w=1200", "alt": "PCM Product Cost Management Engineering Tool"},
         liveUrl: "https://pcmtool.com/",
         featured: true,
         status: 'published'
