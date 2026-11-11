@@ -217,19 +217,19 @@ function GenericInteractiveShowcase({ project }: { project: FullProject }) {
     <div className="space-y-12 my-12">
       {/* ── 1. Live Platform Telemetry & Browser Viewport ── */}
       <div className="rounded-2xl bg-card border border-border/80 p-6 sm:p-8 shadow-xl relative overflow-hidden">
-        <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-6">
-          <div>
-            <span className="text-xs font-mono text-primary uppercase tracking-widest font-bold">
+        <div className="flex flex-col sm:flex-row justify-between sm:items-start gap-4 mb-6">
+          <div className="min-w-0 flex-1">
+            <span className="text-xs font-mono text-primary uppercase tracking-widest font-bold block">
               Live Platform Integration
             </span>
-            <h3 className="text-2xl font-bold text-foreground mt-1">
+            <h3 className="text-xl sm:text-2xl font-bold text-foreground mt-1">
               {clientName} — Platform Telemetry & Live Product View
             </h3>
             <p className="text-sm text-muted-foreground mt-1">
               Production deployment telemetry cross-referenced with live domain records at {hostname}.
             </p>
           </div>
-          <div className="flex items-center gap-3 font-mono text-xs bg-secondary/80 px-3.5 py-2 rounded-xl border border-border shrink-0">
+          <div className="flex flex-wrap items-center gap-3 font-mono text-xs bg-secondary/80 px-3.5 py-2 rounded-xl border border-border self-start shrink-0">
             <span className="flex items-center gap-1.5 text-primary font-bold">
               <span className="w-2 h-2 rounded-full bg-primary animate-pulse" /> Production Active
             </span>
@@ -241,44 +241,44 @@ function GenericInteractiveShowcase({ project }: { project: FullProject }) {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Browser Mockup */}
-          <div className="lg:col-span-2 rounded-xl bg-background border border-border/80 overflow-hidden flex flex-col justify-between h-[360px] relative shadow-lg">
-            <div className="bg-secondary px-4 py-2.5 border-b border-border/80 flex items-center justify-between font-mono text-xs z-10">
-              <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-red-500/80" />
-                <span className="w-3 h-3 rounded-full bg-yellow-500/80" />
-                <span className="w-3 h-3 rounded-full bg-green-500/80" />
-                <span className="text-muted-foreground ml-2 text-[11px] truncate max-w-[200px] sm:max-w-xs">
+          <div className="lg:col-span-2 rounded-xl bg-background border border-border/80 overflow-hidden flex flex-col justify-between min-h-[340px] relative shadow-lg">
+            <div className="bg-secondary px-4 py-2.5 border-b border-border/80 flex items-center justify-between gap-2 font-mono text-xs z-10">
+              <div className="flex items-center gap-2 min-w-0">
+                <span className="w-3 h-3 rounded-full bg-red-500/80 shrink-0" />
+                <span className="w-3 h-3 rounded-full bg-yellow-500/80 shrink-0" />
+                <span className="w-3 h-3 rounded-full bg-green-500/80 shrink-0" />
+                <span className="text-muted-foreground ml-2 text-[11px] truncate">
                   {project.liveUrl || `https://${hostname}/`}
                 </span>
               </div>
-              <span className="px-2 py-0.5 rounded bg-primary/10 text-primary text-[10px] border border-primary/30 font-bold">
+              <span className="px-2 py-0.5 rounded bg-primary/10 text-primary text-[10px] border border-primary/30 font-bold shrink-0">
                 LIVE DOMAIN VERIFIED
               </span>
             </div>
 
-            <div className="p-6 relative z-10 flex flex-col justify-between h-full bg-gradient-to-br from-primary/5 via-card to-background">
-              <div className="space-y-4 max-w-lg">
+            <div className="p-6 relative z-10 flex flex-col justify-between flex-1 gap-6 bg-gradient-to-br from-primary/5 via-card to-background">
+              <div className="space-y-3 max-w-xl">
                 <div className="inline-block px-3 py-1 rounded-md bg-primary/15 text-primary font-mono text-xs border border-primary/30 font-bold uppercase">
                   {clientName}
                 </div>
-                <h4 className="text-2xl font-bold text-foreground leading-tight">
+                <h4 className="text-xl sm:text-2xl font-bold text-foreground leading-snug">
                   {project.title}
                 </h4>
-                <p className="text-muted-foreground text-xs leading-relaxed line-clamp-2">
+                <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">
                   Engineered with modern cloud architecture, strict security protocols, and high-performance user interfaces.
                 </p>
               </div>
 
               <div className="pt-4 border-t border-border/60 grid grid-cols-3 gap-3 font-mono text-xs">
-                <div className="p-2.5 rounded-lg bg-secondary/80 border border-border">
+                <div className="p-2.5 rounded-lg bg-secondary/80 border border-border min-w-0">
                   <span className="text-muted-foreground block text-[10px]">CORE STACK</span>
                   <span className="text-primary font-bold text-xs truncate block">{techStack[0] || "Custom App"}</span>
                 </div>
-                <div className="p-2.5 rounded-lg bg-secondary/80 border border-border">
+                <div className="p-2.5 rounded-lg bg-secondary/80 border border-border min-w-0">
                   <span className="text-muted-foreground block text-[10px]">UPTIME SLA</span>
                   <span className="text-foreground font-bold text-xs block">99.99%</span>
                 </div>
-                <div className="p-2.5 rounded-lg bg-secondary/80 border border-border">
+                <div className="p-2.5 rounded-lg bg-secondary/80 border border-border min-w-0">
                   <span className="text-muted-foreground block text-[10px]">DEPLOYMENT</span>
                   <span className="text-cyan-400 font-bold text-xs block">Verified</span>
                 </div>
@@ -293,21 +293,21 @@ function GenericInteractiveShowcase({ project }: { project: FullProject }) {
                 <FileCheck2 size={16} /> TECHNICAL AUDIT LOG
               </div>
               <div className="space-y-2 text-foreground/80 text-[11px]">
-                <div className="flex justify-between p-2 rounded bg-secondary/70 border border-border">
-                  <span>Architecture Validation</span>
-                  <span className="text-primary font-bold">100% Passed</span>
+                <div className="flex justify-between items-center gap-2 p-2 rounded bg-secondary/70 border border-border">
+                  <span className="truncate">Architecture Validation</span>
+                  <span className="text-primary font-bold shrink-0">100% Passed</span>
                 </div>
-                <div className="flex justify-between p-2 rounded bg-secondary/70 border border-border">
-                  <span>Data Vault Security</span>
-                  <span className="text-foreground font-bold">AES-256</span>
+                <div className="flex justify-between items-center gap-2 p-2 rounded bg-secondary/70 border border-border">
+                  <span className="truncate">Data Vault Security</span>
+                  <span className="text-foreground font-bold shrink-0">AES-256</span>
                 </div>
-                <div className="flex justify-between p-2 rounded bg-secondary/70 border border-border">
-                  <span>Production Pipeline</span>
-                  <span className="text-cyan-400 font-bold">Continuous CI</span>
+                <div className="flex justify-between items-center gap-2 p-2 rounded bg-secondary/70 border border-border">
+                  <span className="truncate">Production Pipeline</span>
+                  <span className="text-cyan-400 font-bold shrink-0">Continuous CI</span>
                 </div>
-                <div className="flex justify-between p-2 rounded bg-secondary/70 border border-border">
-                  <span>API Integration</span>
-                  <span className="text-primary font-bold">Synced</span>
+                <div className="flex justify-between items-center gap-2 p-2 rounded bg-secondary/70 border border-border">
+                  <span className="truncate">API Integration</span>
+                  <span className="text-primary font-bold shrink-0">Synced</span>
                 </div>
               </div>
             </div>
@@ -327,45 +327,48 @@ function GenericInteractiveShowcase({ project }: { project: FullProject }) {
       </div>
 
       {/* ── 2. Architecture & Technical Flow HUD ── */}
-      <div className="rounded-2xl bg-card border border-border/80 p-6 sm:p-8 space-y-6 shadow-xl">
-        <div className="flex flex-col lg:flex-row justify-between lg:items-center gap-4">
-          <div>
+      <div className="rounded-2xl bg-card border border-border/80 p-6 sm:p-8 space-y-6 shadow-xl overflow-hidden">
+        <div className="flex flex-col sm:flex-row justify-between sm:items-start gap-3">
+          <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+              <span className="w-2 h-2 rounded-full bg-primary animate-pulse shrink-0" />
               <span className="text-xs font-mono text-primary uppercase tracking-widest font-bold">
                 Technical Architecture & Execution Matrix
               </span>
             </div>
-            <h3 className="text-2xl font-bold text-foreground mt-1">
+            <h3 className="text-xl sm:text-2xl font-bold text-foreground mt-1">
               Engineering Pillars & Delivery Blueprint
             </h3>
-            <p className="text-sm text-muted-foreground mt-0.5">
+            <p className="text-sm text-muted-foreground mt-1">
               Explore the four core engineering dimensions delivered for {clientName}.
             </p>
           </div>
+          <span className="px-3 py-1 rounded-full text-xs font-mono bg-primary/10 text-primary border border-primary/30 self-start font-bold shrink-0">
+            Interactive Matrix
+          </span>
+        </div>
 
-          {/* Interactive Navigation Tabs */}
-          <div className="flex flex-wrap gap-2 p-1.5 rounded-xl bg-secondary border border-border shrink-0">
-            {(Object.keys(domainTabs) as Array<keyof typeof domainTabs>).map((key) => {
-              const tab = domainTabs[key];
-              const Icon = tab.icon;
-              const isActive = activeTab === key;
-              return (
-                <button
-                  key={key}
-                  onClick={() => setActiveTab(key)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer ${
-                    isActive
-                      ? "bg-primary text-primary-foreground shadow-md"
-                      : "text-muted-foreground hover:text-foreground hover:bg-card"
-                  }`}
-                >
-                  <Icon size={14} />
-                  <span>{tab.label}</span>
-                </button>
-              );
-            })}
-          </div>
+        {/* Interactive Navigation Tabs - Full-width row inside card */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 p-1.5 rounded-xl bg-secondary border border-border w-full">
+          {(Object.keys(domainTabs) as Array<keyof typeof domainTabs>).map((key) => {
+            const tab = domainTabs[key];
+            const Icon = tab.icon;
+            const isActive = activeTab === key;
+            return (
+              <button
+                key={key}
+                onClick={() => setActiveTab(key)}
+                className={`px-3.5 py-2.5 rounded-lg text-xs font-semibold flex items-center justify-center sm:justify-start gap-2 transition-all cursor-pointer w-full ${
+                  isActive
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "text-muted-foreground hover:text-foreground hover:bg-card"
+                }`}
+              >
+                <Icon size={14} className="shrink-0" />
+                <span className="truncate">{tab.label}</span>
+              </button>
+            );
+          })}
         </div>
 
         {/* Dynamic Pillar Cards */}
@@ -378,14 +381,17 @@ function GenericInteractiveShowcase({ project }: { project: FullProject }) {
             transition={{ duration: 0.3 }}
             className="space-y-6"
           >
-            <div className="p-4 rounded-xl bg-secondary/50 border border-border/60">
-              <h4 className="font-bold text-base text-foreground mb-1">{currentTab.title}</h4>
+            <div className="p-4 rounded-xl bg-primary/10 border border-primary/30">
+              <h4 className="font-bold text-base text-foreground mb-1 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-primary shrink-0" />
+                <span>{currentTab.title}</span>
+              </h4>
               <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                 {currentTab.overview}
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
               {currentTab.cards.map((card, idx) => {
                 const Icon = card.icon;
                 const isSelected = selectedNode.title === card.title;
@@ -402,18 +408,18 @@ function GenericInteractiveShowcase({ project }: { project: FullProject }) {
                     }
                     className={`p-5 rounded-xl border transition-all cursor-pointer flex flex-col justify-between h-full group ${
                       isSelected
-                        ? "bg-primary/5 border-primary shadow-lg ring-1 ring-primary/40"
-                        : "bg-card border-border/80 hover:border-primary/50 hover:bg-secondary/40"
+                        ? "bg-primary/10 border-primary shadow-lg ring-1 ring-primary/40"
+                        : "bg-secondary/60 border-border/80 hover:border-primary/50 hover:bg-secondary"
                     }`}
                   >
                     <div>
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-secondary border border-border text-foreground/80">
-                          {card.tag}
-                        </span>
-                        <div className={`p-2 rounded-lg bg-secondary ${card.color}`}>
+                      <div className="flex items-center justify-between gap-2 mb-3">
+                        <div className={`w-9 h-9 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center ${card.color} shrink-0`}>
                           <Icon size={18} />
                         </div>
+                        <span className="px-2.5 py-0.5 rounded bg-card border border-border text-[10px] font-mono font-bold text-primary">
+                          {card.tag}
+                        </span>
                       </div>
                       <h5 className="font-bold text-sm sm:text-base text-foreground mb-2 group-hover:text-primary transition-colors">
                         {card.title}
@@ -436,9 +442,9 @@ function GenericInteractiveShowcase({ project }: { project: FullProject }) {
 
         {/* Selected Node Inspector HUD */}
         <div className="p-4 sm:p-5 rounded-xl bg-background border border-primary/20 flex flex-col sm:flex-row sm:items-center justify-between gap-4 font-mono text-xs">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-primary" />
+          <div className="space-y-1 min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-primary shrink-0" />
               <span className="text-muted-foreground uppercase text-[10px]">Active Node Inspector:</span>
               <span className="text-primary font-bold">{selectedNode.title}</span>
             </div>
@@ -446,7 +452,7 @@ function GenericInteractiveShowcase({ project }: { project: FullProject }) {
               {selectedNode.detail}
             </p>
           </div>
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex flex-wrap items-center gap-2.5 shrink-0">
             <span className="px-2.5 py-1 rounded bg-secondary text-foreground text-[11px] border border-border font-bold">
               {selectedNode.tag}
             </span>
@@ -458,21 +464,21 @@ function GenericInteractiveShowcase({ project }: { project: FullProject }) {
       </div>
 
       {/* ── 3. Production Deliverables & Verification Matrix ── */}
-      <div className="rounded-2xl bg-card border border-border/80 p-6 sm:p-8 shadow-xl">
-        <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-6">
-          <div>
-            <span className="text-xs font-mono text-primary uppercase tracking-widest font-bold">
+      <div className="rounded-2xl bg-card border border-border/80 p-6 sm:p-8 shadow-xl overflow-hidden">
+        <div className="flex flex-col sm:flex-row justify-between sm:items-start gap-4 mb-6">
+          <div className="min-w-0 flex-1">
+            <span className="text-xs font-mono text-primary uppercase tracking-widest font-bold block">
               Verification Matrix
             </span>
-            <h3 className="text-2xl font-bold text-foreground mt-1">
+            <h3 className="text-xl sm:text-2xl font-bold text-foreground mt-1">
               Production Release Checklist
             </h3>
-            <p className="text-sm text-muted-foreground mt-0.5">
+            <p className="text-sm text-muted-foreground mt-1">
               Verified compliance and technical milestone deliverables for {clientName}.
             </p>
           </div>
-          <div className="flex items-center gap-2 text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-lg border border-emerald-500/30 font-bold shrink-0">
-            <CheckCircle2 size={14} /> 100% Quality Assurance Passed
+          <div className="flex items-center gap-2 text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-lg border border-emerald-500/30 font-bold self-start shrink-0">
+            <CheckCircle2 size={14} /> 100% QA Passed
           </div>
         </div>
 

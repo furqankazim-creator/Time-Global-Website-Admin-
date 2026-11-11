@@ -135,19 +135,19 @@ export function OrgpyurInteractiveShowcase() {
     <div className="space-y-12 my-12">
       {/* ── 1. Live Platform Telemetry & Browser Viewport ── */}
       <div className="rounded-2xl bg-card border border-border/80 p-6 sm:p-8 shadow-xl relative overflow-hidden">
-        <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-6">
-          <div>
-            <span className="text-xs font-mono text-primary uppercase tracking-widest font-bold">
+        <div className="flex flex-col sm:flex-row justify-between sm:items-start gap-4 mb-6">
+          <div className="min-w-0 flex-1">
+            <span className="text-xs font-mono text-primary uppercase tracking-widest font-bold block">
               Live Platform Integration
             </span>
-            <h3 className="text-2xl font-bold text-foreground mt-1">
+            <h3 className="text-xl sm:text-2xl font-bold text-foreground mt-1">
               Orgpyur Platform Telemetry & Live Product View
             </h3>
             <p className="text-sm text-muted-foreground mt-1">
               Synchronized audit evidence cross-referenced with live domain records at orgpyur.com.
             </p>
           </div>
-          <div className="flex items-center gap-3 font-mono text-xs bg-secondary/80 px-3.5 py-2 rounded-xl border border-border shrink-0">
+          <div className="flex flex-wrap items-center gap-3 font-mono text-xs bg-secondary/80 px-3.5 py-2 rounded-xl border border-border self-start shrink-0">
             <span className="flex items-center gap-1.5 text-primary font-bold">
               <span className="w-2 h-2 rounded-full bg-primary animate-pulse" /> Domain Active
             </span>
@@ -241,28 +241,28 @@ export function OrgpyurInteractiveShowcase() {
       </div>
 
       {/* ── 2. Governance Node Graph & Interactive Topology HUD ── */}
-      <div className="rounded-2xl bg-card border border-border/80 p-6 sm:p-8 space-y-6 shadow-xl">
-        <div className="flex flex-col lg:flex-row justify-between lg:items-center gap-4">
+      <div className="rounded-2xl bg-card border border-border/80 p-6 sm:p-8 space-y-6 shadow-xl overflow-hidden">
+        <div className="flex flex-col gap-3">
           <div>
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+              <span className="w-2 h-2 rounded-full bg-primary animate-pulse shrink-0" />
               <span className="text-xs font-mono text-primary uppercase tracking-widest font-bold">
                 Enterprise Architecture & Governance Flow
               </span>
             </div>
-            <h3 className="text-2xl font-bold text-foreground mt-1">
+            <h3 className="text-xl sm:text-2xl font-bold text-foreground mt-1">
               Operational Audit & IP Alignment Topology
             </h3>
           </div>
-          <div className="flex items-center gap-3 font-mono text-xs bg-secondary px-3 py-2 rounded-xl border border-border">
+          <div className="flex flex-wrap items-center gap-3 font-mono text-xs bg-secondary px-3.5 py-2 rounded-xl border border-border w-fit">
             <span className="flex items-center gap-1.5 text-primary">
-              <span className="w-2 h-2 rounded-full bg-primary" /> Board Oversight
+              <span className="w-2 h-2 rounded-full bg-primary shrink-0" /> Board Oversight
             </span>
             <span className="flex items-center gap-1.5 text-cyan-400">
-              <span className="w-2 h-2 rounded-full bg-cyan-400" /> CIPO Trademark
+              <span className="w-2 h-2 rounded-full bg-cyan-400 shrink-0" /> CIPO Trademark
             </span>
             <span className="flex items-center gap-1.5 text-amber-400">
-              <span className="w-2 h-2 rounded-full bg-amber-400" /> 66% MVP
+              <span className="w-2 h-2 rounded-full bg-amber-400 shrink-0" /> 66% MVP
             </span>
           </div>
         </div>
@@ -400,25 +400,25 @@ export function OrgpyurInteractiveShowcase() {
       </div>
 
       {/* ── 3. Cross-Industry Governance Scenario Matrix ── */}
-      <div className="rounded-2xl bg-card border border-border/80 p-6 sm:p-8 space-y-6 shadow-xl">
-        <div className="flex flex-col sm:flex-row justify-between sm:items-end gap-3">
-          <div>
+      <div className="rounded-2xl bg-card border border-border/80 p-6 sm:p-8 space-y-6 shadow-xl overflow-hidden">
+        <div className="flex flex-col sm:flex-row justify-between sm:items-start gap-3">
+          <div className="min-w-0 flex-1">
             <div className="text-xs font-mono text-primary tracking-widest uppercase font-bold">
               Governance & Audit Framework
             </div>
-            <h2 className="text-2xl font-bold text-foreground mt-1">
+            <h2 className="text-xl sm:text-2xl font-bold text-foreground mt-1">
               Cross-Industry Executive Governance Matrix
             </h2>
             <p className="text-muted-foreground text-sm mt-1">
               Select an industry domain below to explore specialized milestone tracking, board reporting, and IP protection frameworks.
             </p>
           </div>
-          <span className="px-3 py-1 rounded-full text-xs font-mono bg-primary/10 text-primary border border-primary/30 self-start sm:self-auto font-bold">
+          <span className="px-3 py-1 rounded-full text-xs font-mono bg-primary/10 text-primary border border-primary/30 self-start font-bold shrink-0">
             Interactive Matrix
           </span>
         </div>
 
-        <div className="flex flex-wrap gap-2.5 pt-2 border-b border-border pb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 p-1.5 rounded-xl bg-secondary border border-border w-full">
           {(["saas", "fintech", "healthtech", "web3"] as const).map((key) => {
             const isActive = activeTab === key;
             const labels = {
@@ -431,13 +431,13 @@ export function OrgpyurInteractiveShowcase() {
               <button
                 key={key}
                 onClick={() => setActiveTab(key)}
-                className={`px-4 py-2.5 rounded-xl font-mono text-xs font-bold transition flex items-center gap-2 ${
+                className={`px-3.5 py-2.5 rounded-lg font-mono text-xs font-bold transition flex items-center justify-center sm:justify-start gap-2 cursor-pointer w-full ${
                   isActive
-                    ? "bg-primary text-primary-foreground shadow-sm"
-                    : "bg-secondary text-muted-foreground hover:text-foreground border border-border"
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "text-muted-foreground hover:text-foreground hover:bg-card"
                 }`}
               >
-                {labels[key]}
+                <span className="truncate">{labels[key]}</span>
               </button>
             );
           })}
