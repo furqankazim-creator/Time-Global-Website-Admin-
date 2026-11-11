@@ -397,11 +397,47 @@ export async function seedInitialProjects() {
       }
     ];
 
+    // coverImage is a Media ref (ObjectId), so each seed cover URL is first
+    // registered as a Media document. Each project is seeded independently so
+    // one bad record can't silently stop the rest from being created.
+    const { Media } = await import("./Media.js");
+    let order = 0;
     for (const p of realProjects) {
-      const exists = await Project.findOne({ slug: p.slug });
-      if (!exists) {
-        await Project.create(p);
+      try {
+        const { coverImage, ...rest } = p as typeof p & { coverImage?: { url: string; alt: string } };
+        let coverId: Types.ObjectId | null = null;
+        if (coverImage?.url) {
+          const key = `seed/projects/${p.slug}-cover`;
+          const media = await Media.findOneAndUpdate(
+            { key },
+            {
+              $setOnInsert: {
+                key,
+                url: coverImage.url,
+                filename: coverImage.url.split("/").pop()?.split("?")[0] || `${p.slug}-cover`,
+                mimeType: "image/jpeg",
+                size: 0,
+                alt: coverImage.alt?.slice(0, 300) || p.title,
+                folder: "projects",
+              },
+            },
+            { upsert: true, new: true }
+          );
+          coverId = media?._id ?? null;
+        }
+
+        const exists = await Project.findOne({ slug: p.slug });
+        if (!exists) {
+          await Project.create({ ...rest, coverImage: coverId, order: order, publishedAt: new Date() });
+        } else if (!exists.coverImage && coverId) {
+          await Project.updateOne({ _id: exists._id }, { $set: { coverImage: coverId } });
+        }
+      } catch (err) {
+        console.warn(`[seed] failed to seed project ${p.slug}:`, (err as Error).message);
       }
+      order++;
     }
-  } catch {}
+  } catch (err) {
+    console.warn("[seed] project seeding failed:", (err as Error).message);
+  }
 }
