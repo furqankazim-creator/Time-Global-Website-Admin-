@@ -48,7 +48,7 @@ const SOFTWARE_APP_IMAGES: Record<string, string> = {
   "orgpyur-technologies-mvp-governance-audit": "/assets/projects/orgpyur-creative-card.jpg",
   "ontario-tennis-association": "/assets/projects/Ontario_Tennis_Association_Case_Study_Updated-img-2.webp",
   "amz-properties-dubai": "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&q=80&w=1200",
-  "apta-enterprise-architecture": "https://images.unsplash.com/photo-1555680202-c86f0e12f086?auto=format&fit=crop&q=80&w=1200",
+  "apta-enterprise-architecture": "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&q=80&w=1200",
   "colliborate-tax-workspace": "/assets/projects/colliborate-case-study-img-1.jpg",
   "tampa-property-choice": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=1200",
   "qtt-canada-fleet-dispatch": "https://images.unsplash.com/photo-1557223562-6c77ef16210f?auto=format&fit=crop&q=80&w=1200",
@@ -74,7 +74,7 @@ const SOFTWARE_APP_IMAGES: Record<string, string> = {
   tennis: "/assets/projects/Ontario_Tennis_Association_Case_Study_Updated-img-2.webp",
   ontario: "/assets/projects/Ontario_Tennis_Association_Case_Study_Updated-img-2.webp",
   amz: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&q=80&w=1200",
-  apta: "https://images.unsplash.com/photo-1555680202-c86f0e12f086?auto=format&fit=crop&q=80&w=1200",
+  apta: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&q=80&w=1200",
   colliborate: "/assets/projects/colliborate-case-study-img-1.jpg",
   tampa: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=1200",
   taxi: "https://images.unsplash.com/photo-1557223562-6c77ef16210f?auto=format&fit=crop&q=80&w=1200",
@@ -118,10 +118,23 @@ function getProjectImage(p: CmsProject): string {
   return "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1200";
 }
 
+function isWideCard(i: number, total: number): boolean {
+  // 7-card cycle across 3 rows:
+  // Row A: [Wide(2), Normal(1)] -> i % 7 === 0 is wide
+  // Row B: [Normal(1), Wide(2)] -> i % 7 === 3 is wide
+  // Row C: [Normal(1), Normal(1), Normal(1)] -> 3 cards in row!
+  // If the last row of the list has 2 items left (total % 7 === 6), make the second-to-last item wide so the final row is also 100% full (2 + 1 = 3).
+  if (total % 7 === 6 && i === total - 2) return true;
+  if (total % 7 === 5 && i === total - 1) return true;
+  const mod = i % 7;
+  return mod === 0 || mod === 3;
+}
+
 /** CMS project → the ProjectCard shape this page already renders. */
-function toProjectCard(p: CmsProject, i: number): Omit<ProjectCardProps, "index"> {
+function toProjectCard(p: CmsProject, i: number, arr?: CmsProject[]): Omit<ProjectCardProps, "index"> {
   const categoryTag = p.category ? p.category.replace("-", " ") : "";
   const techTags = p.techStack ?? [];
+  const total = arr ? arr.length : STATIC_PROJECTS.length;
   return {
     image: getProjectImage(p),
     title: p.title,
@@ -129,7 +142,7 @@ function toProjectCard(p: CmsProject, i: number): Omit<ProjectCardProps, "index"
     tags: [categoryTag, ...techTags].filter(Boolean),
     technologies: techTags,
     liveUrl: `/work/${p.slug}`,
-    wide: i % 3 === 0,
+    wide: isWideCard(i, total),
   };
 }
 
@@ -622,9 +635,14 @@ export default function WorkPage() {
                   </button>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+                <div className="grid grid-cols-1 gap-2 sm:grid-cols-3 sm:grid-flow-row-dense">
                   {filteredProjects.map((p, i) => (
-                    <ProjectCard key={p.title} index={i} {...p} />
+                    <ProjectCard
+                      key={p.title}
+                      index={i}
+                      {...p}
+                      wide={isWideCard(i, filteredProjects.length)}
+                    />
                   ))}
                 </div>
               )}

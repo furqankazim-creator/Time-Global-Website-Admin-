@@ -185,11 +185,11 @@ export const STATIC_PROJECTS: (CmsProject & {
     problem: "<p>APTA operated four disparate legacy web environments (main association portal, charitable foundation site, private staff intranet, and external member portal) on outdated infrastructure. Information was duplicated, mobile navigation was broken, and member transit authorities faced friction accessing critical regulatory documents.</p>",
     solution: "<p>Time Global Tech executed a complete enterprise digital overhaul unifying all four platforms under a single cohesive CMS architecture and responsive design system. The solution featured centralized Single Sign-On (SSO), dynamic legislative tracking feeds, an encrypted member-only committee workspace, and high-performance document discovery tools.</p>",
     result: "<p>Streamlined operational workflows for over 1,500 public and private-sector transit agencies across North America. Administrative content duplication was cut by 60%, mobile engagement doubled, and committee collaboration accelerated through instant document distribution.</p>",
-    coverImage: {"url": "https://images.unsplash.com/photo-1555680202-c86f0e12f086?auto=format&fit=crop&q=80&w=1200", "alt": "APTA Enterprise Digital Overhaul"},
+    coverImage: {"url": "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&q=80&w=1200", "alt": "APTA Enterprise Digital Overhaul"},
     liveUrl: "https://www.apta.com/",
     gallery: [
-      {"url": "https://images.unsplash.com/photo-1555680202-c86f0e12f086?auto=format&fit=crop&q=80&w=1200", "alt": "APTA Unified Platform Architecture"},
-      {"url": "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&q=80&w=1200", "alt": "Public Transit Operations Center"},
+      {"url": "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&q=80&w=1200", "alt": "APTA Unified Platform Architecture"},
+      {"url": "https://images.unsplash.com/photo-1474487548417-781cb71495f3?auto=format&fit=crop&q=80&w=1200", "alt": "Public Transit Operations Center"},
       {"url": "https://images.unsplash.com/photo-1517649763962-0c623266ddc0?auto=format&fit=crop&q=80&w=1200", "alt": "Transit Network Telemetry"}
     ],
   },
