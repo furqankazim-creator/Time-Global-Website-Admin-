@@ -18,6 +18,7 @@ import {
   ProjectEditPage, PostEditPage, TestimonialEditPage, TeamEditPage, JobEditPage, StoryEditPage,
 } from "./pages/edits";
 import { JobsListPage, NotificationsPage } from "./pages/careers";
+import ApplicationsPage from "./pages/ApplicationsPage";
 import { AdminLayout } from "./components/AdminLayout";
 
 function NotBuilt({ title }: { title: string }) {
@@ -84,6 +85,7 @@ function Guarded() {
       <Route path="/admin/jobs" component={JobsListPage} />
       <Route path="/admin/jobs/new">{() => <JobEditPage />}</Route>
       <Route path="/admin/jobs/:id">{(p) => <JobEditPage id={p.id} />}</Route>
+      <Route path="/admin/applications" component={ApplicationsPage} />
       <Route path="/admin/leads" component={LeadsPage} />
       <Route path="/admin/settings" component={SettingsPage} />
       <Route path="/admin/settings/:tab" component={SettingsPage} />

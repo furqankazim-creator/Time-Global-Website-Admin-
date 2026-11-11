@@ -25,6 +25,7 @@ import CookiePolicy from "@/pages/CookiePolicy";
 import RefundPolicy from "@/pages/RefundPolicy";
 import NotFoundPage from "@/pages/NotFoundPage";
 import ContactModal from "@/components/ContactModal";
+import { JobApplicationModal } from "@/components/JobApplicationModal";
 import ChatWidget from "@/components/ChatWidget";
 
 // Lazy: keeps the admin bundle out of the public site's initial load.
@@ -188,6 +189,7 @@ function App() {
             </ErrorBoundary>
 
             <ContactModal />
+            <JobApplicationModal />
             <ChatWidget />
             <Toaster />
           </ContactModalProvider>

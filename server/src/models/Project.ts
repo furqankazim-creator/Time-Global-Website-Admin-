@@ -79,17 +79,17 @@ export async function seedInitialProjects() {
     // Purge outdated dummy projects
     await Project.deleteMany({
       slug: {
-        : [
-          bonnet-ev-charging-platform,
-          canet-clinical-research-portal,
-          helvar-iot-lighting-dashboard,
-          tiptop-b2b-marketplace,
-          spectec-fleet-maintenance-suite,
-          finpay-cross-border-payments-app,
-          renlo-property-management-platform,
-          routewise-delivery-route-optimizer,
-          urbancart-same-day-grocery-marketplace,
-          eduspark-cohort-based-learning-platform,
+        $in: [
+          "bonnet-ev-charging-platform",
+          "canet-clinical-research-portal",
+          "helvar-iot-lighting-dashboard",
+          "tiptop-b2b-marketplace",
+          "spectec-fleet-maintenance-suite",
+          "finpay-cross-border-payments-app",
+          "renlo-property-management-platform",
+          "routewise-delivery-route-optimizer",
+          "urbancart-same-day-grocery-marketplace",
+          "eduspark-cohort-based-learning-platform",
         ],
       },
     });

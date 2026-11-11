@@ -4,7 +4,7 @@ import {
   LayoutDashboard, FolderOpen, Wrench, Briefcase, FileText, Quote,
   Users, BriefcaseBusiness, Inbox, Settings, Bell, Menu, X, LogOut,
   ChevronDown, Image, Shield, RefreshCw, History, Search, Sun, Moon,
-  Sparkles
+  Sparkles, FileCheck
 } from "lucide-react";
 import { useAuth } from "../lib/auth";
 import { useTheme } from "../../hooks/use-theme";
@@ -35,7 +35,10 @@ const NAV: NavEntry[] = [
   {
     label: "Leads",
     icon: Inbox,
-    items: [{ label: "Contact Inquiries", href: "/admin/leads", icon: Inbox }],
+    items: [
+      { label: "Contact Inquiries", href: "/admin/leads", icon: Inbox },
+      { label: "Job Applications", href: "/admin/applications", icon: FileCheck },
+    ],
   },
   {
     label: "Tools & SEO",

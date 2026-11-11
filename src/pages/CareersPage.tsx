@@ -10,6 +10,7 @@ import CollaborateCTA from "@/components/CollaborateCTA";
 import { CtaButton } from "@/components/ui/cta-button";
 import { JsonLd, type JobPostingSchema } from "@/components/JsonLd";
 import { useJobs, type CmsJob } from "@/lib/cms";
+import { useJobModal } from "@/hooks/use-job-modal";
 import { 
   Briefcase, 
   Heart, 
@@ -168,6 +169,7 @@ function toOpening(j: CmsJob): Opening {
 export default function CareersPage() {
   usePageMeta({ title: "Careers", description: "Join a remote-first team building software for clients across four continents." });
 
+  const { openJobModal } = useJobModal();
   const [activeDept, setActiveDept] = useState("All");
   const containerRef = useRef<HTMLDivElement>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
@@ -426,7 +428,7 @@ export default function CareersPage() {
                           size="md"
                           variant="primary"
                           arrow
-                          href={`mailto:${job.applyEmail || "careers@timeglobaltech.com"}?subject=${encodeURIComponent(`Application: ${job.role}`)}`}
+                          onClick={() => openJobModal(job.role, job.slug || "")}
                         >
                           Apply Now
                         </CtaButton>
@@ -441,12 +443,13 @@ export default function CareersPage() {
                         <p className="text-muted-foreground mb-6">
                           We still read every speculative application.
                         </p>
-                        <a
-                          href="mailto:careers@timeglobaltech.com?subject=Speculative%20application"
+                        <button
+                          type="button"
+                          onClick={() => openJobModal("General Application", "")}
                           className="text-primary font-bold hover:underline"
                         >
                           Send us your CV
-                        </a>
+                        </button>
                       </>
                     ) : (
                       <>
@@ -572,7 +575,7 @@ export default function CareersPage() {
             <div className="flex justify-center items-center">
               <CtaButton
                 size="lg"
-                href="mailto:careers@timeglobaltech.com?subject=Speculative%20Application"
+                onClick={() => openJobModal("General Application", "")}
               >
                 Send your CV
               </CtaButton>

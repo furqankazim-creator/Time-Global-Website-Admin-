@@ -3,7 +3,19 @@ import { env } from "../config/env.js";
 import { Settings } from "../models/Settings.js";
 import { logger } from "./logger.js";
 
-type Mail = { to: string; subject: string; text: string };
+type Mail = {
+  to: string;
+  subject: string;
+  text?: string;
+  html?: string;
+  replyTo?: string;
+  attachments?: Array<{
+    filename: string;
+    content?: any;
+    path?: string;
+    contentType?: string;
+  }>;
+};
 
 /**
  * SMTP config is read per send (not cached at boot) so a change takes effect

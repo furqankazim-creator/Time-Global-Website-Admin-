@@ -6,6 +6,7 @@ import {
   storiesRouter, tagsRouter, teamRouter, testimonialsRouter,
 } from "./content/content.routes.js";
 import { jobsRouter, notificationsRouter } from "./careers.routes.js";
+import { applicationsRouter } from "./applications.routes.js";
 import { dashboardRouter } from "./dashboard/dashboard.routes.js";
 import { leadsRouter } from "./leads/leads.routes.js";
 import { settingsRouter } from "./settings/settings.routes.js";
@@ -36,6 +37,7 @@ adminRouter.use("/testimonials", testimonialsRouter);
 adminRouter.use("/team", teamRouter);
 adminRouter.use("/home", homeRouter);
 adminRouter.use("/jobs", jobsRouter);
+adminRouter.use("/applications", applicationsRouter);
 adminRouter.use("/notifications", notificationsRouter);
 adminRouter.use("/leads", leadsRouter);
 adminRouter.use("/settings", settingsRouter);

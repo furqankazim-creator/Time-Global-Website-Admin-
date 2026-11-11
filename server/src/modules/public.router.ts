@@ -9,6 +9,7 @@ import { sendMail } from "../lib/mailer.js";
 import { publicWriteLimiter } from "../middleware/rateLimit.js";
 import { validate } from "../middleware/validate.js";
 import { Lead } from "../models/Lead.js";
+import { JobApplication } from "../models/JobApplication.js";
 import { notify } from "../models/Notification.js";
 import { Service } from "../models/Service.js";
 import { Settings } from "../models/Settings.js";
@@ -187,6 +188,195 @@ publicRouter.post(
     })();
 
     res.status(201).json({ data: { received: true } });
+  })
+);
+
+/* -------------------- Job Application Submission -------------------- */
+
+const jobApplicationSchema = z.object({
+  name: z.string().trim().min(2, "Full Name is required").max(160),
+  fatherName: z.string().trim().min(2, "Father's Name is required").max(160),
+  email: z.string().email("Enter a valid email address").max(200),
+  phone: z.string().trim().min(5, "Phone number is required").max(50),
+  education: z.string().trim().min(2, "Education/Qualification is required").max(200),
+  jobTitle: z.string().trim().min(2, "Job Role is required").max(200),
+  jobSlug: z.string().trim().max(200).optional(),
+  experience: z.string().trim().min(10, "Please write 2-3 lines about your experience & key skills").max(3000),
+  coverLetter: z.string().trim().max(5000).optional(),
+  portfolioUrl: z.string().trim().max(300).optional(),
+  resume: z.object({
+    filename: z.string().min(1, "Resume file is required"),
+    size: z.number().max(5 * 1024 * 1024, "Resume file must not exceed 5MB"),
+    mimeType: z.string().default("application/pdf"),
+    dataUrl: z.string().optional(),
+  }),
+  website: z.string().max(300).optional(), // Honeypot
+});
+
+publicRouter.post(
+  "/applications",
+  publicWriteLimiter,
+  validate({ body: jobApplicationSchema }),
+  asyncHandler(async (req, res) => {
+    // Honeypot check
+    if (req.body.website) {
+      return res.status(201).json({ data: { received: true } });
+    }
+
+    const application = await JobApplication.create({
+      name: req.body.name,
+      fatherName: req.body.fatherName,
+      email: req.body.email,
+      phone: req.body.phone,
+      education: req.body.education,
+      jobTitle: req.body.jobTitle,
+      jobSlug: req.body.jobSlug || "",
+      experience: req.body.experience,
+      coverLetter: req.body.coverLetter || "",
+      portfolioUrl: req.body.portfolioUrl || "",
+      resume: {
+        filename: req.body.resume.filename,
+        size: req.body.resume.size,
+        mimeType: req.body.resume.mimeType,
+        dataUrl: req.body.resume.dataUrl || "",
+      },
+      ipAddress: req.ip ?? null,
+    });
+
+    audit(req, {
+      action: "job_application.create",
+      model: "JobApplication",
+      docId: application._id,
+      actorEmail: application.email,
+    });
+
+    notify({
+      type: "lead",
+      title: `New Job Application: ${application.name}`,
+      body: `${application.jobTitle} — ${application.email}`,
+      link: "/admin/applications",
+    });
+
+    // 1. Send Alert Email to Company / HR
+    void (async () => {
+      try {
+        const s = await Settings.findOne({ key: "site" }).lean();
+        const to = s?.smtp?.notifyTo || s?.contact?.email || env.LEAD_NOTIFY_TO || "careers@timeglobaltech.com";
+        
+        let attachments: any[] = [];
+        if (req.body.resume?.dataUrl && req.body.resume.dataUrl.includes(";base64,")) {
+          const base64Data = req.body.resume.dataUrl.split(";base64,").pop();
+          if (base64Data) {
+            attachments.push({
+              filename: req.body.resume.filename,
+              content: Buffer.from(base64Data, "base64"),
+              contentType: req.body.resume.mimeType,
+            });
+          }
+        }
+
+        await sendMail({
+          to,
+          subject: `New Job Application: ${application.name} (${application.jobTitle})`,
+          text: [
+            `New Job Application Received on Time Global Careers:`,
+            `----------------------------------------------------`,
+            `Candidate Name:   ${application.name}`,
+            `Father's Name:    ${application.fatherName}`,
+            `Email:            ${application.email}`,
+            `Phone / WhatsApp: ${application.phone}`,
+            `Education:        ${application.education}`,
+            `Position Applied: ${application.jobTitle}`,
+            `Portfolio/Links:  ${application.portfolioUrl || "—"}`,
+            `Resume File:      ${application.resume.filename} (${Math.round(application.resume.size / 1024)} KB)`,
+            ``,
+            `Experience & Skill Summary (2-3 lines):`,
+            application.experience,
+            ``,
+            `Cover Letter:`,
+            application.coverLetter || "(No cover letter provided)",
+          ].join("\n"),
+          html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;">
+              <h2 style="color: #10b981; border-bottom: 2px solid #10b981; padding-bottom: 8px;">New Job Application Received</h2>
+              <p><strong>Position:</strong> ${application.jobTitle}</p>
+              <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                <tr><td style="padding: 6px 0; color: #666;">Candidate Name:</td><td style="font-weight: bold;">${application.name}</td></tr>
+                <tr><td style="padding: 6px 0; color: #666;">Father's Name:</td><td style="font-weight: bold;">${application.fatherName}</td></tr>
+                <tr><td style="padding: 6px 0; color: #666;">Email:</td><td><a href="mailto:${application.email}">${application.email}</a></td></tr>
+                <tr><td style="padding: 6px 0; color: #666;">Phone:</td><td>${application.phone}</td></tr>
+                <tr><td style="padding: 6px 0; color: #666;">Education:</td><td>${application.education}</td></tr>
+                <tr><td style="padding: 6px 0; color: #666;">Portfolio / Links:</td><td>${application.portfolioUrl || "—"}</td></tr>
+                <tr><td style="padding: 6px 0; color: #666;">Resume Attached:</td><td><strong>${application.resume.filename}</strong> (${Math.round(application.resume.size / 1024)} KB)</td></tr>
+              </table>
+              <div style="margin-top: 20px; padding: 12px; background: #f9f9f9; border-radius: 6px;">
+                <h4 style="margin: 0 0 8px 0; color: #333;">Experience & Expertise Summary:</h4>
+                <p style="margin: 0; white-space: pre-wrap; font-size: 14px; color: #444;">${application.experience}</p>
+              </div>
+              ${application.coverLetter ? `
+              <div style="margin-top: 15px; padding: 12px; background: #f9f9f9; border-radius: 6px;">
+                <h4 style="margin: 0 0 8px 0; color: #333;">Cover Letter:</h4>
+                <p style="margin: 0; white-space: pre-wrap; font-size: 14px; color: #444;">${application.coverLetter}</p>
+              </div>` : ''}
+              <p style="margin-top: 25px; font-size: 12px; color: #999; text-align: center;">Time Global Careers Portal</p>
+            </div>
+          `,
+          attachments,
+        });
+      } catch (err) {
+        logger.error({ err }, "failed to send HR job application email");
+      }
+    })();
+
+    // 2. Send Auto-Reply "Thank You for Applying" Email to Applicant
+    void (async () => {
+      try {
+        await sendMail({
+          to: application.email,
+          subject: `Thank you for applying: ${application.jobTitle} — Time Global`,
+          text: [
+            `Dear ${application.name},`,
+            ``,
+            `Thank you for your interest in joining Time Global and for submitting your application for the ${application.jobTitle} position.`,
+            ``,
+            `We have successfully received your application details and resume. Our talent acquisition squad is currently reviewing candidate submissions. If your qualifications match the role requirements, we will reach out to you directly for the next interview stage.`,
+            ``,
+            `In the meantime, feel free to explore our work and engineering stories at https://timeglobal.com/work.`,
+            ``,
+            `Best regards,`,
+            `Talent Acquisition Team`,
+            `Time Global`,
+          ].join("\n"),
+          html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid #e0e0e0; border-radius: 12px; background: #ffffff;">
+              <h2 style="color: #10b981; margin-top: 0;">Application Received!</h2>
+              <p style="font-size: 15px; color: #333; line-height: 1.6;">Dear <strong>${application.name}</strong>,</p>
+              <p style="font-size: 14px; color: #555; line-height: 1.6;">
+                Thank you for your application for the <strong>${application.jobTitle}</strong> position at <strong>Time Global</strong>.
+              </p>
+              <div style="margin: 20px 0; padding: 16px; background: #f0fdf4; border-left: 4px solid #10b981; border-radius: 4px;">
+                <p style="margin: 0; color: #166534; font-size: 14px; font-weight: 500;">
+                  We have safely received your profile, cover letter, and resume (<em>${application.resume.filename}</em>).
+                </p>
+              </div>
+              <p style="font-size: 14px; color: #555; line-height: 1.6;">
+                Our technical hiring team is reviewing applicant profiles. If your background aligns with our current engineering needs, our team will connect with you via email or phone (${application.phone}) to schedule an initial discussion.
+              </p>
+              <p style="font-size: 14px; color: #555; line-height: 1.6;">
+                We appreciate the time you took to share your credentials with us.
+              </p>
+              <hr style="border: none; border-top: 1px solid #eee; margin: 25px 0;" />
+              <p style="margin: 0; font-size: 13px; color: #333; font-weight: bold;">Talent Acquisition Team</p>
+              <p style="margin: 2px 0 0 0; font-size: 13px; color: #10b981;">Time Global</p>
+            </div>
+          `,
+        });
+      } catch (err) {
+        logger.error({ err }, "failed to send applicant thank-you confirmation email");
+      }
+    })();
+
+    res.status(201).json({ data: { success: true, id: application._id } });
   })
 );
 
