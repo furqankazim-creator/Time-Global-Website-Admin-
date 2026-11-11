@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { toast } from "@/hooks/use-toast";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ContactModalProvider } from "@/hooks/use-contact-modal";
+import { JobModalProvider } from "@/hooks/use-job-modal";
 import { ThemeProvider } from "@/hooks/use-theme";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { JsonLd, TIME_GLOBAL_ORG } from "@/components/JsonLd";
@@ -156,6 +157,7 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <ContactModalProvider>
+            <JobModalProvider>
             {/*
              * Skip-to-content: visually hidden until focused via keyboard Tab.
              * Targets #main-content which every page's <main> carries.
@@ -192,6 +194,7 @@ function App() {
             <JobApplicationModal />
             <ChatWidget />
             <Toaster />
+            </JobModalProvider>
           </ContactModalProvider>
         </TooltipProvider>
       </QueryClientProvider>

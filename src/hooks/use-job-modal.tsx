@@ -1,54 +1,75 @@
-import { useSyncExternalStore } from "react";
+import React, { createContext, useContext, useState, ReactNode, useCallback } from "react";
 
-interface JobModalState {
+interface JobModalContextType {
   isOpen: boolean;
   jobTitle: string;
   jobSlug: string;
+  openJobModal: (jobTitle?: string, jobSlug?: string) => void;
+  closeJobModal: () => void;
 }
 
-let state: JobModalState = {
-  isOpen: false,
-  jobTitle: "",
-  jobSlug: "",
-};
+const JobModalContext = createContext<JobModalContextType | undefined>(undefined);
 
-const listeners = new Set<() => void>();
+let globalOpenModal: ((jobTitle?: string, jobSlug?: string) => void) | null = null;
+let globalCloseModal: (() => void) | null = null;
 
-function emitChange() {
-  for (const listener of listeners) {
-    listener();
+export function openJobModal(jobTitle = "General Application", jobSlug = "") {
+  if (globalOpenModal) {
+    globalOpenModal(jobTitle, jobSlug);
   }
 }
 
-export function openJobModal(jobTitle = "General Application", jobSlug = "") {
-  state = { isOpen: true, jobTitle, jobSlug };
-  emitChange();
-}
-
 export function closeJobModal() {
-  state = { isOpen: false, jobTitle: "", jobSlug: "" };
-  emitChange();
+  if (globalCloseModal) {
+    globalCloseModal();
+  }
 }
 
-export function useJobModal<T = JobModalState & { openJobModal: typeof openJobModal; closeJobModal: typeof closeJobModal }>(
-  selector?: (s: JobModalState & { openJobModal: typeof openJobModal; closeJobModal: typeof closeJobModal }) => T
-): T {
-  const snapshot = useSyncExternalStore(
-    (onStoreChange) => {
-      listeners.add(onStoreChange);
-      return () => {
-        listeners.delete(onStoreChange);
-      };
-    },
-    () => state,
-    () => state
+export function JobModalProvider({ children }: { children: ReactNode }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [jobTitle, setJobTitle] = useState("");
+  const [jobSlug, setJobSlug] = useState("");
+
+  const handleOpen = useCallback((title = "General Application", slug = "") => {
+    setJobTitle(title);
+    setJobSlug(slug);
+    setIsOpen(true);
+  }, []);
+
+  const handleClose = useCallback(() => {
+    setIsOpen(false);
+    setJobTitle("");
+    setJobSlug("");
+  }, []);
+
+  globalOpenModal = handleOpen;
+  globalCloseModal = handleClose;
+
+  return (
+    <JobModalContext.Provider
+      value={{
+        isOpen,
+        jobTitle,
+        jobSlug,
+        openJobModal: handleOpen,
+        closeJobModal: handleClose,
+      }}
+    >
+      {children}
+    </JobModalContext.Provider>
   );
+}
 
-  const full = {
-    ...snapshot,
-    openJobModal,
-    closeJobModal,
-  };
-
-  return selector ? selector(full) : (full as unknown as T);
+export function useJobModal() {
+  const context = useContext(JobModalContext);
+  if (!context) {
+    return {
+      isOpen: false,
+      jobTitle: "",
+      jobSlug: "",
+      openJobModal,
+      closeJobModal,
+    };
+  }
+  return context;
 }
