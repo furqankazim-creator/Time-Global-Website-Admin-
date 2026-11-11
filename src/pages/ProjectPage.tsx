@@ -15,7 +15,7 @@ import { usePageMeta } from "@/lib/usePageMeta";
 import { useProjects, getStaticProject, type CmsImage, type CmsProject } from "@/lib/cms";
 import { useContactModal } from "@/hooks/use-contact-modal";
 import { toast } from "@/hooks/use-toast";
-import { OrgpyurInteractiveShowcase } from "@/components/OrgpyurCaseStudySection";
+import { ProjectInteractiveShowcase } from "@/components/ProjectInteractiveShowcase";
 
 type FullProject = {
   _id: string;
@@ -101,11 +101,25 @@ export default function ProjectPage({ slug }: { slug: string }) {
         if (res.ok) {
           const json = await res.json();
           if (json.data) {
+            const mergedData: FullProject = {
+              ...json.data,
+              liveUrl: json.data.liveUrl || staticFallback?.liveUrl || "",
+              metrics:
+                json.data.metrics && json.data.metrics.length > 0
+                  ? json.data.metrics
+                  : staticFallback?.metrics || [],
+              gallery:
+                json.data.gallery && json.data.gallery.length >= 2
+                  ? json.data.gallery
+                  : staticFallback?.gallery && staticFallback.gallery.length > 0
+                  ? staticFallback.gallery
+                  : json.data.gallery || [],
+            };
             // Save admin work into local cache
             try {
-              localStorage.setItem(`tg_project_${slug}`, JSON.stringify(json.data));
+              localStorage.setItem(`tg_project_${slug}`, JSON.stringify(mergedData));
             } catch {}
-            return json.data;
+            return mergedData;
           }
         }
       } catch {}
@@ -374,10 +388,8 @@ export default function ProjectPage({ slug }: { slug: string }) {
                     index={2}
                   />
 
-                  {/* If Orgpyur case study, inject bespoke interactive telemetry showcase */}
-                  {(slug.includes("orgpyur") || project.title.toLowerCase().includes("orgpyur")) && (
-                    <OrgpyurInteractiveShowcase />
-                  )}
+                  {/* Interactive telemetry, architecture HUD, and delivery matrix for all case studies */}
+                  <ProjectInteractiveShowcase project={project} />
                 </div>
 
                 {/* Right Column: Sticky Project Meta Specs */}

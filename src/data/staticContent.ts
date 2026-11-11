@@ -121,9 +121,9 @@ export const STATIC_PROJECTS: (CmsProject & {
     problem: "<p>Growing enterprise SaaS ventures require stringent alignment between technical product execution, stakeholder communication, and legal IP protection. During a pivotal MVP phase, Orgpyur needed executive milestone tracking, structured board minutes documentation, a Canadian Intellectual Property Office (CIPO) trademark dossier, and coordination across founders, executive board members, and technical vendors.</p>",
     solution: "<p>Time Global Tech established a comprehensive operational audit and corporate governance framework. We audited technical sprint progress, guiding the MVP roadmap to a 66% milestone completion. Simultaneously, we compiled the complete CIPO trademark application dossier, delivered quarterly executive progress reports, maintained meticulous board minutes, and formalized enterprise data storage & messaging architectures for engineering teams.</p>",
     result: "<p>Successfully bridged technical product development with institutional board governance and IP protection. Orgpyur Technologies Inc. attained full milestone transparency, secured their core brand assets with CIPO filing readiness, and aligned all engineering vendors with the live platform architecture at orgpyur.com.</p>",
-    coverImage: {"url": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1200", "alt": "Orgpyur Technologies MVP Governance & Operational Audit"},
+    coverImage: {"url": "/assets/projects/orgpyur-hero.jpg", "alt": "Orgpyur Technologies MVP Governance & Operational Audit"},
     liveUrl: "https://orgpyur.com/",
-    gallery: [{"url": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1200", "alt": "Orgpyur Platform Telemetry & Live Browser View"}, {"url": "/assets/projects/orgpyur-topology.png", "alt": "Operational Audit & IP Alignment Topology Node Graph"}, {"url": "/assets/projects/orgpyur-audit-matrix.png", "alt": "Cross-Industry Governance Deliverables Matrix"}],
+    gallery: [{"url": "/assets/projects/orgpyur-hero.jpg", "alt": "Orgpyur Platform Telemetry & Live Browser View"}, {"url": "/assets/projects/orgpyur-topology.png", "alt": "Operational Audit & IP Alignment Topology Node Graph"}, {"url": "/assets/projects/orgpyur-audit-matrix.png", "alt": "Cross-Industry Governance Deliverables Matrix"}],
   },
   {
     _id: "proj-toyotasure",
@@ -138,7 +138,11 @@ export const STATIC_PROJECTS: (CmsProject & {
     result: "<p>Revolutionized Pakistan certified pre-owned automotive market by establishing ToyotaSure as the nationwide gold standard for pre-owned vehicle verification. Buyers achieved 100% transparency with tamper-evident digital inspection scorecards, while Toyota Indus Motors unified certified used vehicle inventory across authorized dealerships nationwide.</p>",
     coverImage: {"url": "https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?auto=format&fit=crop&q=80&w=1200", "alt": "ToyotaSure Certified Pre-Owned Vehicle Portal"},
     liveUrl: "https://toyotasure.com.pk/",
-    gallery: [{"url": "https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?auto=format&fit=crop&q=80&w=1200", "alt": "ToyotaSure Vehicle Inspection Overview"}, {"url": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80&w=1200", "alt": "Dealership Inventory Grid"}],
+    gallery: [
+      {"url": "https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?auto=format&fit=crop&q=80&w=1200", "alt": "ToyotaSure Vehicle Inspection Overview"},
+      {"url": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80&w=1200", "alt": "Dealership Inventory Grid"},
+      {"url": "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&q=80&w=1200", "alt": "203-Point Digital Vehicle Certification"}
+    ],
   },
   {
     _id: "proj-ontario-tennis",
@@ -183,7 +187,11 @@ export const STATIC_PROJECTS: (CmsProject & {
     result: "<p>Streamlined operational workflows for over 1,500 public and private-sector transit agencies across North America. Administrative content duplication was cut by 60%, mobile engagement doubled, and committee collaboration accelerated through instant document distribution.</p>",
     coverImage: {"url": "https://images.unsplash.com/photo-1555680202-c86f0e12f086?auto=format&fit=crop&q=80&w=1200", "alt": "APTA Enterprise Digital Overhaul"},
     liveUrl: "https://www.apta.com/",
-    gallery: [{"url": "https://images.unsplash.com/photo-1555680202-c86f0e12f086?auto=format&fit=crop&q=80&w=1200", "alt": "APTA Unified Platform Architecture"}],
+    gallery: [
+      {"url": "https://images.unsplash.com/photo-1555680202-c86f0e12f086?auto=format&fit=crop&q=80&w=1200", "alt": "APTA Unified Platform Architecture"},
+      {"url": "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&q=80&w=1200", "alt": "Public Transit Operations Center"},
+      {"url": "https://images.unsplash.com/photo-1517649763962-0c623266ddc0?auto=format&fit=crop&q=80&w=1200", "alt": "Transit Network Telemetry"}
+    ],
   },
   {
     _id: "proj-colliborate",
@@ -213,7 +221,11 @@ export const STATIC_PROJECTS: (CmsProject & {
     result: "<p>Indexed over 10,000 regional commercial properties with sub-50ms search response times. Brokers and institutional investors gained the capability to evaluate complex multi-unit commercial assets in seconds rather than days.</p>",
     coverImage: {"url": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=1200", "alt": "Tampa Property Choice Commercial RE Analytics"},
     liveUrl: "https://tampapropertychoice.com/",
-    gallery: [{"url": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=1200", "alt": "Commercial Analytics Dashboard"}, {"url": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1200", "alt": "Cap Rate Valuation Sandbox"}],
+    gallery: [
+      {"url": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=1200", "alt": "Commercial Analytics Dashboard"},
+      {"url": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1200", "alt": "Cap Rate Valuation Sandbox"},
+      {"url": "https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80&w=1200", "alt": "Corporate Real Estate Pipeline"}
+    ],
   },
   {
     _id: "proj-qtt-canada",
@@ -228,7 +240,11 @@ export const STATIC_PROJECTS: (CmsProject & {
     result: "<p>Reduced dispatch latency to under 120ms, cut manual phone dispatch labor by 42%, improved fleet route efficiency by 34.8%, and delivered 99.99% system availability through peak winter storm operations.</p>",
     coverImage: {"url": "https://images.unsplash.com/photo-1557223562-6c77ef16210f?auto=format&fit=crop&q=80&w=1200", "alt": "QTT Canada Fleet Dispatch & Ride Booking"},
     liveUrl: "https://quicktimetaxi.ca/",
-    gallery: [{"url": "https://images.unsplash.com/photo-1557223562-6c77ef16210f?auto=format&fit=crop&q=80&w=1200", "alt": "GPS Fleet Radar View"}],
+    gallery: [
+      {"url": "https://images.unsplash.com/photo-1557223562-6c77ef16210f?auto=format&fit=crop&q=80&w=1200", "alt": "GPS Fleet Radar View"},
+      {"url": "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&q=80&w=1200", "alt": "Driver Turn-by-Turn Navigation"},
+      {"url": "https://images.unsplash.com/photo-1508873696983-2df5293cb395?auto=format&fit=crop&q=80&w=1200", "alt": "Fleet Central Dispatch Cockpit"}
+    ],
   },
   {
     _id: "proj-mpc",
@@ -273,7 +289,11 @@ export const STATIC_PROJECTS: (CmsProject & {
     result: "<p>Delivered an actionable, investor-ready commercialization roadmap that validated full engineering feasibility, established hardware-in-the-loop testing protocols, and paved the way for successful prototype funding rounds.</p>",
     coverImage: {"url": "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&q=80&w=1200", "alt": "Culinabot Robotics Autonomous Kitchen"},
     liveUrl: "https://culinabot.com/",
-    gallery: [{"url": "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&q=80&w=1200", "alt": "Robotics Kinematics Simulation"}],
+    gallery: [
+      {"url": "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&q=80&w=1200", "alt": "Robotics Kinematics Simulation"},
+      {"url": "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&q=80&w=1200", "alt": "Autonomous Multi-Axis Articulation"},
+      {"url": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=1200", "alt": "Hardware-in-the-Loop Vision Pipeline"}
+    ],
   },
   {
     _id: "proj-thank-you-plaque",
@@ -288,7 +308,11 @@ export const STATIC_PROJECTS: (CmsProject & {
     result: "<p>Increased checkout conversions by 65%, cut manual design proofing time by 80%, and virtually eliminated customer return requests caused by typographical layout misunderstandings.</p>",
     coverImage: {"url": "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&q=80&w=1200", "alt": "Thank You Plaque eCommerce Storefront"},
     liveUrl: "https://thankyouplaque.com/",
-    gallery: [{"url": "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&q=80&w=1200", "alt": "Custom Engraving Configurator"}],
+    gallery: [
+      {"url": "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&q=80&w=1200", "alt": "Custom Engraving Configurator"},
+      {"url": "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&q=80&w=1200", "alt": "Live HTML5 Canvas Preview Engine"},
+      {"url": "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&q=80&w=1200", "alt": "Streamlined Custom Checkout Flow"}
+    ],
   },
   {
     _id: "proj-mattressland",
@@ -303,7 +327,11 @@ export const STATIC_PROJECTS: (CmsProject & {
     result: "<p>Elevated customer brand recall by 40% against high-street UK bedding competitors, achieved seamless visual continuity between retail showrooms and online channels, and boosted in-store promotional conversion rates.</p>",
     coverImage: {"url": "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&q=80&w=1200", "alt": "Mattressland UK Unified Retail Brand"},
     liveUrl: "https://mattressland.co.uk/",
-    gallery: [{"url": "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&q=80&w=1200", "alt": "Retail Identity System"}],
+    gallery: [
+      {"url": "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&q=80&w=1200", "alt": "Retail Identity System"},
+      {"url": "https://images.unsplash.com/photo-1540518614846-7ede433c4578?auto=format&fit=crop&q=80&w=1200", "alt": "Showroom & Digital Product Merchandising"},
+      {"url": "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&q=80&w=1200", "alt": "Omnichannel Packaging & Brand Collateral"}
+    ],
   },
   {
     _id: "proj-infotex",
@@ -318,7 +346,11 @@ export const STATIC_PROJECTS: (CmsProject & {
     result: "<p>Positioned Infotex as a tier-1 software partner in front of prospective enterprise clients and venture investors, directly supporting their client acquisition pipeline and brand confidence.</p>",
     coverImage: {"url": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1200", "alt": "Infotex Technologies Enterprise Identity"},
     liveUrl: "https://infotex.tech/",
-    gallery: [{"url": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1200", "alt": "Brand Identity Architecture"}],
+    gallery: [
+      {"url": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1200", "alt": "Brand Identity Architecture"},
+      {"url": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1200", "alt": "Enterprise Web Platform UI"},
+      {"url": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1200", "alt": "Executive Pitch & Telemetry Design System"}
+    ],
   },
   {
     _id: "proj-dairy-farm",
@@ -348,7 +380,11 @@ export const STATIC_PROJECTS: (CmsProject & {
     result: "<p>Empowered Reccon to successfully pre-qualify for premier public and private sector civil infrastructure tenders, establishing an elite corporate presence that accurately reflects their 35+ years of operational excellence.</p>",
     coverImage: {"url": "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80&w=1200", "alt": "Reccon Corporate Profile & Heritage"},
     liveUrl: "https://reccon.com.pk/",
-    gallery: [{"url": "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80&w=1200", "alt": "Heavy Engineering Infrastructure"}],
+    gallery: [
+      {"url": "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80&w=1200", "alt": "Heavy Engineering Infrastructure"},
+      {"url": "https://images.unsplash.com/photo-1541888946425-d09bb18086f6?auto=format&fit=crop&q=80&w=1200", "alt": "Civil Works & Structural Engineering Dossier"},
+      {"url": "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80&w=1200", "alt": "35-Year Heritage & Tender Pre-Qualification"}
+    ],
   },
   {
     _id: "proj-rh-care",
@@ -363,7 +399,11 @@ export const STATIC_PROJECTS: (CmsProject & {
     result: "<p>Boosted patient intake comprehension by 70%, reduced patient intake delays to zero, and provided R.H. Care with a high-trust digital onboarding asset deployed across myrhcare.com and patient outreach portals.</p>",
     coverImage: {"url": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=1200", "alt": "R.H. Care Healthcare Motion Branding"},
     liveUrl: "https://myrhcare.com/",
-    gallery: [{"url": "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=1200", "alt": "Patient Education Motion Design"}],
+    gallery: [
+      {"url": "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=1200", "alt": "Patient Education Motion Design"},
+      {"url": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=1200", "alt": "Clinical Intake Onboarding Walkthrough"},
+      {"url": "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&q=80&w=1200", "alt": "Telehealth Caregiver Coordination"}
+    ],
   }
 ,
   {
@@ -379,7 +419,11 @@ export const STATIC_PROJECTS: (CmsProject & {
     result: "<p>Boosted fleet mission reliability to 99.98%, reduced unscheduled maintenance turnaround by 45%, and established a predictive maintenance benchmark for modern electrified rail systems.</p>",
     coverImage: {"url": "https://images.unsplash.com/photo-1474487548417-781cb71495f3?auto=format&fit=crop&q=80&w=1200", "alt": "Alstom RailOps Fleet Operations Portal"},
     liveUrl: "https://www.alstom.com/",
-    gallery: [{"url": "https://images.unsplash.com/photo-1474487548417-781cb71495f3?auto=format&fit=crop&q=80&w=1200", "alt": "RailOps Depot Cockpit"}],
+    gallery: [
+      {"url": "https://images.unsplash.com/photo-1474487548417-781cb71495f3?auto=format&fit=crop&q=80&w=1200", "alt": "RailOps Depot Cockpit"},
+      {"url": "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&q=80&w=1200", "alt": "Rolling-Stock Predictive Maintenance Telemetry"},
+      {"url": "https://images.unsplash.com/photo-1515165562839-978bbcf18277?auto=format&fit=crop&q=80&w=1200", "alt": "Electrified Rail Corridor Sensor Network"}
+    ],
   },
   {
     _id: "proj-barkat-foundation",
@@ -394,7 +438,11 @@ export const STATIC_PROJECTS: (CmsProject & {
     result: "<p>Facilitated the transparent deployment of over .4M in humanitarian aid, grew recurring monthly sponsorships by 140%, and gave donors instant photo and GPS verification of sponsored community water wells and clinics.</p>",
     coverImage: {"url": "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=1200", "alt": "Barkat Org Foundation Philanthropic Portal"},
     liveUrl: "https://barkatorg.org/",
-    gallery: [{"url": "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=1200", "alt": "Foundation Field Telemetry & Impact Scorecard"}],
+    gallery: [
+      {"url": "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=1200", "alt": "Foundation Field Telemetry & Impact Scorecard"},
+      {"url": "https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&q=80&w=1200", "alt": "Transparent Aid Disbursement Ledger"},
+      {"url": "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&q=80&w=1200", "alt": "Community Welfare & Donor Sponsorship CRM"}
+    ],
   },
   {
     _id: "proj-pcm-tool",
@@ -409,7 +457,11 @@ export const STATIC_PROJECTS: (CmsProject & {
     result: "<p>Reduced BOM cost variance by 30% across major product lines, modeled over 500,000 discrete manufacturing components, and enabled engineering squads to hit target cost constraints before physical tooling commitment.</p>",
     coverImage: {"url": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&q=80&w=1200", "alt": "PCM Product Cost Management Engineering Tool"},
     liveUrl: "https://pcmtool.com/",
-    gallery: [{"url": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&q=80&w=1200", "alt": "BOM Analytics & Component Sourcing Engine"}],
+    gallery: [
+      {"url": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&q=80&w=1200", "alt": "BOM Analytics & Component Sourcing Engine"},
+      {"url": "https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&q=80&w=1200", "alt": "Precision Manufacturing Cost Simulation"},
+      {"url": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=80&w=1200", "alt": "Supplier Tier Margin & Amortization Matrix"}
+    ],
   }
 ];
 

@@ -105,7 +105,7 @@ export async function seedInitialProjects() {
         problem: "<p>Growing enterprise SaaS ventures require stringent alignment between technical product execution, stakeholder communication, and legal IP protection. During a pivotal MVP phase, Orgpyur needed executive milestone tracking, structured board minutes documentation, a Canadian Intellectual Property Office (CIPO) trademark dossier, and coordination across founders, executive board members, and technical vendors.</p>",
         solution: "<p>Time Global Tech established a comprehensive operational audit and corporate governance framework. We audited technical sprint progress, guiding the MVP roadmap to a 66% milestone completion. Simultaneously, we compiled the complete CIPO trademark application dossier, delivered quarterly executive progress reports, maintained meticulous board minutes, and formalized enterprise data storage & messaging architectures for engineering teams.</p>",
         result: "<p>Successfully bridged technical product development with institutional board governance and IP protection. Orgpyur Technologies Inc. attained full milestone transparency, secured their core brand assets with CIPO filing readiness, and aligned all engineering vendors with the live platform architecture at orgpyur.com.</p>",
-        coverImage: {"url": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1200", "alt": "Orgpyur Technologies MVP Governance & Operational Audit"},
+        coverImage: {"url": "/assets/projects/orgpyur-hero.jpg", "alt": "Orgpyur Technologies MVP Governance & Operational Audit"},
         liveUrl: "https://orgpyur.com/",
         featured: true,
         status: 'published'

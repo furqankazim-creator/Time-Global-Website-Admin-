@@ -45,7 +45,7 @@ import { STATIC_PROJECTS } from "@/data/staticContent";
 const SOFTWARE_APP_IMAGES: Record<string, string> = {
   // CMS Slugs - Authentic images matched to each client, website, and industry
   "toyotasure-used-car-portal": "https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?auto=format&fit=crop&q=80&w=1200",
-  "orgpyur-technologies-mvp-governance-audit": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1200",
+  "orgpyur-technologies-mvp-governance-audit": "/assets/projects/orgpyur-hero.jpg",
   "ontario-tennis-association": "/assets/projects/Ontario_Tennis_Association_Case_Study_Updated-img-2.webp",
   "amz-properties-dubai": "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&q=80&w=1200",
   "apta-enterprise-architecture": "https://images.unsplash.com/photo-1555680202-c86f0e12f086?auto=format&fit=crop&q=80&w=1200",
@@ -69,7 +69,7 @@ const SOFTWARE_APP_IMAGES: Record<string, string> = {
   alstom: "https://images.unsplash.com/photo-1474487548417-781cb71495f3?auto=format&fit=crop&q=80&w=1200",
   barkat: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=1200",
   pcm: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&q=80&w=1200",
-  orgpyur: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1200",
+  orgpyur: "/assets/projects/orgpyur-hero.jpg",
   toyota: "https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?auto=format&fit=crop&q=80&w=1200",
   tennis: "/assets/projects/Ontario_Tennis_Association_Case_Study_Updated-img-2.webp",
   ontario: "/assets/projects/Ontario_Tennis_Association_Case_Study_Updated-img-2.webp",

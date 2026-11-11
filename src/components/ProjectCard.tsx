@@ -287,6 +287,23 @@ export function ProjectCard({
 
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
 
+      {/* Whole-card link so clicking anywhere navigates into the case study */}
+      {liveUrl.startsWith("/") ? (
+        <Link
+          href={liveUrl}
+          aria-label={`View case study: ${title}`}
+          className="absolute inset-0 z-[1] cursor-pointer"
+        />
+      ) : (
+        <a
+          href={liveUrl}
+          target="_blank"
+          rel="noreferrer"
+          aria-label={`View case study: ${title}`}
+          className="absolute inset-0 z-[1] cursor-pointer"
+        />
+      )}
+
       <div className="absolute left-4 top-4 z-10 flex flex-wrap gap-2">
         {tags.map((t) => (
           <span
