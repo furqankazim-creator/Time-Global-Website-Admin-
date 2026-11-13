@@ -81,8 +81,10 @@ export function Globe({
     const H = container.clientHeight;
 
     // ── Renderer ──────────────────────────────────────────────
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // cap at 2× — saves GPU
+    const compact = window.matchMedia("(max-width: 767px)").matches;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const renderer = new THREE.WebGLRenderer({ antialias: !compact, alpha: true, powerPreference: "low-power" });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, compact ? 1 : 1.5));
     renderer.setSize(W, H);
     renderer.setClearColor(0x000000, 0);
     container.appendChild(renderer.domElement);
@@ -124,17 +126,23 @@ export function Globe({
 
     // ── Controls ──────────────────────────────────────────────
     const controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
+    controls.enableDamping = !reducedMotion;
     controls.dampingFactor = 0.05;   // smoother, less "sticky"
     controls.enablePan = false;
     controls.rotateSpeed = 0.5;
     controls.zoomSpeed = 0.8;
-    controls.autoRotate = true;
+    controls.autoRotate = !reducedMotion;
     controls.autoRotateSpeed = 0.6;
 
     // ── Globe build ───────────────────────────────────────────
     let globe: ThreeGlobe | null = null;
-    let rafId: number;
+    let rafId = 0;
+    let detailsTimer: ReturnType<typeof setTimeout> | undefined;
+    let disposed = false;
+    const renderStill = () => {
+      if (!disposed && reducedMotion && !document.hidden) renderer.render(scene, camera);
+    };
+    controls.addEventListener("change", renderStill);
 
     const isActive = (feat: object) =>
       WORKING_COUNTRIES.has(
@@ -142,10 +150,13 @@ export function Globe({
       );
 
     const build = (features: object[]) => {
-      const g = new ThreeGlobe({ waitForGlobeReady: true, animateIn: true })
+      const g = new ThreeGlobe({ waitForGlobeReady: true, animateIn: !reducedMotion })
+        .onGlobeReady(renderStill)
         .showAtmosphere(true)
         .atmosphereColor(BRAND_GREEN)
         .atmosphereAltitude(0.18)
+        .polygonCapCurvatureResolution(compact ? 8 : 6)
+        .polygonsTransitionDuration(reducedMotion ? 0 : 1000)
         .polygonsData(features)
         .polygonCapColor((feat: object) =>
           isActive(feat) ? "rgba(0,200,120,0.82)" : "rgba(255,255,255,0.04)"
@@ -169,44 +180,49 @@ export function Globe({
       scene.add(g);
       globe = g;
 
-      setTimeout(() => {
+      detailsTimer = setTimeout(() => {
         if (!globe) return;
         globe
-          .arcsData(ARCS)
+          .arcsData(compact ? ARCS.slice(0, 8) : ARCS)
           .arcColor((d: object) => (d as (typeof ARCS)[0]).color)
           .arcAltitude(0.32)
           .arcStroke(0.5)
           .arcDashLength(0.4)
           .arcDashGap(1.8)
           .arcDashAnimateTime(900)
-          .arcsTransitionDuration(800)
+          .arcsTransitionDuration(reducedMotion ? 0 : 800)
           .arcDashInitialGap(
             (d: object) => (ARCS.indexOf(d as (typeof ARCS)[0]) % 5) * 0.6
           )
-          .ringsData(HUBS)
+          .ringsData(compact || reducedMotion ? [] : HUBS)
           .ringColor(() => BRAND_GREEN)
           .ringMaxRadius(3.5)
           .ringPropagationSpeed(3)
           .ringRepeatPeriod(1000)
           .pointsData(HUBS)
+          .pointsTransitionDuration(reducedMotion ? 0 : 1000)
           .pointColor(() => BRAND_GREEN)
           .pointAltitude(0.025)
           .pointRadius(0.4)
           .pointsMerge(false)
           .labelsData(HUBS)
+          .labelsTransitionDuration(reducedMotion ? 0 : 1000)
           .labelText((d: any) => d.name)
           .labelSize(2.2)
           .labelDotRadius(0.5)
           .labelColor(() => "#ffffffff")
           .labelAltitude(0.06)
-          .labelResolution(3);
+          .labelResolution(2);
+        if (!isVisible || document.hidden || reducedMotion) globe.pauseAnimation();
+        renderStill();
       }, 1200);
     };
 
     if (geoJsonCache && geoJsonCache.length > 0) {
       build(geoJsonCache);
     } else {
-      const g = new ThreeGlobe({ waitForGlobeReady: true, animateIn: true })
+      const g = new ThreeGlobe({ waitForGlobeReady: true, animateIn: !reducedMotion })
+        .onGlobeReady(renderStill)
         .showAtmosphere(true)
         .atmosphereColor(BRAND_GREEN)
         .atmosphereAltitude(0.18);
@@ -277,6 +293,7 @@ export function Globe({
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
+      renderStill();
     };
     applySize();
 
@@ -284,37 +301,60 @@ export function Globe({
     ro.observe(container);
 
     // ── Render loop — PAUSE WHEN OFF-SCREEN TO SAVE GPU & SMOOTH PAGE SCROLL ──
-    let isVisible = true;
+    let isVisible = false;
+    const syncAnimation = () => {
+      cancelAnimationFrame(rafId);
+      if (!isVisible || document.hidden) {
+        globe?.pauseAnimation();
+        return;
+      }
+      if (!reducedMotion) globe?.resumeAnimation();
+      else globe?.pauseAnimation();
+      lastFrame = 0;
+      rafId = requestAnimationFrame(tick);
+    };
     const io = new IntersectionObserver(
       ([entry]) => {
-        const nowVisible = entry.isIntersecting;
-        if (nowVisible !== isVisible) {
-          isVisible = nowVisible;
-          if (isVisible) {
-            cancelAnimationFrame(rafId);
-            rafId = requestAnimationFrame(tick);
-          }
-        }
+        isVisible = entry.isIntersecting;
+        syncAnimation();
       },
       { threshold: 0.05 }
     );
     io.observe(container);
 
-    const tick = () => {
-      if (!isVisible) return;
-      rafId = requestAnimationFrame(tick);
+    let lastFrame = 0;
+    const tick = (now: number) => {
+      if (!isVisible || document.hidden) return;
+      if (!reducedMotion) rafId = requestAnimationFrame(tick);
+      // Bound GPU work on high-refresh displays and smaller devices.
+      if (!reducedMotion && now - lastFrame < 1000 / (compact ? 30 : 45)) return;
+      lastFrame = now;
       controls.update();
       renderer.render(scene, camera);
     };
-    tick();
+    document.addEventListener("visibilitychange", syncAnimation);
+    globe?.pauseAnimation();
 
     return () => {
+      disposed = true;
       cancelAnimationFrame(rafId);
+      clearTimeout(detailsTimer);
+      document.removeEventListener("visibilitychange", syncAnimation);
       container.removeEventListener("mousemove", onMouse);
       container.removeEventListener("mouseleave", onMouseLeave);
       ro.disconnect();
       io.disconnect();
+      controls.removeEventListener("change", renderStill);
       controls.dispose();
+      globe?._destructor();
+      globe = null;
+      scene.traverse((object) => {
+        if (object instanceof THREE.Mesh) {
+          object.geometry.dispose();
+          const materials = Array.isArray(object.material) ? object.material : [object.material];
+          materials.forEach((material) => material.dispose());
+        }
+      });
       renderer.dispose();
       if (container.contains(renderer.domElement))
         container.removeChild(renderer.domElement);

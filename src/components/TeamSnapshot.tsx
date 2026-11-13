@@ -26,8 +26,8 @@ function toMember(m: CmsTeamMember, i: number): Member {
 
 export default function TeamSnapshot() {
   // Published CMS team members replace the bundled four.
-  const { data: cms } = useTeam();
-  const members: Member[] = cms.length > 0 ? cms.map(toMember) : TEAM_MEMBERS;
+  const { data: cms, isFallback } = useTeam();
+  const members: Member[] = (!isFallback || cms.length > 0) ? cms.map(toMember) : TEAM_MEMBERS;
 
   return (
     <section className="py-32 px-6 bg-gradient-to-b from-secondary/10 to-secondary/5 relative overflow-hidden">

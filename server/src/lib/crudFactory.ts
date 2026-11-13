@@ -14,6 +14,7 @@ type Config = {
   /** Fields matched by `?q=` (regex, escaped). */
   searchable: string[];
   populate?: string;
+  listSelect?: string;
   /** Omit for models without slugs (e.g. Testimonial, TeamMember). */
   slugFrom?: string;
   /**
@@ -46,7 +47,7 @@ export function crudFactory(cfg: Config) {
       filter.$or = searchable.map((f) => ({ [f]: rx }));
     }
 
-    res.json(await paginate(model, filter, query, { sortable, populate }));
+    res.json(await paginate(model, filter, query, { sortable, populate, select: cfg.listSelect }));
   };
 
   const getOne = async (req: Request, res: Response) => {

@@ -5,6 +5,7 @@ export type Approval = (typeof APPROVAL)[number];
 
 export interface ITestimonial {
   clientName: string;
+  gender: "male" | "female" | "unspecified";
   company: string;
   position: string;
   photo: Types.ObjectId | null;
@@ -27,6 +28,7 @@ export interface ITestimonial {
 const testimonialSchema = new Schema<ITestimonial, Model<ITestimonial>>(
   {
     clientName: { type: String, required: true, trim: true, maxlength: 120 },
+    gender: { type: String, enum: ["male", "female", "unspecified"], default: "unspecified" },
     company: { type: String, default: "", trim: true, maxlength: 120 },
     position: { type: String, default: "", trim: true, maxlength: 120 },
     photo: { type: Schema.Types.ObjectId, ref: "Media", default: null },

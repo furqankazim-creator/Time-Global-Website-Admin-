@@ -134,6 +134,8 @@ export default function SettingsPage() {
     mutationFn: (body: object) => api("/api/v1/admin/settings", { method: "PUT", body }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["settings"] });
+      qc.invalidateQueries({ queryKey: ["cms"] });
+      try { localStorage.setItem("tg_cms_updated_at", String(Date.now())); } catch { /* storage unavailable */ }
       setSaved(true);
       setTimeout(() => setSaved(false), 2500);
     },

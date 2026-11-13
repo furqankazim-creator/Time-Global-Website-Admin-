@@ -5,7 +5,26 @@ on:
     branches: [main]
 
 jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            server/package-lock.json
+      - run: npm ci
+      - run: npm ci --prefix server
+      - run: npm run typecheck
+      - run: npm run build
+      - run: npm run build --prefix server
+      - run: npm test --prefix server
+
   deploy:
+    needs: verify
     runs-on: ubuntu-latest
     steps:
       - name: Deploy via SSH
@@ -15,8 +34,12 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           password: ${{ secrets.SERVER_PASSWORD }}
           script: |
+            set -eu
             cd /home/TimeGlobal
             git pull origin main
             docker build -t timeglobal .
-            docker stop timeglobal && docker rm timeglobal
-            docker run -d --name timeglobal -p 3000:80 --restart always timeglobal
+            if docker container inspect timeglobal >/dev/null 2>&1; then
+              docker stop timeglobal
+              docker rm timeglobal
+            fi
+            docker run -d --name timeglobal --add-host host.docker.internal:host-gateway -p 3000:80 --restart always timeglobal

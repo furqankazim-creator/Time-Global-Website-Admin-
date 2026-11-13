@@ -1,0 +1,14 @@
+node_modules
+server/node_modules
+dist
+server/dist
+.git
+**/.env
+**/.env.*
+!.env.production
+server/uploads
+server/tests/.uploads
+.aws
+.codex
+.agents
+*.log

@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Time Global — AI-Powered Software & Digital Agency</title>
     <meta name="description" content="Time Global delivers scalable software, SaaS platforms, AI automation systems, and high-performance digital products worldwide." />
     <meta name="robots" content="index, follow" />
@@ -31,9 +31,46 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+      body { margin: 0; }
+      .startup-loader {
+        min-height: 100vh;
+        min-height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+        background: #0a0a14;
+        color: #f4f4f5;
+        font-family: system-ui, sans-serif;
+      }
+      .startup-loader strong { font-size: 20px; letter-spacing: .08em; }
+      .startup-loader span { color: #a1a1aa; font-size: 13px; }
+      .startup-spinner {
+        width: 32px;
+        height: 32px;
+        border: 3px solid #ffffff1a;
+        border-top-color: #00c48c;
+        border-radius: 50%;
+        animation: startup-spin .8s linear infinite;
+      }
+      @keyframes startup-spin { to { transform: rotate(360deg); } }
+      @media (prefers-reduced-motion: reduce) {
+        .startup-spinner { animation: none; }
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- React replaces this immediately on its first render. -->
+      <div class="startup-loader" role="status" aria-live="polite">
+        <strong>TIME GLOBAL</strong>
+        <div class="startup-spinner" aria-hidden="true"></div>
+        <span>Loading website…</span>
+      </div>
+    </div>
+    <noscript>Please enable JavaScript to view the Time Global website.</noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

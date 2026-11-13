@@ -34,7 +34,7 @@ type FullProject = {
   gallery: CmsImage[];
 };
 
-const BASE = import.meta.env.VITE_API_URL ?? "http://localhost:4000";
+import { API_BASE as BASE } from "@/lib/api-base";
 
 const PROSE =
   "text-base sm:text-lg leading-relaxed text-foreground/85 font-normal " +

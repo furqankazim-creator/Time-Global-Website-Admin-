@@ -9,7 +9,7 @@ import {
   STATIC_HOME,
 } from "@/data/staticContent";
 
-const BASE = import.meta.env.VITE_API_URL ?? "http://localhost:4000";
+import { API_BASE as BASE } from "@/lib/api-base";
 const CACHE_PREFIX = "tg_cms_cache_v5_";
 
 // Proactively clear stale legacy caches so browsers always show real portfolio case studies
@@ -85,29 +85,25 @@ function useCms<T>(key: string, path: string, fallback: T) {
   const q = useQuery({
     queryKey: ["cms", key],
     queryFn: async (): Promise<T> => {
-      try {
-        const data = await get<T>(path);
-        if (data && (!Array.isArray(data) || data.length > 0)) {
-          setCachedCms<T>(key, data);
-          return data;
-        }
-        return effectiveFallback;
-      } catch {
-        return effectiveFallback;
-      }
+      const data = await get<T>(path);
+      setCachedCms<T>(key, data);
+      // An empty successful response is authoritative: all items may be unpublished.
+      return data;
     },
     initialData: effectiveFallback,
     staleTime: 0,
     retry: 1,
     refetchOnWindowFocus: true,
     refetchOnMount: true,
+    refetchInterval: 60_000,
+    refetchIntervalInBackground: false,
   });
 
   const finalData = q.data ?? effectiveFallback;
 
   return {
     data: finalData as T,
-    isFallback: !q.data || (Array.isArray(q.data) && q.data.length === 0),
+    isFallback: cached === null && (!q.isFetched || q.isError),
     isLoading: q.isLoading,
   };
 }
@@ -137,6 +133,7 @@ export type CmsService = {
 };
 
 export type CmsTestimonial = {
+  gender?: "male" | "female" | "unspecified";
   _id: string; clientName: string; company: string; position: string;
   quote: string; rating: number; caseStudyUrl: string;
   photo: CmsImage | null; companyLogo: CmsImage | null;

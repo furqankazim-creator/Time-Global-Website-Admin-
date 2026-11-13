@@ -416,6 +416,7 @@ export function PostEditPage({ id }: { id?: string }) {
 
 /* --------------------------- Testimonial ------------------------------ */
 type TestimonialForm = {
+  gender: string;
   clientName: string; company: string; position: string; quote: string;
   rating: number; caseStudyUrl: string; featured: boolean; order: number;
   approvalStatus: string;
@@ -423,6 +424,7 @@ type TestimonialForm = {
   companyLogo: string | { _id: string; url: string; alt: string } | null;
 };
 const EMPTY_TESTIMONIAL: TestimonialForm = {
+  gender: "unspecified",
   clientName: "", company: "", position: "", quote: "", rating: 5,
   caseStudyUrl: "", featured: false, order: 0, approvalStatus: "approved",
   photo: null, companyLogo: null,
@@ -500,6 +502,13 @@ export function TestimonialEditPage({ id }: { id?: string }) {
       </Card>
 
       <Card title="Images">
+        <Field label="Avatar" hint="Used when no client photo is uploaded. Uploaded photos always take priority.">
+          <Select value={f.form.gender ?? "unspecified"} onChange={(v) => f.set("gender", v)} options={[
+            { value: "unspecified", label: "Neutral avatar" },
+            { value: "male", label: "Male avatar" },
+            { value: "female", label: "Female avatar" },
+          ]} />
+        </Field>
         <div className="grid sm:grid-cols-2 gap-6">
           <MediaPicker
             label="Client photo"

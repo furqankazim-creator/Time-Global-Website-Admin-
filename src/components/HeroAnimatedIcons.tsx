@@ -357,7 +357,7 @@ function IconShell({
       ref={containerRef}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={() => setIsHovered(false)}
-      className={`relative rounded-3xl border bg-neutral-950/40 backdrop-blur-md shadow-2xl cursor-help transition-all duration-300 ${
+      className={`hero-icon-shell relative rounded-3xl border bg-neutral-950/40 backdrop-blur-md shadow-2xl cursor-help transition-all duration-300 ${
         isHovered ? "scale-105 border-current/40" : "scale-100"
       } ${colorClass}`}
       style={{

@@ -89,6 +89,7 @@ const countWords = (s: string) => s.trim().split(/\s+/).filter(Boolean).length;
 
 export const createTestimonialSchema = z.object({
   clientName: z.string().trim().min(2, "Client name is required").max(120),
+  gender: z.enum(["male", "female", "unspecified"]).optional(),
   company: z.string().trim().max(120).optional(),
   position: z.string().trim().max(120).optional(),
   photo: objectId.nullable().optional(),

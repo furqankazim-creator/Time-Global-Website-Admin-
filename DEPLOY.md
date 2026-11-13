@@ -41,8 +41,30 @@ The final SPA fallback (`/* → /index.html`) is also required — deep links li
 
 ### Site (build-time)
 ```
-VITE_API_URL=https://api.timeglobaltech.com   # baked in at `vite build`
+VITE_API_URL=   # same-origin /api proxy; default in .env.production
 ```
+
+Set `VITE_API_URL` in the hosting build environment only when using a separate,
+confirmed API origin. Do not deploy a build pointing to localhost.
+
+The repository's VPS Docker image includes the SPA fallback and proxies `/api`,
+`/uploads`, `/sitemap.xml`, `/robots.txt`, and `/health` to `API_UPSTREAM`.
+The default is `http://host.docker.internal:4000`, for an API running on the VPS.
+Build and run it with:
+
+```bash
+docker build -t timeglobal .
+docker run -d --name timeglobal --add-host host.docker.internal:host-gateway \
+  -e API_UPSTREAM=http://host.docker.internal:4000 \
+  -p 3000:80 --restart always timeglobal
+```
+
+Run the API separately using the production configuration below. MongoDB must
+be reachable from it, and uploaded files must live on persistent storage.
+The VPS reverse proxy must terminate HTTPS and forward the public domain to
+port 3000. The Docker image itself does not provision a certificate or database.
+The current `vercel.json` provides only SPA routing: configure the four API
+rewrites above before using Vercel with same-origin API requests.
 
 ### API (`server/.env` — see `server/.env.example`)
 ```
@@ -57,7 +79,16 @@ PUBLIC_API_URL=https://api.timeglobaltech.com
 STORAGE_DRIVER=local                  # or cloudinary once implemented
 ```
 
-SMTP is configured **in the admin panel** (Settings → Email/SMTP), not env.
+SMTP can be configured in **Settings → Email/SMTP**; `server/.env.example`
+also documents the SMTP environment fallback. Send an actual test message from
+the admin settings after entering production credentials.
+
+Chat uses `GROQ_API_KEY` and optional `GROQ_MODEL` in the **API environment**.
+Never put provider credentials in a `VITE_` variable: those values are public
+browser configuration. The frontend calls `/api/v1/public/chat`; the API makes
+the provider request. Rotate any key previously shipped in a frontend build.
+The provider request format is documented in the
+[Groq API reference](https://console.groq.com/docs/api-reference).
 
 ## 3. First boot
 
@@ -68,7 +99,10 @@ node dist/index.js        # or a process manager (pm2/systemd/Railway)
 npm run seed:content      # optional demo content
 ```
 
-Then build the site: `npm ci && npm run build` → deploy `dist/`.
+Then validate and build the site: `npm ci && npm run typecheck && npm run build`
+→ deploy `dist/`. The GitHub VPS workflow runs both builds and the backend tests
+before deploying the frontend image. API releases still need the separate API
+build/restart; that workflow does not deploy the API service.
 
 ## 4. Checklist before flipping DNS
 

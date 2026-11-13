@@ -12,7 +12,7 @@ const TESTIMONIALS = [
     quote: "Time Global rebuilt our patient scheduling platform from the ground up. Appointment no-shows dropped by 40% and our staff saves 15 hours a week thanks to the intelligent automation they engineered.",
     color: "bg-emerald-100 text-emerald-700",
     location: "New York, USA",
-    avatar: "https://i.pravatar.cc/80?img=12"
+    avatar: "/assets/avatars/neutral.svg"
   },
   {
     name: "Sarah Chen",
@@ -21,7 +21,7 @@ const TESTIMONIALS = [
     quote: "Their team integrated open banking APIs into our product in half the time we expected. The code quality was exceptional and the documentation made our internal team self-sufficient from day one.",
     color: "bg-blue-100 text-blue-700",
     location: "London, UK",
-    avatar: "https://i.pravatar.cc/80?img=5"
+    avatar: "/assets/avatars/neutral.svg"
   },
   {
     name: "Khalid Al-Rashidi",
@@ -30,7 +30,7 @@ const TESTIMONIALS = [
     quote: "We scaled from 5,000 to 200,000 daily transactions without a single downtime incident. Their cloud architecture is bulletproof — and so is their communication throughout every phase.",
     color: "bg-amber-100 text-amber-700",
     location: "Dubai, UAE",
-    avatar: "https://i.pravatar.cc/80?img=3"
+    avatar: "/assets/avatars/neutral.svg"
   },
   {
     name: "Emma Thompson",
@@ -39,7 +39,7 @@ const TESTIMONIALS = [
     quote: "Time Global turned a complex LMS vision into a polished product in just 4 months. Learner engagement went up 55% and educators love how intuitive the interface feels.",
     color: "bg-purple-100 text-purple-700",
     location: "Toronto, Canada",
-    avatar: "https://i.pravatar.cc/80?img=44"
+    avatar: "/assets/avatars/neutral.svg"
   },
   {
     name: "Liam O'Brien",
@@ -48,7 +48,7 @@ const TESTIMONIALS = [
     quote: "They built a real-time crop monitoring dashboard that farmers can actually use. Data from 3,000+ IoT sensors is now visualized beautifully — and it works offline in remote areas.",
     color: "bg-lime-100 text-lime-700",
     location: "Sydney, Australia",
-    avatar: "https://i.pravatar.cc/80?img=13"
+    avatar: "/assets/avatars/neutral.svg"
   },
   {
     name: "Priya Sharma",
@@ -57,7 +57,7 @@ const TESTIMONIALS = [
     quote: "Our freelancer marketplace went live on schedule with zero post-launch bugs. The escrow and dispute resolution features they built cut payment conflicts by 65% in the first quarter.",
     color: "bg-cyan-100 text-cyan-700",
     location: "Singapore",
-    avatar: "https://i.pravatar.cc/80?img=49"
+    avatar: "/assets/avatars/neutral.svg"
   },
   {
     name: "Marco Rossi",
@@ -66,7 +66,7 @@ const TESTIMONIALS = [
     quote: "They delivered a smart grid management portal integrating 7 different hardware vendors. The custom firmware layer was a breakthrough our own engineers had struggled with for months.",
     color: "bg-orange-100 text-orange-700",
     location: "Milan, Italy",
-    avatar: "https://i.pravatar.cc/80?img=68"
+    avatar: "/assets/avatars/neutral.svg"
   },
   {
     name: "Aisha Williams",
@@ -75,7 +75,7 @@ const TESTIMONIALS = [
     quote: "The incident reporting app they built handles 10,000+ submissions a month for our city partnership. Response time by local services improved by 30% in the first quarter alone.",
     color: "bg-rose-100 text-rose-700",
     location: "Houston, USA",
-    avatar: "https://i.pravatar.cc/80?img=47"
+    avatar: "/assets/avatars/neutral.svg"
   },
   {
     name: "David Park",
@@ -84,7 +84,7 @@ const TESTIMONIALS = [
     quote: "Our creative teams now collaborate in real time across three time zones thanks to the platform Time Global engineered. Asset delivery time went from 3 days to same-day.",
     color: "bg-indigo-100 text-indigo-700",
     location: "Los Angeles, USA",
-    avatar: "https://i.pravatar.cc/80?img=7"
+    avatar: "/assets/avatars/neutral.svg"
   },
   {
     name: "Dr. Lisa Mueller",
@@ -93,7 +93,7 @@ const TESTIMONIALS = [
     quote: "They fine-tuned a domain-specific LLM for our clinical research pipeline. Accuracy improved to 91% and inference latency dropped by 60% — production-ready in just 6 weeks.",
     color: "bg-fuchsia-100 text-fuchsia-700",
     location: "Berlin, Germany",
-    avatar: "https://i.pravatar.cc/80?img=16"
+    avatar: "/assets/avatars/neutral.svg"
   }
 ];
 
@@ -133,9 +133,7 @@ function toCard(t: CmsTestimonial): Card {
     rating: t.rating,
     color: "bg-emerald-100 text-emerald-700",
     location: "",
-    // Deterministic placeholder keeps avatars stable across renders when the
-    // CMS has no photo; a random one would flicker on every re-render.
-    avatar: t.photo?.url ?? `https://i.pravatar.cc/80?u=${t._id}`,
+    avatar: t.photo?.url?.trim() || `/assets/avatars/${t.gender === "male" || t.gender === "female" ? t.gender : "neutral"}.svg`,
   };
 }
 
@@ -220,56 +218,114 @@ function TestimonialCard({ test }: { test: Card }) {
 
 export default function Testimonials() {
   const marqueeRef = useRef<HTMLDivElement>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
   // Approved CMS testimonials replace the bundled ones; if the CMS is empty
   // or unreachable we keep shipping the originals rather than an empty rail.
-  const { data: cms } = useTestimonials();
-  const items: Card[] = cms.length > 0 ? cms.map(toCard) : TESTIMONIALS;
+  const { data: cms, isFallback } = useTestimonials();
+  const items: Card[] = (!isFallback || cms.length > 0) ? cms.map(toCard) : TESTIMONIALS;
 
   useEffect(() => {
-    if (!marqueeRef.current) return;
-
     const marquee = marqueeRef.current;
-    const cardWidth = 450 + 32; // w-[450px] + gap-8
-    // Must track the rendered count, not the bundled constant — the CMS may
-    // return a different number, and a stale width desyncs the seamless loop.
-    const totalWidth = items.length * cardWidth;
+    const viewport = viewportRef.current;
+    if (!marquee || !viewport || !items.length) return;
 
-    const loop = gsap.to(marquee, {
-      x: `-=${totalWidth}`,
-      duration: 80,
-      ease: "none",
-      repeat: -1,
-      force3D: true,
-      onReverseComplete() {
-        const self = this as any;
-        self.totalTime(self.rawTime() + self.duration() * 10);
-      }
-    });
-
+    let width = 0;
+    let x = 0;
+    let speed = 0;
+    let targetSpeed = 0;
+    let dragging = false;
+    let pointerId: number | null = null;
+    let previousX = 0;
+    const setX = gsap.quickSetter(marquee, "x", "px");
+    const wrap = () => {
+      if (width > 0) x = gsap.utils.wrap(-2 * width, -width, x);
+      setX(x);
+    };
+    const measure = () => {
+      const first = marquee.children[0] as HTMLElement;
+      const nextCopy = marquee.children[items.length] as HTMLElement;
+      const previousWidth = width;
+      width = nextCopy.offsetLeft - first.offsetLeft;
+      x = previousWidth ? x * width / previousWidth : -width;
+      targetSpeed = -width / 80;
+      wrap();
+    };
+    measure();
+    const resizeObserver = new ResizeObserver(measure);
+    resizeObserver.observe(viewport);
     marquee.style.willChange = "transform";
 
-    const handleMouseEnter = () => gsap.to(loop, { timeScale: 0, duration: 0.5 });
-    const handleMouseLeave = () => gsap.to(loop, { timeScale: 1, duration: 0.5 });
-    const handleTouchStart = () => gsap.to(loop, { timeScale: 0, duration: 0.3 });
-    const handleTouchEnd = () => gsap.to(loop, { timeScale: 1, duration: 0.8 });
+    const tick = (_time: number, deltaMs: number) => {
+      if (dragging) return;
+      const dt = Math.min(deltaMs, 64) / 1000;
+      speed += (targetSpeed - speed) * (1 - Math.exp(-10 * dt));
+      x += speed * dt;
+      wrap();
+    };
+    gsap.ticker.add(tick);
 
-    marquee.addEventListener("mouseenter", handleMouseEnter);
-    marquee.addEventListener("mouseleave", handleMouseLeave);
-    marquee.addEventListener("touchstart", handleTouchStart, { passive: true });
-    marquee.addEventListener("touchend", handleTouchEnd, { passive: true });
-    marquee.addEventListener("touchcancel", handleTouchEnd, { passive: true });
+    const steer = (event: PointerEvent) => {
+      if (event.pointerType !== "mouse") return;
+      const bounds = viewport.getBoundingClientRect();
+      const position = ((event.clientX - bounds.left) / bounds.width - 0.5) * 2;
+      targetSpeed = Math.abs(position) < 0.15 ? 0 : position * 240;
+    };
+    const down = (event: PointerEvent) => {
+      if (!event.isPrimary || event.button !== 0) return;
+      dragging = true;
+      pointerId = event.pointerId;
+      previousX = event.clientX;
+      speed = 0;
+      viewport.setPointerCapture(event.pointerId);
+      viewport.style.cursor = "grabbing";
+    };
+    const move = (event: PointerEvent) => {
+      if (dragging && event.pointerId === pointerId) {
+        x += event.clientX - previousX;
+        previousX = event.clientX;
+        wrap();
+      } else if (!dragging) steer(event);
+    };
+    const resume = () => { targetSpeed = -width / 80; };
+    const release = (event: PointerEvent) => {
+      if (event.pointerId !== pointerId) return;
+      dragging = false;
+      pointerId = null;
+      viewport.style.cursor = "";
+      resume();
+    };
+    const keydown = (event: KeyboardEvent) => {
+      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+      event.preventDefault();
+      x += event.key === "ArrowLeft" ? -482 : 482;
+      wrap();
+    };
+    const preventImageDrag = (event: DragEvent) => event.preventDefault();
+    viewport.addEventListener("pointerenter", steer);
+    viewport.addEventListener("pointermove", move);
+    viewport.addEventListener("pointerdown", down);
+    viewport.addEventListener("pointerup", release);
+    viewport.addEventListener("pointercancel", release);
+    viewport.addEventListener("lostpointercapture", release);
+    viewport.addEventListener("pointerleave", resume);
+    viewport.addEventListener("keydown", keydown);
+    viewport.addEventListener("dragstart", preventImageDrag);
 
     return () => {
-      loop.kill();
+      gsap.ticker.remove(tick);
+      resizeObserver.disconnect();
       marquee.style.willChange = "auto";
-      marquee.removeEventListener("mouseenter", handleMouseEnter);
-      marquee.removeEventListener("mouseleave", handleMouseLeave);
-      marquee.removeEventListener("touchstart", handleTouchStart);
-      marquee.removeEventListener("touchend", handleTouchEnd);
-      marquee.removeEventListener("touchcancel", handleTouchEnd);
+      viewport.style.cursor = "";
+      viewport.removeEventListener("pointerenter", steer);
+      viewport.removeEventListener("pointermove", move);
+      viewport.removeEventListener("pointerdown", down);
+      viewport.removeEventListener("pointerup", release);
+      viewport.removeEventListener("pointercancel", release);
+      viewport.removeEventListener("lostpointercapture", release);
+      viewport.removeEventListener("pointerleave", resume);
+      viewport.removeEventListener("keydown", keydown);
+      viewport.removeEventListener("dragstart", preventImageDrag);
     };
-    // Rebuild the loop when the item count changes (CMS data arriving)
-    // — the tween's distance is baked in at creation time.
   }, [items.length]);
 
   return (
@@ -306,9 +362,9 @@ export default function Testimonials() {
         </div>
       </div>
 
-      <div className="relative">
-        <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-secondary to-transparent z-10" />
-        <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-secondary to-transparent z-10" />
+      <div ref={viewportRef} role="region" aria-label="Client testimonials. Drag or use left and right arrow keys to move." tabIndex={0} className="relative cursor-grab select-none touch-pan-y focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
+        <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-secondary to-transparent z-10" />
+        <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-secondary to-transparent z-10" />
 
         <div
           ref={marqueeRef}

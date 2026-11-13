@@ -1,6 +1,8 @@
-import { lazy, Suspense, useEffect, useRef } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 import gsap from "gsap";
+import { useReducedMotion } from "framer-motion";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useContactModal } from "@/hooks/use-contact-modal";
 import { useHome, type CmsHome } from "@/lib/cms";
@@ -38,6 +40,25 @@ const FALLBACK: CmsHome = {
 };
 
 export default function HeroSection() {
+  const reduceMotion = useReducedMotion();
+  const [showGlobe, setShowGlobe] = useState(false);
+
+  useEffect(() => {
+    // Give the heading and controls a paint before loading the graphics bundle.
+    let idle: number | undefined;
+    const timer = window.setTimeout(() => {
+      if ("requestIdleCallback" in window) {
+        idle = window.requestIdleCallback(() => setShowGlobe(true), { timeout: 2000 });
+      } else {
+        setShowGlobe(true);
+      }
+    }, 500);
+    return () => {
+      window.clearTimeout(timer);
+      if (idle !== undefined) window.cancelIdleCallback(idle);
+    };
+  }, []);
+
   const headingRef = useRef<HTMLHeadingElement>(null);
   const { openModal } = useContactModal();
   const { data: home } = useHome(FALLBACK);
@@ -45,7 +66,7 @@ export default function HeroSection() {
   const hero = home.hero?.headline ? home.hero : FALLBACK.hero;
 
   useEffect(() => {
-    if (!headingRef.current) return;
+    if (!headingRef.current || reduceMotion) return;
     const words = headingRef.current.querySelectorAll(".hero-word");
 
     const ctx = gsap.context(() => {
@@ -67,7 +88,7 @@ export default function HeroSection() {
     // Must re-run when the headline changes. wrapWords() renders each word
     // with visibility:hidden and relies on GSAP to reveal it — if CMS copy
     // arrives after this ran once, the new words would stay invisible.
-  }, [hero.headline]);
+  }, [hero.headline, reduceMotion]);
 
   /**
    * Split the headline so the final word keeps the accent colour the design
@@ -96,7 +117,6 @@ export default function HeroSection() {
       <span
         key={i}
         className={`hero-word inline-block mr-3 ${colorClass}`}
-        style={{ visibility: "hidden" }}
       >
         {word}
       </span>
@@ -147,7 +167,7 @@ export default function HeroSection() {
               href="/work"
               data-testid="button-hero-work"
             >
-              Explore Case Studies
+              Explore Our Work
             </CtaButton>
           </div>
 
@@ -184,6 +204,7 @@ export default function HeroSection() {
           {/* Single instance: the globe auto-fits whatever box it's given. */}
           <div className="relative w-full h-full z-10">
             {/* Placeholder keeps the layout stable while the chunk arrives */}
+            <ErrorBoundary fallback={<div className="mx-auto h-full aspect-square max-w-full rounded-full border border-primary/20 bg-primary/5" aria-hidden="true" />}>
             <Suspense
               fallback={
                 <div className="w-full h-full grid place-items-center">
@@ -191,8 +212,9 @@ export default function HeroSection() {
                 </div>
               }
             >
-              <Globe />
+              {showGlobe ? <Globe /> : <div className="mx-auto h-full aspect-square max-w-full rounded-full border border-primary/20 bg-primary/5" aria-hidden="true" />}
             </Suspense>
+            </ErrorBoundary>
           </div>
         </div>
       </div>

@@ -75,7 +75,7 @@ export default function NotFoundPage() {
 
           <div className="flex flex-wrap items-center justify-center gap-4">
             <CtaButton size="lg" href="/">Go Home</CtaButton>
-            <CtaButton size="lg" variant="glass" href="/work">View Case Studies</CtaButton>
+            <CtaButton size="lg" variant="glass" href="/work">View Our Work</CtaButton>
           </div>
         </motion.div>
       </main>

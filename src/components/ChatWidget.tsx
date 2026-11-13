@@ -13,35 +13,10 @@ import {
   Calendar,
   Mail,
 } from "lucide-react";
+import { useLocation } from "wouter";
 import { useContactModal } from "@/hooks/use-contact-modal";
 
-const API_BASE = import.meta.env.VITE_API_URL ?? "http://localhost:4000";
-const GROQ_CLIENT_KEY = import.meta.env.VITE_GROQ_API_KEY || "";
-const GROQ_MODEL = import.meta.env.VITE_GROQ_MODEL || "qwen/qwen3.8-27b";
-
-const COMPANY_SYSTEM_PROMPT = `
-You are the official AI Assistant for Time Global — an AI-first digital agency and software engineering company.
-Guide users warmly, accurately, and concisely about Time Global.
-
-### About Time Global:
-- Founded: 2013 (13+ years of software engineering excellence).
-- Track Record: 150+ successfully delivered digital products, web apps, SaaS systems, and AI workflows.
-- Global Footprint: Clients across 16+ countries worldwide (United States, UK, Japan, Germany, Canada, Australia, UAE, Saudi Arabia, Singapore, France, etc.).
-- Philosophy: "Quick delivery, efficient execution, and measurable results."
-
-### Core Services:
-1. AI & Automation: Custom LLM integration, autonomous AI agents, workflow automations (Make, n8n, LangChain, Python), document intelligence, support bots.
-2. Web & Full-Stack Development: Modern web apps with React, Next.js, TypeScript, Node.js, Python.
-3. SaaS Product Engineering: Multi-tenant SaaS architecture, billing, auth, dashboards.
-4. Mobile App Development: Cross-platform iOS & Android apps (React Native, Flutter) & native Swift/Kotlin.
-5. Cloud & DevOps: AWS, GCP, Docker, Kubernetes, Terraform, CI/CD pipelines, database engineering (Postgres, Mongo, Redis).
-6. UI/UX Design: Conversion-optimized product design, Figma prototypes.
-
-### Rules:
-- Keep responses friendly, concise, and structured with bullet points.
-- Always encourage the user to click "Schedule a Consultation" or email timeglobaltech@gmail.com for custom roadmaps & quotes within 24 hours.
-`;
-
+import { API_BASE } from "@/lib/api-base";
 type Message = {
   id: string;
   role: "user" | "assistant";
@@ -128,7 +103,8 @@ export function ChatWidget() {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const { openModal } = useContactModal();
+  const { openModal, isOpen: contactOpen, isWelcome } = useContactModal();
+  const [pathname] = useLocation();
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -185,32 +161,7 @@ export function ChatWidget() {
           }
         }
       } catch {
-        // Backend not responding, proceed to direct Groq call
-      }
-
-      // 2. Direct Groq API fallback if backend wasn't running
-      if (!assistantReply && GROQ_CLIENT_KEY) {
-        const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${GROQ_CLIENT_KEY}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            model: GROQ_MODEL,
-            messages: [
-              { role: "system", content: COMPANY_SYSTEM_PROMPT },
-              ...newMessages.slice(-6).map((m) => ({ role: m.role, content: m.content })),
-            ],
-            temperature: 0.6,
-            max_tokens: 450,
-          }),
-        });
-
-        if (groqRes.ok) {
-          const groqData = await groqRes.json();
-          assistantReply = groqData.choices?.[0]?.message?.content || "";
-        }
+        // The local consultation fallback below remains available if chat is offline.
       }
 
       if (!assistantReply) {
@@ -248,6 +199,8 @@ export function ChatWidget() {
   const handleReset = () => {
     setMessages(INITIAL_MESSAGES);
   };
+
+  if (contactOpen && isWelcome && pathname === "/") return null;
 
   return (
     <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[9999]">

@@ -73,8 +73,8 @@ function toSvc(s: CmsService, i: number): Svc {
 export default function Services() {
   // Published CMS services replace the bundled list; empty/unreachable CMS
   // keeps the originals so the section never renders blank.
-  const { data: cms } = useServices();
-  const items: Svc[] = cms.length > 0 ? cms.map(toSvc) : SERVICES;
+  const { data: cms, isFallback } = useServices();
+  const items: Svc[] = (!isFallback || cms.length > 0) ? cms.map(toSvc) : SERVICES;
 
   const [activeTab, setActiveTab] = useState(0);
   const [openAccordion, setOpenAccordion] = useState<number | null>(0);

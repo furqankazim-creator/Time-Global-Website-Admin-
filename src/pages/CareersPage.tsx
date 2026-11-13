@@ -176,8 +176,8 @@ export default function CareersPage() {
 
   // Published jobs from the admin panel; bundled list only covers an
   // unreachable API, and an empty CMS legitimately means "no open roles".
-  const { data: cmsJobs } = useJobs();
-  const openings: Opening[] = cmsJobs.length > 0 ? cmsJobs.map(toOpening) : OPENINGS;
+  const { data: cmsJobs, isFallback } = useJobs();
+  const openings: Opening[] = (!isFallback || cmsJobs.length > 0) ? cmsJobs.map(toOpening) : OPENINGS;
 
   // Filters derive from what actually exists, so a new department in the
   // admin appears here without a code change.
@@ -575,6 +575,9 @@ export default function CareersPage() {
             <div className="flex justify-center items-center">
               <CtaButton
                 size="lg"
+                variant="secondary"
+                arrow
+                className="min-w-[220px] border-white bg-white text-zinc-950 font-bold shadow-lg shadow-black/15 hover:border-white hover:bg-zinc-100 hover:shadow-xl focus-visible:ring-white focus-visible:ring-offset-primary"
                 onClick={() => openJobModal("General Application", "")}
               >
                 Send your CV

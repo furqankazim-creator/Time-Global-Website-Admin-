@@ -1,5 +1,6 @@
-import { motion, AnimatePresence } from "framer-motion";
-import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { useState, useRef, useEffect, useCallback } from "react";
+import { useLocation } from "wouter";
 import { useContactModal } from "@/hooks/use-contact-modal";
 import {
   X,
@@ -29,7 +30,7 @@ const MIN_FILL_MS = 3_000;
  * surfaces it in the admin "Contact Submissions" inbox — it also fires an
  * in-app notification and (if SMTP is configured) an email alert.
  */
-const API_BASE = import.meta.env.VITE_API_URL ?? "http://localhost:4000";
+import { API_BASE } from "@/lib/api-base";
 const LEADS_ENDPOINT = `${API_BASE}/api/v1/public/leads`;
 
 function readLastSubmit(): number {
@@ -119,7 +120,9 @@ const FIELD_CLS =
   "w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-[14px] text-white shadow-inner outline-none transition-all duration-200 placeholder:text-white/30 hover:border-white/20 hover:bg-white/[0.06] focus:border-primary focus:bg-white/[0.08] focus:ring-2 focus:ring-primary/25 focus:shadow-[0_0_25px_rgba(16,185,129,0.15)]";
 
 export default function ContactModal() {
-  const { isOpen, closeModal } = useContactModal();
+  const { isOpen, isWelcome, closeModal } = useContactModal();
+  const [pathname] = useLocation();
+  const reduceMotion = useReducedMotion();
 
   const [isSuccess, setIsSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -128,6 +131,57 @@ export default function ContactModal() {
   const [spamBlocked, setSpamBlocked] = useState(false);
   const [consent, setConsent] = useState(false);
   const openedAt = useRef<number>(0);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const welcomeIdleTimer = useRef<number | null>(null);
+  const recordWelcomeActivity = useCallback(() => {
+    if (welcomeIdleTimer.current !== null) window.clearTimeout(welcomeIdleTimer.current);
+    if (!isOpen || !isWelcome || pathname !== "/" || isLoading || isSuccess) return;
+    welcomeIdleTimer.current = window.setTimeout(closeModal, 5_000);
+  }, [isOpen, isWelcome, pathname, isLoading, isSuccess, closeModal]);
+
+  useEffect(() => {
+    recordWelcomeActivity();
+    return () => {
+      if (welcomeIdleTimer.current !== null) window.clearTimeout(welcomeIdleTimer.current);
+    };
+  }, [recordWelcomeActivity]);
+
+  useEffect(() => {
+    if (!isOpen || (isWelcome && pathname !== "/")) return;
+    const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    dialogRef.current?.focus({ preventScroll: true });
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closeModal();
+      }
+      if (event.key !== "Tab") return;
+      const focusable = Array.from(dialogRef.current?.querySelectorAll<HTMLElement>(
+        'button:not(:disabled), a[href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex="0"]'
+      ) ?? []).filter((element) => element.getClientRects().length > 0 && !element.closest('[aria-hidden="true"]'));
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (!first || !last) {
+        event.preventDefault();
+        dialogRef.current?.focus();
+      } else if (event.shiftKey && (document.activeElement === first || document.activeElement === dialogRef.current)) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && (document.activeElement === last || document.activeElement === dialogRef.current)) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", onKeyDown);
+      if (previousFocus?.isConnected) previousFocus.focus({ preventScroll: true });
+    };
+  }, [isOpen, isWelcome, pathname, closeModal]);
 
   const [formData, setFormData] = useState({ ...EMPTY_FORM });
   const [showDetails, setShowDetails] = useState(false);
@@ -137,7 +191,7 @@ export default function ContactModal() {
 
   useEffect(() => {
     if (isOpen) openedAt.current = Date.now();
-  }, [isOpen]);
+  }, [isOpen, pathname]);
 
   // Desktop mouse scrubbing
   useEffect(() => {
@@ -201,6 +255,7 @@ export default function ContactModal() {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
+    recordWelcomeActivity();
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -359,6 +414,77 @@ export default function ContactModal() {
     </div>
   );
 
+  if (isWelcome) {
+    return (
+      <AnimatePresence>
+        {isOpen && pathname === "/" && (
+          <motion.div
+            key="welcome-panel"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1, x: 0, y: 0, scale: 1 }}
+            exit={{
+              opacity: 0,
+              pointerEvents: "none",
+              transition: { duration: reduceMotion ? 0.1 : 0.4, ease: [0.4, 0, 1, 1] },
+            }}
+            transition={{ duration: reduceMotion ? 0.1 : 0.35, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed inset-0 z-[60] flex items-center justify-center bg-black/30 p-4 backdrop-blur-sm sm:p-6"
+            onClick={(event) => { if (event.target === event.currentTarget) closeModal(); }}
+          >
+            <motion.div
+              ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="welcome-title" tabIndex={-1}
+              onKeyDownCapture={recordWelcomeActivity}
+              onPointerDownCapture={recordWelcomeActivity}
+              onFocusCapture={recordWelcomeActivity}
+              initial={{ opacity: 0, y: 16, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }}
+              className="relative max-h-[calc(100dvh-2rem)] w-full max-w-md overflow-y-auto overscroll-contain rounded-2xl border border-white/10 bg-zinc-950 p-5 text-white shadow-2xl sm:p-6"
+            >
+              <button type="button" onClick={closeModal} aria-label="Close welcome form" className="absolute right-4 top-4 rounded-full p-2 text-white/60 transition hover:bg-white/10 hover:text-white focus-visible:outline focus-visible:outline-primary"><X size={20} /></button>
+              {isSuccess ? (
+                <div role="status" className="py-8 text-center">
+                  <Check className="mx-auto mb-4 text-primary" size={36} />
+                  <h2 id="welcome-title" className="text-2xl font-bold">Thanks for saying hello!</h2>
+                  <p className="mt-3 text-sm text-white/60">We’ll get back to you by email.</p>
+                </div>
+              ) : (
+                <>
+                  <span className="mb-4 inline-flex rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">Welcome to Time Global</span>
+                  <h2 id="welcome-title" className="pr-6 text-3xl font-bold tracking-tight">Hi, hello! <span aria-hidden="true">👋</span></h2>
+                  <p className="mb-6 mt-2 text-sm leading-relaxed text-white/60">How are you? Tell us a little about what you need.</p>
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    <input type="text" name="_gotcha" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
+                    <div>
+                      <label htmlFor="welcome-name" className="mb-1.5 block text-sm text-white/80">Your name</label>
+                      <input id="welcome-name" name="firstName" autoComplete="name" value={formData.firstName} onChange={handleChange} required minLength={2} maxLength={160} placeholder="What should we call you?" className={FIELD_CLS} />
+                    </div>
+                    <div>
+                      <label htmlFor="welcome-email" className="mb-1.5 block text-sm text-white/80">Email address</label>
+                      <input id="welcome-email" name="email" type="email" autoComplete="email" value={formData.email} onChange={handleChange} required maxLength={200} placeholder="you@example.com" className={FIELD_CLS} />
+                    </div>
+                    <div>
+                      <label htmlFor="welcome-work" className="mb-1.5 block text-sm text-white/80">What can we help you with?</label>
+                      <textarea id="welcome-work" name="message" value={formData.message} onChange={handleChange} required maxLength={5000} rows={3} placeholder="A website, an app, or something else…" className={cn(FIELD_CLS, "resize-y")} />
+                    </div>
+                    <label className="flex items-start gap-2 text-xs leading-relaxed text-white/60">
+                      <input type="checkbox" checked={consent} onChange={(event) => setConsent(event.target.checked)} required className="mt-0.5 accent-primary" />
+                      <span>I agree to Time Global using my details to reply to this inquiry.</span>
+                    </label>
+                    {isError && <p role="alert" className="text-sm text-red-300">{errorMsg ?? "Couldn’t send your message. Please try again."}</p>}
+                    {spamBlocked && <p role="alert" className="text-sm text-amber-300">Please wait a moment before sending.</p>}
+                    <button type="submit" disabled={isLoading} className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-bold text-black transition hover:brightness-110 disabled:opacity-50">
+                      {isLoading ? <><Loader2 size={16} className="animate-spin" /> Sending…</> : <>Send message <ArrowRight size={16} /></>}
+                    </button>
+                    <button type="button" onClick={closeModal} className="w-full py-1 text-sm text-white/50 transition hover:text-white">Just browsing? Maybe later</button>
+                  </form>
+                </>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    );
+  }
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -375,6 +501,11 @@ export default function ContactModal() {
 
           {/* Full-screen sliding drawer with premium styling */}
           <motion.div
+            ref={dialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="contact-dialog-title"
+            tabIndex={-1}
             initial={{ opacity: 0, scale: 0.98, y: 15 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.98, y: 15 }}
@@ -428,7 +559,7 @@ export default function ContactModal() {
                     <div className="absolute inset-0 rounded-2xl bg-primary animate-ping opacity-25" />
                   </div>
                   <div className="space-y-2.5">
-                    <h2 className="font-display text-3xl font-extrabold text-white">
+                    <h2 id="contact-dialog-title" className="font-display text-3xl font-extrabold text-white">
                       Message Sent Successfully!
                     </h2>
                     <p className="text-sm leading-relaxed text-white/70">
@@ -463,15 +594,15 @@ export default function ContactModal() {
                         </span>
                       </div>
 
-                      <h1 className="font-display text-4xl font-black leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-[52px]">
-                        Let's build your <br />
+                      <h2 id="contact-dialog-title" className="font-display text-4xl font-black leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-[52px]">
+                        Hi, how are you? <br />
                         <span className="bg-gradient-to-r from-primary via-emerald-400 to-teal-300 bg-clip-text text-transparent">
-                          next breakthrough.
+                          Let's talk about your work.
                         </span>
-                      </h1>
+                      </h2>
 
                       <p className="max-w-md text-base leading-relaxed text-white/70 font-sans font-light">
-                        Whether you need a full-scale AI platform, web & SaaS engineering, or high-performance cloud architecture, our senior team is ready to deliver.
+                        Welcome to Time Global! Leave your email and tell us about the project or work you need help with. Our team will get back to you.
                       </p>
                     </div>
 

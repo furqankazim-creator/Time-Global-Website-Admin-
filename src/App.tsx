@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect } from "react";
+import { lazy, Suspense, useEffect, useState, useCallback } from "react";
 import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
 import { MutationCache, QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -11,20 +11,22 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { JsonLd, TIME_GLOBAL_ORG } from "@/components/JsonLd";
 import { useAnalytics } from "@/hooks/use-analytics";
 import HomePage from "@/pages/HomePage";
-import WorkPage from "@/pages/WorkPage";
-import ServicesPage from "@/pages/ServicesPage";
-import StoriesPage from "@/pages/StoriesPage";
-import CareersPage from "@/pages/CareersPage";
-import AwardsPage from "@/pages/AwardsPage";
-import AboutPage from "@/pages/AboutPage";
-import BlogPage from "@/pages/BlogPage";
-import BlogPostPage from "@/pages/BlogPostPage";
-import ProjectPage from "@/pages/ProjectPage";
-import PrivacyPolicy from "@/pages/PrivacyPolicy";
-import TermsAndConditions from "@/pages/TermsAndConditions";
-import CookiePolicy from "@/pages/CookiePolicy";
-import RefundPolicy from "@/pages/RefundPolicy";
-import NotFoundPage from "@/pages/NotFoundPage";
+import { Preloader } from "@/components/Preloader";
+import { PageLoader } from "@/components/PageLoader";
+const WorkPage = lazy(() => import("@/pages/WorkPage"));
+const ServicesPage = lazy(() => import("@/pages/ServicesPage"));
+const StoriesPage = lazy(() => import("@/pages/StoriesPage"));
+const CareersPage = lazy(() => import("@/pages/CareersPage"));
+const AwardsPage = lazy(() => import("@/pages/AwardsPage"));
+const AboutPage = lazy(() => import("@/pages/AboutPage"));
+const BlogPage = lazy(() => import("@/pages/BlogPage"));
+const BlogPostPage = lazy(() => import("@/pages/BlogPostPage"));
+const ProjectPage = lazy(() => import("@/pages/ProjectPage"));
+const PrivacyPolicy = lazy(() => import("@/pages/PrivacyPolicy"));
+const TermsAndConditions = lazy(() => import("@/pages/TermsAndConditions"));
+const CookiePolicy = lazy(() => import("@/pages/CookiePolicy"));
+const RefundPolicy = lazy(() => import("@/pages/RefundPolicy"));
+const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 import ContactModal from "@/components/ContactModal";
 import { JobApplicationModal } from "@/components/JobApplicationModal";
 import ChatWidget from "@/components/ChatWidget";
@@ -133,6 +135,8 @@ const AdminFallback = () => (
 );
 
 function App() {
+  const [introComplete, setIntroComplete] = useState(false);
+  const finishIntro = useCallback(() => setIntroComplete(true), []);
   // The admin is a separate surface: no preloader, marketing modal, or site
   // chrome. Branch here rather than inside Router so none of it mounts.
   const isAdmin = useLocation()[0].startsWith("/admin");
@@ -154,6 +158,8 @@ function App() {
 
   return (
     <ThemeProvider>
+      {/* Prepare the page under the intro so its exit reveals rendered content. */}
+      {!introComplete && <Preloader onComplete={finishIntro} />}
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <ContactModalProvider>
@@ -187,7 +193,9 @@ function App() {
             <ErrorBoundary>
               <AnalyticsWatcher />
               <LiveCmsWatcher />
-              <Router />
+              <Suspense fallback={<PageLoader />}>
+                <Router />
+              </Suspense>
             </ErrorBoundary>
 
             <ContactModal />

@@ -35,13 +35,13 @@ export function ProjectsListPage() {
 
   return (
     <ResourceList<Project>
-      title="Case Studies"
+      title="Our Work"
       resource="projects"
       newLabel="New Case Study"
       defaultSort="order"
       columns={columns}
       labelOf={(r) => r.title}
-      emptyMessage="No case studies yet."
+      emptyMessage="No projects yet."
       extraParams={{ category }}
       filters={
         <select value={category} onChange={(e) => setCategory(e.target.value)} className={filterCls}>

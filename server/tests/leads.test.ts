@@ -11,6 +11,7 @@ beforeAll(async () => {
 beforeEach(async () => {
   await resetDb();
   admin = await tokenFor(app, "admin");
+  vi.clearAllMocks();
 });
 
 const lead = (over: object = {}) => ({
@@ -23,6 +24,53 @@ const lead = (over: object = {}) => ({
 });
 
 describe("public lead submission", () => {
+  it("saves the welcome form payload and exposes it in the admin inbox with a notification", async () => {
+    const payload = {
+      name: "Welcome Form Test",
+      email: "welcome-form-test@example.com",
+      phone: "",
+      company: "",
+      industry: "",
+      budgetRange: "",
+      preferredContact: "Email",
+      topic: "",
+      message: "Test inquiry from the homepage welcome form.",
+      sourcePage: "/",
+      consent: true,
+      website: "",
+    };
+    const submitted = await request(app).post("/api/v1/public/leads").send(payload).expect(201);
+    expect(submitted.body.data.received).toBe(true);
+    const { sendMail } = await import("../src/lib/mailer.js");
+    await vi.waitFor(() => {
+      expect(sendMail).toHaveBeenCalledWith(expect.objectContaining({
+        to: payload.email,
+        subject: "Thank you for contacting Time Global",
+        text: expect.stringContaining("We have received your inquiry"),
+      }));
+    });
+
+    const list = await request(app).get("/api/v1/admin/leads").set(auth(admin)).expect(200);
+    expect(list.body.meta.total).toBe(1);
+    const saved = list.body.data[0];
+    expect(saved).toMatchObject({
+      name: payload.name, email: payload.email, message: payload.message,
+      sourcePage: "/", preferredContact: "Email", status: "new",
+    });
+
+    const detail = await request(app).get(`/api/v1/admin/leads/${saved._id}`).set(auth(admin)).expect(200);
+    expect(detail.body.data.message).toBe(payload.message);
+    expect(detail.body.data.consentGivenAt).toBeTruthy();
+
+    const { Lead } = await import("../src/models/Lead.js");
+    expect(await Lead.findById(saved._id).lean()).toMatchObject({ email: payload.email });
+    const { Notification } = await import("../src/models/Notification.js");
+    await vi.waitFor(async () => {
+      expect(await Notification.findOne({ type: "lead", link: "/admin/leads" }).lean())
+        .toMatchObject({ title: `New inquiry: ${payload.name}` });
+    });
+  });
+
   it("stores a valid submission", async () => {
     await request(app).post("/api/v1/public/leads").send(lead()).expect(201);
 
@@ -50,6 +98,8 @@ describe("public lead submission", () => {
 
     const list = await request(app).get("/api/v1/admin/leads").set(auth(admin));
     expect(list.body.meta.total).toBe(0);
+    const { sendMail } = await import("../src/lib/mailer.js");
+    expect(sendMail).not.toHaveBeenCalled();
   });
 });
 

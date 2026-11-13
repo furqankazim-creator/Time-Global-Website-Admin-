@@ -21,7 +21,7 @@ import {
 import { useJobModal } from "@/hooks/use-job-modal";
 import { toast } from "@/hooks/use-toast";
 
-const API_BASE = import.meta.env.VITE_API_URL ?? "http://localhost:4000";
+import { API_BASE } from "@/lib/api-base";
 const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB
 
 export function JobApplicationModal() {
@@ -180,47 +180,28 @@ export function JobApplicationModal() {
     };
 
     try {
-      let sentToBackend = false;
-      try {
-        const res = await fetch(`${API_BASE}/api/v1/public/applications`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
-
-        if (res.ok) {
-          sentToBackend = true;
-        }
-      } catch (err) {
-        console.warn("Backend submission failed, falling back to local storage queue:", err);
+      const res = await fetch(`${API_BASE}/api/v1/public/applications`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        throw new Error(body?.error?.message ?? "Unable to submit your application. Please try again.");
       }
-
-      // Always save a copy to localStorage queue as fallback
-      try {
-        const stored = JSON.parse(localStorage.getItem("tg_job_applications") || "[]");
-        stored.unshift({
-          ...payload,
-          resume: { filename: resumeFile.name, size: resumeFile.size },
-          id: `app_${Date.now()}`,
-          submittedAt: new Date().toISOString(),
-          synced: sentToBackend,
-        });
-        localStorage.setItem("tg_job_applications", JSON.stringify(stored.slice(0, 30)));
-      } catch {}
 
       setIsSuccess(true);
       resetForm();
       toast({
         title: "Application Submitted Successfully!",
-        description: `Thank you, ${name}. A confirmation email has been dispatched.`,
+        description: `Thank you, ${name}. Our team has received your application.`,
       });
-    } catch {
+    } catch (error) {
       toast({
-        title: "Submission saved!",
-        description: "Your application has been recorded.",
+        title: "Application not submitted",
+        description: error instanceof Error ? error.message : "Couldn’t reach the server. Please try again.",
+        variant: "destructive",
       });
-      setIsSuccess(true);
-      resetForm();
     } finally {
       setSubmitting(false);
     }
@@ -268,7 +249,7 @@ export function JobApplicationModal() {
                   Application Submitted Successfully!
                 </h3>
                 <p className="text-zinc-400 text-sm max-w-md mx-auto mb-6 leading-relaxed">
-                  Thank you for applying. We have received your credentials and resume. A confirmation email has been dispatched to your inbox.
+                  Thank you for applying. We have received your details and résumé. Our team will review your application.
                 </p>
 
                 <div className="p-4 rounded-xl bg-zinc-900/90 border border-white/10 text-xs text-zinc-400 max-w-sm mb-6 text-left space-y-2 font-mono">
@@ -317,7 +298,7 @@ export function JobApplicationModal() {
                     </h2>
                   </div>
                   <p className="text-zinc-400 text-xs hidden md:block max-w-xs text-right">
-                    Fill out your credentials. All submissions receive immediate confirmation.
+                    Share your details and résumé to apply.
                   </p>
                 </div>
 
@@ -572,7 +553,7 @@ export function JobApplicationModal() {
                     {/* Bottom Submit Area */}
                     <div className="pt-2 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3">
                       <p className="text-[10px] text-zinc-500 text-center sm:text-left leading-tight">
-                        Instant email confirmation sent to candidate & HR team.
+                        Your application goes directly to our hiring team.
                       </p>
 
                       <button

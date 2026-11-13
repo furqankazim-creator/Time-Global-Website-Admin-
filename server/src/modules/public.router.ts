@@ -14,6 +14,7 @@ import { notify } from "../models/Notification.js";
 import { Service } from "../models/Service.js";
 import { Settings } from "../models/Settings.js";
 import { publicContentRouter } from "./public.content.js";
+import { chatRouter } from "./chat.routes.js";
 
 /**
  * Unauthenticated, read-only. Structurally incapable of returning a draft:
@@ -37,6 +38,7 @@ publicRouter.use((_req, res, next) => {
 
 // Content endpoints (projects, posts, testimonials, team, home)
 publicRouter.use("/", publicContentRouter);
+publicRouter.use("/chat", chatRouter);
 
 publicRouter.get(
   "/services",
@@ -185,7 +187,21 @@ publicRouter.post(
           lead.message || "(no message)",
         ].join("\n"),
       });
-    })();
+    })().catch((err) => logger.error({ err }, "failed to send lead notification"));
+
+    // Confirm receipt to the visitor independently of admin notification preferences.
+    void sendMail({
+      to: lead.email,
+      subject: "Thank you for contacting Time Global",
+      text: [
+        `Hi ${lead.name},`,
+        "",
+        "Thank you for contacting Time Global. We have received your inquiry and our team will get back to you soon.",
+        "",
+        "Best regards,",
+        "The Time Global Team",
+      ].join("\n"),
+    });
 
     res.status(201).json({ data: { received: true } });
   })

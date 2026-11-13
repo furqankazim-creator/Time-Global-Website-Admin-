@@ -30,7 +30,7 @@ type FullPost = {
   author: { name: string } | null;
 };
 
-const BASE = import.meta.env.VITE_API_URL ?? "http://localhost:4000";
+import { API_BASE as BASE } from "@/lib/api-base";
 
 export default function BlogPostPage({ slug }: { slug: string }) {
   const [copied, setCopied] = useState(false);

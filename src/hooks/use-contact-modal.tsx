@@ -1,7 +1,8 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, useCallback, ReactNode } from "react";
 
 interface ContactModalContextType {
   isOpen: boolean;
+  isWelcome: boolean;
   openModal: () => void;
   closeModal: () => void;
 }
@@ -9,12 +10,17 @@ interface ContactModalContextType {
 const ContactModalContext = createContext<ContactModalContextType | undefined>(undefined);
 
 export function ContactModalProvider({ children }: { children: ReactNode }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const openModal = () => setIsOpen(true);
-  const closeModal = () => setIsOpen(false);
+  // Welcome visitors on each full website load, without reopening on SPA navigation.
+  const [isOpen, setIsOpen] = useState(true);
+  const [isWelcome, setIsWelcome] = useState(true);
+  const openModal = useCallback(() => {
+    setIsWelcome(false);
+    setIsOpen(true);
+  }, []);
+  const closeModal = useCallback(() => setIsOpen(false), []);
 
   return (
-    <ContactModalContext.Provider value={{ isOpen, openModal, closeModal }}>
+    <ContactModalContext.Provider value={{ isOpen, isWelcome, openModal, closeModal }}>
       {children}
     </ContactModalContext.Provider>
   );

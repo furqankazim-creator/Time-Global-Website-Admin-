@@ -132,7 +132,7 @@ export function CommandPalette({
                 className="flex items-center justify-between px-3 py-2 rounded-lg text-sm cursor-pointer aria-selected:bg-muted transition-colors"
               >
                 <span className="flex items-center gap-2.5">
-                  <Briefcase size={15} /> Case Studies
+                  <Briefcase size={15} /> Our Work
                 </span>
                 <ArrowRight size={13} className="text-muted-foreground opacity-60" />
               </Command.Item>

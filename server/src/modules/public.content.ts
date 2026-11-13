@@ -153,7 +153,7 @@ publicContentRouter.get(
       {
         path: "featuredTestimonials",
         match: { approvalStatus: "approved", deletedAt: null },
-        select: "clientName company position quote rating",
+        select: "clientName company position quote rating gender",
       },
     ]);
 

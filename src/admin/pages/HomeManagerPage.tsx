@@ -138,6 +138,7 @@ export default function HomeManagerPage() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["home"] });
       qc.invalidateQueries({ queryKey: ["cms"] });
+      try { localStorage.setItem("tg_cms_updated_at", String(Date.now())); } catch { /* storage unavailable */ }
       setSaved(true);
       setTimeout(() => setSaved(false), 2500);
     },

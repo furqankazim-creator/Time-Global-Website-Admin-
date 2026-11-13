@@ -15,6 +15,12 @@ export function errorHandler(
   res: Response,
   _next: NextFunction
 ) {
+  if (typeof err === "object" && err !== null && "type" in err && err.type === "entity.too.large") {
+    return res.status(413).json({
+      error: { code: "PAYLOAD_TOO_LARGE", message: "The submitted data is too large. Please use a smaller file." },
+    });
+  }
+
   // Known, intentional errors
   if (err instanceof ApiError) {
     return res.status(err.status).json({

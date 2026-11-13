@@ -19,8 +19,8 @@ const Separator = () => (
 );
 
 export default function ServiceMarquee() {
-  const { data: cms } = useServices();
-  const list = cms.length > 0
+  const { data: cms, isFallback } = useServices();
+  const list = (!isFallback || cms.length > 0)
     ? cms.map((s) => ({ label: s.title, href: "/services" }))
     : SERVICES;
 

@@ -8,6 +8,8 @@ import { useProjects, type CmsProject } from "@/lib/cms";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const HOME_CASE_STUDY_LIMIT = 10;
+
 type CaseStudy = {
   slug: string;
   tags: string[];
@@ -22,7 +24,7 @@ type CaseStudy = {
 // Verified modern software application, SaaS dashboard & cloud platform screenshots
 const SOFTWARE_APP_IMAGES: Record<string, string> = {
   // CMS Slugs
-  "orgpyur-technologies-mvp-governance-audit": "/assets/projects/orgpyur-cover.png",
+  "orgpyur-technologies-mvp-governance-audit": "/assets/projects/orgpyur-creative-card.jpg",
   "toyotasure-used-car-portal": "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&q=80&w=1200",
   "ontario-tennis-association": "/assets/projects/Ontario_Tennis_Association_Case_Study_Updated-img-2.webp",
   "amz-properties-dubai": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=1200",
@@ -47,7 +49,7 @@ const SOFTWARE_APP_IMAGES: Record<string, string> = {
   alstom: "/assets/projects/railops-alstom-case-study.html.png",
   barkat: "/assets/projects/Barkat_Org_Foundation_Final__Project_Case_Study_v2.pdf.jpg.jpeg",
   pcm: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=1200",
-  orgpyur: "/assets/projects/orgpyur-cover.png",
+  orgpyur: "/assets/projects/orgpyur-creative-card.jpg",
   toyota: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&q=80&w=1200",
   tennis: "/assets/projects/Ontario_Tennis_Association_Case_Study_Updated-img-2.webp",
   ontario: "/assets/projects/Ontario_Tennis_Association_Case_Study_Updated-img-2.webp",
@@ -116,7 +118,7 @@ const studies: CaseStudy[] = [
       { value: "CIPO", label: "Trademark Dossier" },
       { value: "100%", label: "Board Sync" },
     ],
-    image: "/assets/projects/orgpyur-cover.png",
+    image: "/assets/projects/orgpyur-creative-card.jpg",
   },
   {
     slug: "toyotasure-used-car-portal",
@@ -271,7 +273,8 @@ function StudyCard({ s }: { s: CaseStudy }) {
             src={s.image}
             alt={s.title}
             className="w-full h-full object-cover object-top scale-[1.05] group-hover:scale-110 transition-transform duration-700 ease-out will-change-transform opacity-80 group-hover:opacity-95"
-            loading="eager"
+            loading="lazy"
+            decoding="async"
             onError={(e) => {
               e.currentTarget.onerror = null;
               e.currentTarget.src = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1200";
@@ -351,15 +354,15 @@ function CtaCard() {
       </div>
 
       <div className="p-8 sm:p-10 md:p-14">
-        <a
-          href="/work"
+        <Link
+          href="/case-studies"
           className="inline-flex items-center gap-4 group/link text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white hover:text-primary transition-colors duration-300"
         >
-          <span>See all projects</span>
+          <span>View all our work</span>
           <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full border border-primary/30 bg-primary/10 text-primary group-hover/link:bg-primary group-hover/link:text-black transition-all duration-300 shadow-md">
             <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover/link:translate-x-1" />
           </div>
-        </a>
+        </Link>
         <p className="text-sm text-gray-300/90 max-w-sm font-normal leading-relaxed mt-4">
           Explore our full production pipeline of digital designs built for elite industries globally.
         </p>
@@ -371,8 +374,10 @@ function CtaCard() {
 export function CaseStudySlider() {
   // Published projects from the admin panel; the bundled studies only cover
   // an empty or unreachable CMS.
-  const { data: cmsProjects } = useProjects();
-  const shown: CaseStudy[] = cmsProjects.length > 0 ? cmsProjects.map(toStudy) : studies;
+  const { data: cmsProjects, isFallback } = useProjects();
+  const shown: CaseStudy[] = (!isFallback || cmsProjects.length > 0)
+    ? cmsProjects.slice(0, HOME_CASE_STUDY_LIMIT).map(toStudy)
+    : studies.slice(0, HOME_CASE_STUDY_LIMIT);
 
   const sectionRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -491,7 +496,7 @@ export function CaseStudySlider() {
             <div>
               {/* Eyebrow chip matches every other section on the page */}
               <div className="head-reveal inline-block px-4 py-1.5 rounded-lg bg-primary/15 text-primary font-mono text-sm font-bold mb-6 border border-primary/30 shadow-sm shadow-primary/10">
-                {"<Case Studies/>"}
+                {"<Our Work/>"}
               </div>
               <h2
                 ref={headingRef}
@@ -501,7 +506,7 @@ export function CaseStudySlider() {
                     heading pattern */}
                 <SplitText text="Featured" />{" "}
                 <span className="text-primary drop-shadow-[0_0_24px_rgba(16,185,129,0.25)]">
-                  <SplitText text="Case Studies" />
+                  <SplitText text="Our Work" />
                 </span>
               </h2>
             </div>
@@ -511,13 +516,19 @@ export function CaseStudySlider() {
                 Real engagements, real numbers. Production systems we designed,
                 built and shipped for clients across five industries.
               </p>
+              <Link
+                href="/case-studies"
+                className="mt-4 inline-flex items-center gap-2 font-semibold text-primary hover:underline underline-offset-4"
+              >
+                View all our work <ArrowUpRight size={18} aria-hidden="true" />
+              </Link>
               {/* Desktop scroll progress + card counter, driven by the scrub */}
               <div className="hidden lg:flex items-center gap-4 mt-6 max-w-md">
                 <div className="h-1.5 flex-1 bg-white/10 dark:bg-white/15 rounded-full overflow-hidden border border-white/5">
                   <div className="slider-progress h-full w-full bg-primary origin-left scale-x-0 rounded-full" />
                 </div>
                 <span className="slider-count font-mono text-sm text-foreground/90 tabular-nums shrink-0 font-bold">
-                  01 / 07
+                  01 / {String(shown.length + 1).padStart(2, "0")}
                 </span>
               </div>
               <p className="lg:hidden mt-4 text-xs font-mono uppercase tracking-widest text-primary font-bold">

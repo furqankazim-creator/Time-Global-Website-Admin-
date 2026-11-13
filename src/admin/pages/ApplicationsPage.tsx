@@ -35,19 +35,9 @@ function ApplicationDrawer({ id, onClose }: { id: string; onClose: () => void })
   const { canEdit } = useAuth();
   const qc = useQueryClient();
 
-  // Try API first, fallback to localStorage
-  const { data: application } = useQuery({
+  const { data: application, error: loadError } = useQuery({
     queryKey: ["application", id],
-    queryFn: async (): Promise<Application | null> => {
-      try {
-        const res = await api<{ data: Application }>(`/api/v1/admin/applications/${id}`);
-        return res.data;
-      } catch {
-        const local = JSON.parse(localStorage.getItem("tg_job_applications") || "[]");
-        const found = local.find((a: any) => a._id === id || a.id === id);
-        return found || null;
-      }
-    },
+    queryFn: () => api<{ data: Application }>(`/api/v1/admin/applications/${id}`).then((res) => res.data),
   });
 
   const invalidate = () => {
@@ -56,22 +46,19 @@ function ApplicationDrawer({ id, onClose }: { id: string; onClose: () => void })
   };
 
   const setStatus = useMutation({
-    mutationFn: async (status: string) => {
-      try {
-        return await api(`/api/v1/admin/applications/${id}`, { method: "PATCH", body: { status } });
-      } catch {
-        // Update in localStorage
-        const local = JSON.parse(localStorage.getItem("tg_job_applications") || "[]");
-        const updated = local.map((a: any) => (a._id === id || a.id === id ? { ...a, status } : a));
-        localStorage.setItem("tg_job_applications", JSON.stringify(updated));
-        return { success: true };
-      }
-    },
+    mutationFn: (status: string) => api(`/api/v1/admin/applications/${id}`, { method: "PATCH", body: { status } }),
     onSuccess: invalidate,
     meta: { success: "Status updated" },
   });
 
-  if (!application) return null;
+  if (!application) return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-6">
+      <div className="max-w-sm rounded-xl border border-border bg-card p-6">
+        <p role={loadError ? "alert" : "status"}>{loadError instanceof Error ? loadError.message : "Loading application…"}</p>
+        <button onClick={onClose} className="mt-4 rounded-lg bg-muted px-4 py-2">Close</button>
+      </div>
+    </div>
+  );
 
   const downloadResume = () => {
     if (application.resume.dataUrl) {
@@ -241,40 +228,21 @@ export default function ApplicationsPage() {
   const [roleFilter, setRoleFilter] = useState("");
   const [page, setPage] = useState(1);
   const [q, setQ] = useState("");
+  const [sort, setSort] = useState("-createdAt");
 
   const params = new URLSearchParams({
     page: String(page),
     limit: "20",
+    sort,
   });
   if (q) params.set("q", q);
   if (statusFilter) params.set("status", statusFilter);
   if (roleFilter) params.set("jobTitle", roleFilter);
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["applications", page, q, statusFilter, roleFilter],
+  const { data, isLoading, error: listError } = useQuery({
+    queryKey: ["applications", page, q, statusFilter, roleFilter, sort],
     queryFn: async (): Promise<{ data: Application[]; meta: Meta }> => {
-      try {
-        return await api<{ data: Application[]; meta: Meta }>(`/api/v1/admin/applications?${params}`);
-      } catch {
-        // Fallback to local storage
-        const local = JSON.parse(localStorage.getItem("tg_job_applications") || "[]");
-        let list = local;
-        if (statusFilter) list = list.filter((a: any) => a.status === statusFilter);
-        if (roleFilter) list = list.filter((a: any) => a.jobTitle === roleFilter);
-        if (q) {
-          const lower = q.toLowerCase();
-          list = list.filter(
-            (a: any) =>
-              a.name?.toLowerCase().includes(lower) ||
-              a.email?.toLowerCase().includes(lower) ||
-              a.jobTitle?.toLowerCase().includes(lower)
-          );
-        }
-        return {
-          data: list,
-          meta: { page: 1, limit: 20, total: list.length, totalPages: 1 },
-        };
-      }
+      return api<{ data: Application[]; meta: Meta }>(`/api/v1/admin/applications?${params}`);
     },
   });
 
@@ -358,11 +326,14 @@ export default function ApplicationsPage() {
         rows={data?.data ?? []}
         meta={data?.meta}
         loading={isLoading}
+        error={listError instanceof Error ? listError.message : null}
         search={q}
         onSearch={(v) => {
           setQ(v);
           setPage(1);
         }}
+        sort={sort}
+        onSort={(value) => { setSort(value); setPage(1); }}
         onPage={setPage}
         rowKey={(r) => r._id}
         emptyMessage="No job applications received yet."

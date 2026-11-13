@@ -114,8 +114,8 @@ export default function AboutPage() {
   // then newest-first, and a freshly added testimonial defaults to order 0 —
   // so a new entry from the admin panel enters the six and the oldest of the
   // ordered ones drops off. Bundled quotes only cover an empty CMS.
-  const { data: cmsQuotes } = useTestimonials();
-  const quotes: QuoteCard[] = (cmsQuotes.length > 0 ? cmsQuotes : FALLBACK_QUOTES).slice(0, 6);
+  const { data: cmsQuotes, isFallback } = useTestimonials();
+  const quotes: QuoteCard[] = ((!isFallback || cmsQuotes.length > 0) ? cmsQuotes : FALLBACK_QUOTES).slice(0, 6);
 
   useEffect(() => {
     window.scrollTo(0, 0);

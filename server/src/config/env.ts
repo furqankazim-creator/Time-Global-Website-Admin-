@@ -62,6 +62,8 @@ const schema = z.object({
    * e.g. https://crm.tgailab.site/api/public/inquiries
    */
   CRM_INQUIRY_URL: z.string().url().optional(),
+  GROQ_API_KEY: z.string().optional(),
+  GROQ_MODEL: z.string().default("qwen/qwen3.8-27b"),
 });
 
 const parsed = schema.safeParse(process.env);

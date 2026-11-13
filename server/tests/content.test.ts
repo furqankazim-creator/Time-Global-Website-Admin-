@@ -377,6 +377,7 @@ describe("testimonial images", () => {
       .set(auth(admin))
       .send({
         clientName: "Photo Client",
+        gender: "female",
         quote: "They delivered exactly what we needed, on time and within the agreed budget.",
         photo: up.body.data._id,
         approvalStatus: "approved",
@@ -388,6 +389,7 @@ describe("testimonial images", () => {
 
     // Assert the folder and extension, not the upload root — that's env config
     // (tests write to tests/.uploads, dev to uploads/).
+    expect(row.gender).toBe("female");
     expect(row.photo.url).toContain("/testimonials/");
     expect(row.photo.url).toMatch(/\.png$/);
     expect(row.photo.alt).toBe("Client photo");

@@ -65,3 +65,13 @@ export const publicWriteLimiter = rateLimit({
   handler,
   skip,
 });
+
+/** Keep provider traffic separate from the contact/application submission quota. */
+export const publicChatLimiter = rateLimit({
+  windowMs: 60_000,
+  limit: 12,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  handler,
+  skip,
+});

@@ -167,7 +167,7 @@ export default function DashboardPage() {
           href="/admin/posts"
         />
         <KpiCard
-          label="Case Studies"
+          label="Our Work"
           value={isLoading ? null : data?.cards.projects ?? 0}
           hint={`${data?.cards.activeProjects ?? 0} published`}
           icon={Briefcase}

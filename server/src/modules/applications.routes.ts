@@ -24,6 +24,8 @@ const updateApplicationSchema = z.object({
 const ctrl = crudFactory({
   name: "job_application",
   model: JobApplication,
+  // Résumé contents are fetched only when opening a candidate's profile.
+  listSelect: "-resume.dataUrl",
   sortable: ["name", "email", "jobTitle", "createdAt", "status"],
   searchable: ["name", "email", "jobTitle", "fatherName", "education"],
   filters: (q) => ({

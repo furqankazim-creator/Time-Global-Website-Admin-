@@ -46,6 +46,8 @@ export function createApp() {
       credentials: true,
     })
   );
+  // A 5 MB résumé expands to about 6.7 MB when encoded as a data URL.
+  app.use("/api/v1/public/applications", express.json({ limit: "8mb" }));
   app.use(express.json({ limit: "1mb" }));
   app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());

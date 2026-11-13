@@ -199,9 +199,9 @@ const VALUE_PROPS = [
 export default function ServicesPage() {
   usePageMeta({ title: "Services", description: "Web and mobile development, cloud and DevOps, AI and enterprise automation — one partner for the whole stack." });
 
-  const { data: cmsServices } = useServices();
+  const { data: cmsServices, isFallback } = useServices();
 
-  const activeServices = cmsServices.length > 0
+  const activeServices = (!isFallback || cmsServices.length > 0)
     ? cmsServices.map((cs, idx) => {
         const match = DETAILED_SERVICES.find(
           (d) => d.title.toLowerCase().includes(cs.title.toLowerCase()) || cs.title.toLowerCase().includes(d.title.toLowerCase())

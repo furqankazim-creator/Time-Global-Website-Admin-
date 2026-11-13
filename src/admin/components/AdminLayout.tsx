@@ -23,7 +23,7 @@ const NAV: NavEntry[] = [
     icon: FolderOpen,
     items: [
       { label: "Services", href: "/admin/services", icon: Wrench },
-      { label: "Case Studies", href: "/admin/projects", icon: Briefcase },
+      { label: "Our Work", href: "/admin/projects", icon: Briefcase },
       { label: "Stories", href: "/admin/stories", icon: Sparkles },
       { label: "Blog", href: "/admin/posts", icon: FileText },
       { label: "Testimonials", href: "/admin/testimonials", icon: Quote },

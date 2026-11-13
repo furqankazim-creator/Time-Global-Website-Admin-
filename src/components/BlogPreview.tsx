@@ -128,8 +128,8 @@ export function PostCard({ post, index = 0 }: { post: BlogCard; index?: number }
 export default function BlogPreview() {
   // Published CMS posts replace the bundled previews; a scheduled post stays
   // hidden until its publish date, enforced server-side.
-  const { data: cms } = usePosts();
-  const posts: BlogCard[] = cms.length > 0 ? cms.slice(0, 3).map(toPost) : BLOG_POSTS;
+  const { data: cms, isFallback } = usePosts();
+  const posts: BlogCard[] = (!isFallback || cms.length > 0) ? cms.slice(0, 3).map(toPost) : BLOG_POSTS;
 
   return (
     <section className="py-24 sm:py-32 px-6 relative overflow-hidden">

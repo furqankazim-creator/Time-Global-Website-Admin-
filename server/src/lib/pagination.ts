@@ -34,13 +34,14 @@ export async function paginate<T>(
   model: Model<any>,
   filter: FilterQuery<any>,
   query: ListQuery,
-  opts: { sortable: string[]; populate?: string | string[] } = { sortable: [] }
+  opts: { sortable: string[]; populate?: string | string[]; select?: string } = { sortable: [] }
 ): Promise<Paginated<T>> {
   const { page, limit } = query;
   const skip = (page - 1) * limit;
   const sort = parseSort(query.sort, [...opts.sortable, "createdAt", "updatedAt"]);
 
   let q = model.find(filter).sort(sort).skip(skip).limit(limit);
+  if (opts.select) q = q.select(opts.select);
   if (opts.populate) q = q.populate(opts.populate as string);
 
   // countDocuments must use the same filter, else meta.total lies.
