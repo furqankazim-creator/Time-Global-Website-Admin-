@@ -142,7 +142,7 @@ export default function Navbar() {
             exit={{ opacity: 0, height: 0 }}
             className="lg:hidden bg-background border-b border-border overflow-hidden"
           >
-            <div className="px-6 py-6 flex flex-col gap-5">
+            <div className="max-h-[calc(100dvh-72px)] overflow-y-auto overscroll-contain px-6 py-6 flex flex-col gap-5">
               <div className="flex gap-3">
                 <Link
                   href="/services#services-breakdown"

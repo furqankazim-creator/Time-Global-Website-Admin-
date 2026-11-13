@@ -156,10 +156,10 @@ function App() {
     );
   }
 
+  if (!introComplete) return <Preloader onComplete={finishIntro} />;
+
   return (
     <ThemeProvider>
-      {/* Prepare the page under the intro so its exit reveals rendered content. */}
-      {!introComplete && <Preloader onComplete={finishIntro} />}
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <ContactModalProvider>

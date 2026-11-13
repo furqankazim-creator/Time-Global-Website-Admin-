@@ -1,17 +1,17 @@
+import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { useEffect, useState } from "react";
 
 const INTRO_VIDEO = "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260603_132049_036591b8-6e92-4760-b94c-a7ea6eef315c.mp4";
 
 /** A startup intro; its timeline completes even if the video cannot load. */
 export function Preloader({ onComplete }: { onComplete: () => void }) {
+  useScrollLock(true);
   const [progress, setProgress] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
   const [videoReady, setVideoReady] = useState(false);
 
   useEffect(() => {
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const duration = reducedMotion ? 300 : 4000;
     const exitDuration = reducedMotion ? 0 : 550;
@@ -31,7 +31,6 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
     return () => {
       cancelAnimationFrame(frame);
       clearTimeout(exitTimer);
-      document.body.style.overflow = previousOverflow;
     };
   }, [onComplete]);
 

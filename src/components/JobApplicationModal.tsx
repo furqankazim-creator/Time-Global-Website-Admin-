@@ -1,3 +1,4 @@
+import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { useState, useRef, useEffect, type FormEvent, type ChangeEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -58,20 +59,11 @@ export function JobApplicationModal() {
     }
   }, [jobTitle, isOpen]);
 
-  // Lock background scroll when open
+  useScrollLock(isOpen);
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-      const timer = setTimeout(() => {
-        setIsSuccess(false);
-      }, 300);
-      return () => clearTimeout(timer);
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
+    if (isOpen) return;
+    const timer = setTimeout(() => setIsSuccess(false), 300);
+    return () => clearTimeout(timer);
   }, [isOpen]);
 
   const handleFile = (file: File) => {
@@ -212,7 +204,7 @@ export function JobApplicationModal() {
       {isOpen && (
         <div
           onClick={closeJobModal}
-          className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-5 overflow-y-auto bg-black/80 backdrop-blur-md"
+          className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-5 overflow-y-auto overscroll-contain bg-black/80 backdrop-blur-md"
         >
           {/* Modal Card - WIDE & BIG (max-w-5xl) with NO SCROLL on desktop */}
           <motion.div
@@ -221,7 +213,7 @@ export function JobApplicationModal() {
             exit={{ opacity: 0, scale: 0.96, y: 15 }}
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
             onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-5xl bg-zinc-950/95 border border-white/10 rounded-2xl sm:rounded-3xl shadow-2xl shadow-emerald-950/40 my-auto z-10 isolate overflow-hidden backdrop-blur-xl"
+            className="relative shrink-0 w-full max-w-5xl bg-zinc-950/95 border border-white/10 rounded-2xl sm:rounded-3xl shadow-2xl shadow-emerald-950/40 my-auto z-10 isolate overflow-hidden backdrop-blur-xl"
           >
             {/* Ambient emerald backlight glows */}
             <div className="absolute -top-24 -left-24 w-80 h-80 bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none" />

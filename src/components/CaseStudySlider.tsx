@@ -385,6 +385,7 @@ export function CaseStudySlider() {
 
   useEffect(() => {
     // Keep animations isolated to the scoped element ref instance
+    const media = gsap.matchMedia();
     const ctx = gsap.context(() => {
       if (headingRef.current) {
         gsap.from(headingRef.current.querySelectorAll(".char"), {
@@ -424,8 +425,10 @@ export function CaseStudySlider() {
       const section = sectionRef.current;
 
       // Horizontal pinning is desktop-only; only pin if screen has enough vertical height
-      if (track && section && window.matchMedia("(min-width: 1024px)").matches && window.innerHeight >= 620) {
-        const getDistance = () => track.scrollWidth - window.innerWidth;
+      media.add("(min-width: 1024px) and (min-height: 620px)", () => {
+        if (!track || !section) return;
+        const getDistance = () => Math.max(0, track.scrollWidth - window.innerWidth);
+        if (getDistance() === 0) return;
 
         const total = track.querySelectorAll(".study-card").length;
 
@@ -478,10 +481,10 @@ export function CaseStudySlider() {
             }
           );
         });
-      }
+      });
     }, sectionRef);
 
-    return () => ctx.revert();
+    return () => { media.revert(); ctx.revert(); };
     // scrollWidth is captured when the tween is built; CMS data arriving
     // later would otherwise leave a stale scroll distance.
   }, [shown.length]);

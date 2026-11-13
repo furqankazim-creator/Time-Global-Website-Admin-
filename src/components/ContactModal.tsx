@@ -1,3 +1,4 @@
+import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useLocation } from "wouter";
@@ -123,6 +124,7 @@ export default function ContactModal() {
   const { isOpen, isWelcome, closeModal } = useContactModal();
   const [pathname] = useLocation();
   const reduceMotion = useReducedMotion();
+  useScrollLock(isOpen && (!isWelcome || pathname === "/"));
 
   const [isSuccess, setIsSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -149,8 +151,6 @@ export default function ContactModal() {
   useEffect(() => {
     if (!isOpen || (isWelcome && pathname !== "/")) return;
     const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
     dialogRef.current?.focus({ preventScroll: true });
 
     const onKeyDown = (event: KeyboardEvent) => {
@@ -177,7 +177,6 @@ export default function ContactModal() {
     };
     document.addEventListener("keydown", onKeyDown);
     return () => {
-      document.body.style.overflow = previousOverflow;
       document.removeEventListener("keydown", onKeyDown);
       if (previousFocus?.isConnected) previousFocus.focus({ preventScroll: true });
     };

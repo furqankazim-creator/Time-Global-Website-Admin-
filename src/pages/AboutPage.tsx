@@ -257,7 +257,7 @@ export default function AboutPage() {
               <Eyebrow>{"<Our Values/>"}</Eyebrow>
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold">What we won't compromise on</h2>
             </motion.div>
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {VALUES.map((v, i) => (
                 <motion.div
                   key={v.title}
@@ -331,7 +331,7 @@ export default function AboutPage() {
               Technology with a <span className="text-primary">conscience</span>
             </h2>
           </motion.div>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
                 icon: GraduationCap, title: "Growing local talent",
@@ -369,13 +369,13 @@ export default function AboutPage() {
               <Eyebrow>{"<Client Voices/>"}</Eyebrow>
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold">In their words</h2>
             </motion.div>
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {quotes.map((t, i) => (
                 <motion.div
                   key={t._id ?? t.clientName}
                   {...rise}
                   transition={{ ...rise.transition, delay: (i % 3) * 0.1 }}
-                  className="flex flex-col p-8 rounded-2xl bg-card border border-border/50 shadow-sm relative"
+                  className="min-w-0 flex flex-col p-8 rounded-2xl bg-card border border-border/50 shadow-sm relative"
                 >
                   <Quote size={32} className="text-primary/20 absolute top-6 right-6" />
 
